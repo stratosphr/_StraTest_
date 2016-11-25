@@ -6,6 +6,8 @@ package utilities;
  */
 public final class UChars {
 
+    public static final String NEW_LINE = "\n";
+
     public static final String TABULATION = "\t";
 
     public static final String LAND = "∧";

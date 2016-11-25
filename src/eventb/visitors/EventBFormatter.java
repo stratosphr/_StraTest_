@@ -2,6 +2,7 @@ package eventb.visitors;
 
 import eventb.exprs.arith.*;
 import eventb.exprs.bool.*;
+import utilities.UAFormatter;
 import utilities.UChars;
 
 import java.util.stream.Collectors;
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
  * Created by gvoiron on 24/11/16.
  * Time : 16:32
  */
-public class EventBFormatter {
+public final class EventBFormatter extends UAFormatter {
 
     public String visit(IntVariable intVariable) {
         return intVariable.getName();
