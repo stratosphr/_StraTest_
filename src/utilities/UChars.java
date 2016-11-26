@@ -16,6 +16,8 @@ public final class UChars {
 
     public static final String LNOT = "¬";
 
+    public static final String EQ_DEF = "≝";
+
     public static final String LEQ = "≤";
 
     public static final String GEQ = "≥";
