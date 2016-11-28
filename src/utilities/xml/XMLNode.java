@@ -41,7 +41,7 @@ public final class XMLNode implements IXMLFormatterVisitable {
     }
 
     public XMLNode getFirstChildWithName(String name) {
-        return getChildrenWithName(name).get(0);
+        return getChildrenWithName(name).isEmpty() ? null : getChildrenWithName(name).get(0);
     }
 
     public List<XMLNode> getChildrenWithName(String name) {

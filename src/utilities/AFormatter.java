@@ -6,16 +6,16 @@ import java.util.Collections;
  * Created by gvoiron on 25/11/16.
  * Time : 15:00
  */
-public abstract class UAFormatter {
+public abstract class AFormatter {
 
     private int indentation;
 
-    public UAFormatter() {
+    public AFormatter() {
         this.indentation = 0;
     }
 
     public String indent() {
-        return String.join("", Collections.nCopies(indentation, UChars.TABULATION));
+        return String.join("", Collections.nCopies(indentation, Chars.TABULATION));
     }
 
     public void indentLeft() {

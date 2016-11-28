@@ -1,18 +1,20 @@
 package eventb.visitors;
 
+import eventb.Machine;
 import eventb.events.*;
 import eventb.exprs.arith.*;
 import eventb.exprs.bool.*;
-import utilities.UAFormatter;
-import utilities.UChars;
+import utilities.AFormatter;
 
 import java.util.stream.Collectors;
+
+import static utilities.Chars.*;
 
 /**
  * Created by gvoiron on 24/11/16.
  * Time : 16:32
  */
-public final class EventBFormatter extends UAFormatter {
+public final class EventBFormatter extends AFormatter {
 
     public String visit(Int anInt) {
         return String.valueOf(anInt.getValue());
@@ -38,16 +40,28 @@ public final class EventBFormatter extends UAFormatter {
         return "(" + division.getOperands().stream().map(operand -> operand.accept(this)).collect(Collectors.joining(" / ")) + ")";
     }
 
+    public String visit(False aFalse) {
+        return "false";
+    }
+
+    public String visit(True aTrue) {
+        return "true";
+    }
+
+    public String visit(Predicate predicate) {
+        return "(" + predicate.getName() + " " + EQ_DEF + " " + predicate.getExpression().accept(this) + ")";
+    }
+
     public String visit(Not not) {
-        return UChars.LNOT + "(" + not.getOperand().accept(this) + ")";
+        return LNOT + "(" + not.getOperand().accept(this) + ")";
     }
 
     public String visit(And and) {
-        return and.getOperands().isEmpty() ? "true" : "(" + and.getOperands().stream().map(operand -> operand.accept(this)).collect(Collectors.joining(" " + UChars.LAND + " ")) + ")";
+        return and.getOperands().isEmpty() ? "true" : "(" + and.getOperands().stream().map(operand -> operand.accept(this)).collect(Collectors.joining(" " + LAND + " ")) + ")";
     }
 
     public String visit(Or or) {
-        return or.getOperands().isEmpty() ? "false" : "(" + or.getOperands().stream().map(operand -> operand.accept(this)).collect(Collectors.joining(" " + UChars.LOR + " ")) + ")";
+        return or.getOperands().isEmpty() ? "false" : "(" + or.getOperands().stream().map(operand -> operand.accept(this)).collect(Collectors.joining(" " + LOR + " ")) + ")";
     }
 
     public String visit(Equals equals) {
@@ -59,7 +73,7 @@ public final class EventBFormatter extends UAFormatter {
     }
 
     public String visit(LowerOrEqual lowerOrEqual) {
-        return "(" + lowerOrEqual.getLeft().accept(this) + " " + UChars.LEQ + " " + lowerOrEqual.getRight().accept(this) + ")";
+        return "(" + lowerOrEqual.getLeft().accept(this) + " " + LEQ + " " + lowerOrEqual.getRight().accept(this) + ")";
     }
 
     public String visit(GreaterThan greaterThan) {
@@ -67,12 +81,50 @@ public final class EventBFormatter extends UAFormatter {
     }
 
     public String visit(GreaterOrEqual greaterOrEqual) {
-        return "(" + greaterOrEqual.getLeft().accept(this) + " " + UChars.GEQ + " " + greaterOrEqual.getRight().accept(this) + ")";
+        return "(" + greaterOrEqual.getLeft().accept(this) + " " + GEQ + " " + greaterOrEqual.getRight().accept(this) + ")";
+    }
+
+    public String visit(Invariant invariant) {
+        return invariant.getExpression().accept(this);
+    }
+
+    public String visit(Machine machine) {
+        String str = "";
+        str += "MACHINE" + NEW_LINE;
+        indentRight();
+        str += indent() + machine.getName() + NEW_LINE;
+        indentLeft();
+        if (!machine.getSets().isEmpty()) {
+            throw new Error("Sets are not yet handled by the formatter.");
+        }
+        if (!machine.getVariables().isEmpty()) {
+            str += NEW_LINE;
+            str += indent() + "VARIABLES" + NEW_LINE;
+            indentRight();
+            str += indent() + machine.getVariables().stream().map(assignable -> assignable.accept(this)).collect(Collectors.joining("," + NEW_LINE + indent())) + NEW_LINE;
+            indentLeft();
+        }
+        str += NEW_LINE;
+        str += indent() + "INVARIANT" + NEW_LINE;
+        indentRight();
+        str += indent() + machine.getInvariant().accept(this) + NEW_LINE;
+        indentLeft();
+        str += NEW_LINE;
+        str += indent() + "INITIALISATION" + NEW_LINE;
+        indentRight();
+        str += indent() + machine.getInitialisation().accept(this) + NEW_LINE;
+        indentLeft();
+        str += NEW_LINE;
+        str += indent() + "EVENTS" + NEW_LINE;
+        indentRight();
+        str += indent() + machine.getEvents().stream().map(event -> event.accept(this)).collect(Collectors.joining(NEW_LINE + NEW_LINE + indent())) + NEW_LINE;
+        indentLeft();
+        return str;
     }
 
     public String visit(Event event) {
         String str = "";
-        str += event.getName() + " " + UChars.EQ_DEF + UChars.NEW_LINE;
+        str += event.getName() + " " + EQ_DEF + NEW_LINE;
         indentRight();
         str += indent() + event.getSubstitution().accept(this);
         indentLeft();
@@ -89,13 +141,31 @@ public final class EventBFormatter extends UAFormatter {
 
     public String visit(Select select) {
         String str = "";
-        str += "SELECT" + UChars.NEW_LINE;
+        str += "SELECT" + NEW_LINE;
         indentRight();
-        str += indent() + select.getCondition().accept(this) + UChars.NEW_LINE;
+        str += indent() + select.getCondition().accept(this) + NEW_LINE;
         indentLeft();
-        str += indent() + "THEN" + UChars.NEW_LINE;
+        str += indent() + "THEN" + NEW_LINE;
         indentRight();
-        str += indent() + select.getSubstitution().accept(this) + UChars.NEW_LINE;
+        str += indent() + select.getSubstitution().accept(this) + NEW_LINE;
+        indentLeft();
+        str += indent() + "END";
+        return str;
+    }
+
+    public String visit(IfThenElse ifThenElse) {
+        String str = "";
+        str += "IF" + NEW_LINE;
+        indentRight();
+        str += indent() + ifThenElse.getCondition().accept(this) + NEW_LINE;
+        indentLeft();
+        str += indent() + "THEN" + NEW_LINE;
+        indentRight();
+        str += indent() + ifThenElse.getThenPart().accept(this) + NEW_LINE;
+        indentLeft();
+        str += indent() + "ELSE" + NEW_LINE;
+        indentRight();
+        str += indent() + ifThenElse.getElsePart().accept(this) + NEW_LINE;
         indentLeft();
         str += indent() + "END";
         return str;
@@ -103,15 +173,15 @@ public final class EventBFormatter extends UAFormatter {
 
     public String visit(Choice choice) {
         String str = "";
-        str += "CHOICE" + UChars.NEW_LINE;
+        str += "CHOICE" + NEW_LINE;
         for (ASubstitution substitution : choice.getSubstitutions().subList(0, choice.getSubstitutions().size() - 1)) {
             indentRight();
-            str += indent() + substitution.accept(this) + UChars.NEW_LINE;
+            str += indent() + substitution.accept(this) + NEW_LINE;
             indentLeft();
-            str += indent() + "OR" + UChars.NEW_LINE;
+            str += indent() + "OR" + NEW_LINE;
         }
         indentRight();
-        str += indent() + choice.getSubstitutions().get(choice.getSubstitutions().size() - 1).accept(this) + UChars.NEW_LINE;
+        str += indent() + choice.getSubstitutions().get(choice.getSubstitutions().size() - 1).accept(this) + NEW_LINE;
         indentLeft();
         str += indent() + "END";
         return str;
@@ -119,24 +189,24 @@ public final class EventBFormatter extends UAFormatter {
 
     public String visit(Any any) {
         String str = "";
-        str += "ANY" + UChars.NEW_LINE;
+        str += "ANY" + NEW_LINE;
         indentRight();
-        str += indent() + any.getQuantifiedVariables().stream().map(quantifiedVariable -> quantifiedVariable.accept(this)).collect(Collectors.joining(", ")) + UChars.NEW_LINE;
+        str += indent() + any.getQuantifiedVariables().stream().map(quantifiedVariable -> quantifiedVariable.accept(this)).collect(Collectors.joining(", ")) + NEW_LINE;
         indentLeft();
-        str += indent() + "WHERE" + UChars.NEW_LINE;
+        str += indent() + "WHERE" + NEW_LINE;
         indentRight();
-        str += indent() + any.getCondition().accept(this) + UChars.NEW_LINE;
+        str += indent() + any.getCondition().accept(this) + NEW_LINE;
         indentLeft();
-        str += indent() + "THEN" + UChars.NEW_LINE;
+        str += indent() + "THEN" + NEW_LINE;
         indentRight();
-        str += indent() + any.getSubstitution().accept(this) + UChars.NEW_LINE;
+        str += indent() + any.getSubstitution().accept(this) + NEW_LINE;
         indentLeft();
         str += indent() + "END";
         return str;
     }
 
     public String visit(Parallel parallel) {
-        return parallel.getSubstitutions().stream().map(substitution -> substitution.accept(this)).collect(Collectors.joining(" ||" + UChars.NEW_LINE + indent()));
+        return parallel.getSubstitutions().stream().map(substitution -> substitution.accept(this)).collect(Collectors.joining(" ||" + NEW_LINE + indent()));
     }
 
 }

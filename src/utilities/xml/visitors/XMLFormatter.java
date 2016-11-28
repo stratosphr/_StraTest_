@@ -1,7 +1,7 @@
 package utilities.xml.visitors;
 
-import utilities.UAFormatter;
-import utilities.UChars;
+import utilities.AFormatter;
+import utilities.Chars;
 import utilities.xml.XMLDocument;
 import utilities.xml.XMLNode;
 
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * Created by gvoiron on 25/11/16.
  * Time : 15:00
  */
-public final class XMLFormatter extends UAFormatter {
+public final class XMLFormatter extends AFormatter {
 
     public String visit(XMLDocument xmlDocument) {
         return xmlDocument.getRoot().accept(this);
@@ -23,10 +23,10 @@ public final class XMLFormatter extends UAFormatter {
         if (xmlNode.getChildren().isEmpty()) {
             str += "/>";
         } else {
-            str += ">" + UChars.NEW_LINE;
+            str += ">" + Chars.NEW_LINE;
             indentRight();
             for (XMLNode child : xmlNode.getChildren()) {
-                str += indent() + child.accept(this) + UChars.NEW_LINE;
+                str += indent() + child.accept(this) + Chars.NEW_LINE;
             }
             indentLeft();
             str += indent() + "<" + xmlNode.getName() + "/>";

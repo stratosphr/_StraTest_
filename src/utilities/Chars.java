@@ -4,7 +4,7 @@ package utilities;
  * Created by gvoiron on 23/11/16.
  * Time : 23:33
  */
-public final class UChars {
+public final class Chars {
 
     public static final String NEW_LINE = "\n";
 
