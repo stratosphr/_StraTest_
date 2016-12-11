@@ -1,19 +1,24 @@
 package eventb.parsers;
 
-import eventb.AEventBObject;
+import eventb.Event;
 import eventb.Machine;
-import eventb.events.*;
 import eventb.exprs.arith.*;
 import eventb.exprs.bool.*;
+import eventb.parsers.metamodel.EBMAttributes;
+import eventb.parsers.metamodel.EBMEntities;
+import eventb.substitutions.*;
 import utilities.xml.XMLDocument;
 import utilities.xml.XMLNode;
 import utilities.xml.XMLParser;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
+
+import static eventb.parsers.metamodel.EBMAttributes.*;
+import static eventb.parsers.metamodel.EBMAttributesValues.TYPE_NATURAL_NUMBERS;
+import static eventb.parsers.metamodel.EBMEntities.*;
+import static eventb.parsers.metamodel.EventBRegex.IDENTIFIER;
 
 /**
  * Created by gvoiron on 26/11/16.
@@ -22,10 +27,236 @@ import java.util.stream.Stream;
 public final class EventBParser {
 
     public static Machine parseMachine(File file) {
+        XMLDocument document = XMLParser.parse(file, "MACHINE", new File("resources/eventb/ebm.dtd"), new ErrorHandler());
+        XMLNode root = document.getRoot();
+        String name = root.getAttributes().get(EBMAttributes.NAME);
+        LinkedHashSet<Object> sets = new LinkedHashSet<>();
+        LinkedHashSet<AAssignable> assignables = parseVariables(root.getFirstChildWithName(VARIABLES));
+        Invariant invariant = parseInvariant(root.getFirstChildWithName(INVARIANT));
+        ASubstitution initialisation = parseInitialisation(root.getFirstChildWithName(INITIALISATION));
+        LinkedHashSet<Event> events = parseEvents(root.getFirstChildWithName(EVENTS));
+        return new Machine(name, sets, assignables, invariant, initialisation, events);
+    }
+
+    private static LinkedHashSet<AAssignable> parseVariables(XMLNode node) {
+        return node.getChildren().stream().map(EventBParser::parseAssignable).collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    private static Invariant parseInvariant(XMLNode node) {
+        return new Invariant(parseBoolExpr(node.getChildren().get(0)));
+    }
+
+    private static ASubstitution parseInitialisation(XMLNode node) {
+        return parseSubstitution(node.getChildren().get(0));
+    }
+
+    private static LinkedHashSet<Event> parseEvents(XMLNode node) {
+        return node.getChildren().stream().map(EventBParser::parseEvent).collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    private static Event parseEvent(XMLNode node) {
+        switch (node.getName()) {
+            case EBMEntities.NON_GUARDED_EVENT:
+                return parseNonGuardedEvent(node);
+            case EBMEntities.GUARDED_EVENT:
+                return parseGuardedEvent(node);
+            case EBMEntities.ANY_EVENT:
+                return parseAnyEvent(node);
+            default:
+                throw new Error("Unable to parse node \"" + node.getName() + "\": this node is not handled yet by the parser.");
+        }
+    }
+
+    private static Event parseAnyEvent(XMLNode node) {
+        if (!node.getAttributes().get(NAME).matches(IDENTIFIER)) {
+            throw new Error("The \"" + VAL + "\" attribute for a \"" + node.getName() + "\" node must match the regular expression \"" + IDENTIFIER + "\" (\"" + node.getAttributes().get(VAL) + "\" given).");
+        } else {
+            return new Event(node.getAttributes().get(NAME), new Any(parseBoolExpr(node.getChildren().get(1)), parseSubstitution(node.getChildren().get(2)), parseQuantifiedVariables(node.getChildren().get(0))));
+        }
+    }
+
+    private static IntVariable[] parseQuantifiedVariables(XMLNode node) {
+        return node.getChildren().stream().map(EventBParser::parseVariable).toArray(IntVariable[]::new);
+    }
+
+    private static Event parseNonGuardedEvent(XMLNode node) {
+        if (!node.getAttributes().get(NAME).matches(IDENTIFIER)) {
+            throw new Error("The \"" + VAL + "\" attribute for a \"" + node.getName() + "\" node must match the regular expression \"" + IDENTIFIER + "\" (\"" + node.getAttributes().get(VAL) + "\" given).");
+        } else {
+            return new Event(node.getAttributes().get(NAME), parseSubstitution(node.getChildren().get(0)));
+        }
+    }
+
+    private static Event parseGuardedEvent(XMLNode node) {
+        if (!node.getAttributes().get(NAME).matches(IDENTIFIER)) {
+            throw new Error("The \"" + VAL + "\" attribute for a \"" + node.getName() + "\" node must match the regular expression \"" + IDENTIFIER + "\" (\"" + node.getAttributes().get(VAL) + "\" given).");
+        } else {
+            return new Event(node.getAttributes().get(NAME), new Select(parseBoolExpr(node.getChildren().get(0)), parseSubstitution(node.getChildren().get(1))));
+        }
+    }
+
+    private static ASubstitution parseSubstitution(XMLNode node) {
+        switch (node.getName()) {
+            case EBMEntities.SKIP:
+                return parseSkip(node);
+            case EBMEntities.PARALLEL:
+                return parseParallel(node);
+            case EBMEntities.ASSIGNMENT:
+                return parseAssignment(node);
+            case EBMEntities.MULTIPLE_ASSIGNMENT:
+                return parseMultipleAssignment(node);
+            case EBMEntities.SELECT:
+                return parseSelect(node);
+            case EBMEntities.IF:
+                return parseIf(node);
+            case EBMEntities.CHOICE:
+                return parseChoice(node);
+            case EBMEntities.ANY:
+                return parseAny(node);
+            default:
+                throw new Error("Unable to parse node \"" + node.getName() + "\": this node is not handled yet by the parser.");
+        }
+    }
+
+    private static ASubstitution parseSkip(XMLNode node) {
+        return new Skip();
+    }
+
+    private static ASubstitution parseIf(XMLNode node) {
+        if (node.getChildren().size() == 2) {
+            return new IfThenElse(parseBoolExpr(node.getChildren().get(0)), parseSubstitution(node.getChildren().get(1)));
+        } else if (node.getChildren().size() == 3) {
+            return new IfThenElse(parseBoolExpr(node.getChildren().get(0)), parseSubstitution(node.getChildren().get(1)), parseSubstitution(node.getChildren().get(2)));
+        } else {
+            throw new Error("Unable to parse node \"" + node.getName() + "\": this node is not handled yet by the parser.");
+        }
+    }
+
+    private static ASubstitution parseParallel(XMLNode node) {
+        return new Parallel(node.getChildren().stream().map(EventBParser::parseSubstitution).toArray(ASubstitution[]::new));
+    }
+
+    private static ASubstitution parseAssignment(XMLNode node) {
+        return new Assignment(parseAssignable(node.getChildren().get(0)), parseArithExpr(node.getChildren().get(1)));
+    }
+
+    private static ASubstitution parseMultipleAssignment(XMLNode node) {
+        return new Parallel(node.getChildren().stream().map(EventBParser::parseSubstitution).toArray(ASubstitution[]::new));
+    }
+
+    private static ASubstitution parseSelect(XMLNode node) {
+        return new Select(parseBoolExpr(node.getChildren().get(0)), parseSubstitution(node.getChildren().get(1)));
+    }
+
+    private static ASubstitution parseChoice(XMLNode node) {
+        return new Choice(node.getChildren().stream().map(EventBParser::parseSubstitution).toArray(ASubstitution[]::new));
+    }
+
+    private static ASubstitution parseAny(XMLNode node) {
+        return new Any(parseBoolExpr(node.getChildren().get(1)), parseSubstitution(node.getChildren().get(2)), parseQuantifiedVariables(node.getChildren().get(0)));
+    }
+
+    private static AArithExpr parseArithExpr(XMLNode node) {
+        switch (node.getName()) {
+            case NUMBER:
+                return parseNumber(node);
+            case VARIABLE:
+                return parseVariable(node);
+            case EBMEntities.SUM:
+                return parseSum(node);
+            case EBMEntities.SUBTRACTION:
+                return parseSubtraction(node);
+            default:
+                throw new Error("Unable to parse node \"" + node.getName() + "\": this node is not handled yet by the parser.");
+        }
+    }
+
+    private static ABoolExpr parseBoolExpr(XMLNode node) {
+        switch (node.getName()) {
+            case IN_DOMAIN:
+                return parseInDomain(node);
+            case EBMEntities.NOT:
+                return parseNot(node);
+            case AND:
+                return parseAnd(node);
+            case OR:
+                return parseOr(node);
+            case EQUALS:
+                return parseEquals(node);
+            case GREATER_THAN:
+                return parseGreaterThan(node);
+            default:
+                throw new Error("Unable to parse node \"" + node.getName() + "\": this node is not handled yet by the parser.");
+        }
+    }
+
+    private static AArithExpr parseNumber(XMLNode node) {
+        try {
+            return new Int(Integer.parseInt(node.getAttributes().get(VAL)));
+        } catch (NumberFormatException e) {
+            throw new Error("The \"" + VAL + "\" attribute for a \"" + node.getName() + "\" node must be an integer (\"" + node.getAttributes().get(VAL) + "\" given).");
+        }
+    }
+
+    private static AAssignable parseAssignable(XMLNode node) {
+        switch (node.getName()) {
+            case VARIABLE:
+                return parseVariable(node);
+            default:
+                throw new Error("Unable to parse node \"" + node.getName() + "\": this node is not handled yet by the parser.");
+        }
+    }
+
+    private static IntVariable parseVariable(XMLNode node) {
+        if (!node.getAttributes().get(VAL).matches(IDENTIFIER)) {
+            throw new Error("The \"" + VAL + "\" attribute for a \"" + node.getName() + "\" node must match the regular expression \"" + IDENTIFIER + "\" (\"" + node.getAttributes().get(VAL) + "\" given).");
+        } else {
+            return new IntVariable(node.getAttributes().get(VAL));
+        }
+    }
+
+    private static AArithExpr parseSum(XMLNode node) {
+        return new Sum(node.getChildren().stream().map(EventBParser::parseArithExpr).toArray(AArithExpr[]::new));
+    }
+
+    private static AArithExpr parseSubtraction(XMLNode node) {
+        return new Subtraction(node.getChildren().stream().map(EventBParser::parseArithExpr).toArray(AArithExpr[]::new));
+    }
+
+    private static ABoolExpr parseInDomain(XMLNode node) {
+        switch (node.getAttributes().get(TYPE)) {
+            case TYPE_NATURAL_NUMBERS:
+                return new GreaterOrEqual(parseVariable(node.getChildren().get(0)), new Int(0));
+            default:
+                throw new Error("Unable to parse node \"" + node.getName() + "\": this node is not handled yet by the parser.");
+        }
+    }
+
+    private static ABoolExpr parseNot(XMLNode node) {
+        return new Not(parseBoolExpr(node.getChildren().get(0)));
+    }
+
+    private static ABoolExpr parseAnd(XMLNode node) {
+        return new And(node.getChildren().stream().map(EventBParser::parseBoolExpr).toArray(ABoolExpr[]::new));
+    }
+
+    private static ABoolExpr parseOr(XMLNode node) {
+        return new Or(node.getChildren().stream().map(EventBParser::parseBoolExpr).toArray(ABoolExpr[]::new));
+    }
+
+    private static ABoolExpr parseEquals(XMLNode node) {
+        return new Equals(parseArithExpr(node.getChildren().get(0)), parseArithExpr(node.getChildren().get(1)));
+    }
+
+    private static ABoolExpr parseGreaterThan(XMLNode node) {
+        return new GreaterThan(parseArithExpr(node.getChildren().get(0)), parseArithExpr(node.getChildren().get(1)));
+    }
+
+    /*public static Machine parseMachine(File file) {
         XMLDocument document = XMLParser.parse(file);
         XMLNode root = document.getRoot();
         if (!root.getName().equals("MACHINE")) {
-            throw new Error("Unable to parse machine from file \"" + file + "\": the root node must be a \"MACHINE\" node (\"" + root.getName() + "\" found).");
+            throw new Error("Unable to parse machine from file \"" + file + "\": the root node must be a \"MACHINE\" node (\"" + root.getName() + "\" given).");
         }
         if(!root.getAttributes().containsKey("name")){
             throw new Error("A \"MACHINE\" node must have a \"name\" attribute.");
@@ -44,7 +275,7 @@ public final class EventBParser {
                         throw new Error("Variable \"" + variable.getName() + "\" has already been declared.");
                     }
                 } else {
-                    throw new Error("The children nodes of the \"VARIABLES\" node must only be \"CVariable\" nodes (\"" + child.getName() + "\" found).");
+                    throw new Error("The children nodes of the \"VARIABLES\" node must only be \"CVariable\" nodes (\"" + child.getName() + "\" given).");
                 }
             }
         }
@@ -58,7 +289,7 @@ public final class EventBParser {
             }
             XMLNode child = invariantNode.getChildren().get(0);
             if (Stream.of("CAnd", "COr", "CEquals", "CGreaterOrEqual", "CGreaterThan", "CLowerOrEqual", "CLowerThan", "CNot", "CTrue", "CFalse").noneMatch(nodeName -> child.getName().equals(nodeName))) {
-                throw new Error("The children nodes of the \"INVARIANT\" node must only be \"CAnd\", \"COr\", \"CEquals\", \"CGreaterOrEqual\", \"CGreaterThan\", \"CLowerOrEqual\", \"CLowerThan\" or \"CNot\" nodes (\"" + child.getName() + "\" found).");
+                throw new Error("The children nodes of the \"INVARIANT\" node must only be \"CAnd\", \"COr\", \"CEquals\", \"CGreaterOrEqual\", \"CGreaterThan\", \"CLowerOrEqual\", \"CLowerThan\" or \"CNot\" nodes (\"" + child.getName() + "\" given).");
             }
             invariant = new Invariant((ABoolExpr) parseNode(child));
         }
@@ -76,7 +307,7 @@ public final class EventBParser {
         if (eventsNode != null) {
             for (XMLNode child : eventsNode.getChildren()) {
                 if (Stream.of("CNonGuardedEvent", "CGuardedEvent", "CAnyEvent", "CMultipleAssignment").noneMatch(nodeName -> child.getName().equals(nodeName))) {
-                    throw new Error("The children nodes of the \"EVENTS\" node must only be \"CNonGuardedEvent\", \"CGuardedEvent\", \"CAnyEvent\" or \"CMultipleAssignment\" nodes (" + child.getName() + " found)");
+                    throw new Error("The children nodes of the \"EVENTS\" node must only be \"CNonGuardedEvent\", \"CGuardedEvent\", \"CAnyEvent\" or \"CMultipleAssignment\" nodes (" + child.getName() + " given)");
                 }
                 Event event = (Event) parseNode(child);
                 if (events.stream().anyMatch(declaredEvent -> declaredEvent.getName().equals(event.getName()))) {
@@ -86,9 +317,9 @@ public final class EventBParser {
             }
         }
         return new Machine(name, new LinkedHashSet<>(), variables, invariant, initialisation, events);
-    }
+    }*/
 
-    private static AEventBObject parseNode(XMLNode node) {
+    /*private static AEventBObject parseNode(XMLNode node) {
         Set<IntVariable> quantifiedVariables;
         switch (node.getName()) {
             case "CVariable":
@@ -261,6 +492,6 @@ public final class EventBParser {
             default:
                 throw new Error("Unable to parse node \"" + node.getName() + "\": this node is not handled yet by the parser.");
         }
-    }
+    }*/
 
 }

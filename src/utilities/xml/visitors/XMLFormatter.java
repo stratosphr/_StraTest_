@@ -1,11 +1,12 @@
 package utilities.xml.visitors;
 
 import utilities.AFormatter;
-import utilities.Chars;
 import utilities.xml.XMLDocument;
 import utilities.xml.XMLNode;
 
 import java.util.stream.Collectors;
+
+import static utilities.Chars.NEW_LINE;
 
 /**
  * Created by gvoiron on 25/11/16.
@@ -23,10 +24,10 @@ public final class XMLFormatter extends AFormatter {
         if (xmlNode.getChildren().isEmpty()) {
             str += "/>";
         } else {
-            str += ">" + Chars.NEW_LINE;
+            str += ">" + NEW_LINE;
             indentRight();
             for (XMLNode child : xmlNode.getChildren()) {
-                str += indent() + child.accept(this) + Chars.NEW_LINE;
+                str += indent() + child.accept(this) + NEW_LINE;
             }
             indentLeft();
             str += indent() + "<" + xmlNode.getName() + "/>";

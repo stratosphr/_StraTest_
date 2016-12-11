@@ -1,7 +1,8 @@
 package eventb.visitors;
 
+import eventb.Event;
 import eventb.Machine;
-import eventb.events.*;
+import eventb.substitutions.*;
 import eventb.exprs.arith.*;
 import eventb.exprs.bool.*;
 import utilities.AFormatter;
@@ -97,11 +98,11 @@ public final class EventBFormatter extends AFormatter {
         if (!machine.getSets().isEmpty()) {
             throw new Error("Sets are not yet handled by the formatter.");
         }
-        if (!machine.getVariables().isEmpty()) {
+        if (!machine.getAssignables().isEmpty()) {
             str += NEW_LINE;
             str += indent() + "VARIABLES" + NEW_LINE;
             indentRight();
-            str += indent() + machine.getVariables().stream().map(assignable -> assignable.accept(this)).collect(Collectors.joining("," + NEW_LINE + indent())) + NEW_LINE;
+            str += indent() + machine.getAssignables().stream().map(assignable -> assignable.accept(this)).collect(Collectors.joining("," + NEW_LINE + indent())) + NEW_LINE;
             indentLeft();
         }
         str += NEW_LINE;

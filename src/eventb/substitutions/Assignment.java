@@ -1,4 +1,4 @@
-package eventb.events;
+package eventb.substitutions;
 
 import eventb.exprs.arith.AArithExpr;
 import eventb.exprs.arith.AAssignable;

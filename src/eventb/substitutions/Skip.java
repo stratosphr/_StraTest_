@@ -1,4 +1,4 @@
-package eventb.events;
+package eventb.substitutions;
 
 import eventb.visitors.EventBFormatter;
 

@@ -1,6 +1,6 @@
-package eventb.events;
+package eventb;
 
-import eventb.AEventBObject;
+import eventb.substitutions.ASubstitution;
 import eventb.visitors.EventBFormatter;
 
 /**

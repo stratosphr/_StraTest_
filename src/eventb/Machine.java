@@ -1,13 +1,14 @@
 package eventb;
 
-import eventb.events.ASubstitution;
-import eventb.events.Event;
+import eventb.substitutions.ASubstitution;
 import eventb.exprs.arith.AAssignable;
 import eventb.exprs.bool.Invariant;
 import eventb.visitors.EventBFormatter;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import static eventb.parsers.metamodel.EventBRegex.IDENTIFIER;
 
 /**
  * Created by gvoiron on 28/11/16.
@@ -17,21 +18,29 @@ public final class Machine extends AEventBObject {
 
     private final String name;
     private final LinkedHashSet<Object> sets;
-    private final Set<AAssignable> variables;
+    private final LinkedHashSet<AAssignable> variables;
     private final Invariant invariant;
     private final ASubstitution initialisation;
-    private final Set<Event> events;
+    private final LinkedHashSet<Event> events;
 
-    public Machine(String name, LinkedHashSet<Object> sets, Set<AAssignable> variables, Invariant invariant, ASubstitution initialisation, LinkedHashSet<Event> events) {
+    public Machine(String name, LinkedHashSet<Object> sets, LinkedHashSet<AAssignable> assignables, Invariant invariant, ASubstitution initialisation, LinkedHashSet<Event> events) throws Error {
+        if (!name.matches(IDENTIFIER)) {
+            throw new Error("The name of a machine must match the regular expression \"" + IDENTIFIER + "\" (\"" + name + "\" given).");
+        }
         if (!sets.isEmpty()) {
             throw new Error("Sets are not yet handled.");
         }
         this.name = name;
         this.sets = sets;
-        this.variables = variables;
+        this.variables = assignables;
         this.invariant = invariant;
         this.initialisation = initialisation;
         this.events = events;
+    }
+
+    @Override
+    public String accept(EventBFormatter visitor) {
+        return visitor.visit(this);
     }
 
     public String getName() {
@@ -42,7 +51,7 @@ public final class Machine extends AEventBObject {
         return sets;
     }
 
-    public Set<AAssignable> getVariables() {
+    public LinkedHashSet<AAssignable> getAssignables() {
         return variables;
     }
 
@@ -56,11 +65,6 @@ public final class Machine extends AEventBObject {
 
     public Set<Event> getEvents() {
         return events;
-    }
-
-    @Override
-    public String accept(EventBFormatter visitor) {
-        return visitor.visit(this);
     }
 
 }

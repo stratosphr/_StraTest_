@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+        <!ELEMENT MACHINE (VARIABLES, INVARIANT, INITIALISATION, EVENTS)>
+        <!ATTLIST MACHINE name ID #REQUIRED>
+
+        <!ELEMENT VARIABLES (CVariable)+>
+        <!ELEMENT INVARIANT (CInDomain | CFalse | CTrue | CNot | CAnd | COr | CEquals | CGreaterOrEqual | CGreater | CLowerOrEqual | CLowerThan)>
+        <!ELEMENT INITIALISATION (CAssignment | CMultipleAssignment | CAny | CGuarded | CIf | CSkip | CNDChoice | CParallel)>
+        <!ELEMENT EVENTS (CGuardedEvent | CAnyEvent | CNonGuardedEvent)+>
+
+        <!ELEMENT CVariable EMPTY>
+        <!ATTLIST CVariable val CDATA #REQUIRED>
+        <!ELEMENT CNumber EMPTY>
+        <!ATTLIST CNumber val CDATA #REQUIRED>
+        <!ELEMENT CPlus ((CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision), (CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision)+)>
+        <!ELEMENT CMinus ((CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision), (CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision)+)>
+        <!ELEMENT CSubtraction ((CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision), (CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision)+)>
+        <!ELEMENT CProduct ((CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision), (CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision)+)>
+        <!ELEMENT CDivision ((CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision), (CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision)+)>
+
+        <!ELEMENT CInDomain (CVariable)>
+        <!ATTLIST CInDomain type CDATA #REQUIRED>
+        <!ELEMENT CFalse EMPTY>
+        <!ELEMENT CTrue EMPTY>
+        <!ELEMENT CNot (CInDomain | CFalse | CTrue | CNot | CAnd | COr | CEquals | CGreaterOrEqual | CGreater | CLowerOrEqual | CLowerThan)>
+        <!ELEMENT CAnd ((CInDomain | CFalse | CTrue | CNot | CAnd | COr | CEquals | CGreaterOrEqual | CGreater | CLowerOrEqual | CLowerThan), (CInDomain | CFalse | CTrue | CNot | CAnd | COr | CEquals | CGreaterOrEqual | CGreater | CLowerOrEqual | CLowerThan)+)>
+        <!ELEMENT COr ((CInDomain | CFalse | CTrue | CNot | CAnd | COr | CEquals | CGreaterOrEqual | CGreater | CLowerOrEqual | CLowerThan), (CInDomain | CFalse | CTrue | CNot | CAnd | COr | CEquals | CGreaterOrEqual | CGreater | CLowerOrEqual | CLowerThan)+)>
+        <!ELEMENT CEquals ((CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision), (CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision))>
+        <!ELEMENT CGreaterOrEqual ((CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision), (CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision))>
+        <!ELEMENT CGreater ((CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision), (CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision))>
+        <!ELEMENT CLowerOrEqual ((CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision), (CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision))>
+        <!ELEMENT CLowerThan ((CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision), (CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision))>
+
+        <!ELEMENT CSkip EMPTY>
+        <!ELEMENT CAssignment (CVariable, (CNumber | CVariable | CPlus | CMinus | CSubtraction | CProduct | CDivision))>
+        <!ELEMENT CMultipleAssignment (CAssignment, CAssignment+)>
+        <!ELEMENT CAny (VariablesList, (CFalse | CTrue | CNot | CAnd | COr | CEquals | CGreaterOrEqual | CGreater | CLowerOrEqual | CLowerThan), (CAssignment | CMultipleAssignment | CAny | CGuarded | CIf | CSkip | CNDChoice | CParallel))>
+        <!ELEMENT CGuarded ((CInDomain | CFalse | CTrue | CNot | CAnd | COr | CEquals | CGreaterOrEqual | CGreater | CLowerOrEqual | CLowerThan), (CAssignment | CMultipleAssignment | CAny | CGuarded | CIf | CSkip | CNDChoice | CParallel))>
+        <!ELEMENT CIf ((CInDomain | CFalse | CTrue | CNot | CAnd | COr | CEquals | CGreaterOrEqual | CGreater | CLowerOrEqual | CLowerThan), (CAssignment | CMultipleAssignment | CAny | CGuarded | CIf | CSkip | CNDChoice | CParallel), (CAssignment | CMultipleAssignment | CAny | CGuarded | CIf | CSkip | CNDChoice | CParallel)?)>
+        <!ELEMENT CNDChoice ((CAssignment | CMultipleAssignment | CAny | CGuarded | CIf | CSkip | CNDChoice | CParallel), (CAssignment | CMultipleAssignment | CAny | CGuarded | CIf | CSkip | CNDChoice | CParallel)+)>
+        <!ELEMENT CParallel ((CAssignment | CMultipleAssignment | CAny | CGuarded | CIf | CSkip | CNDChoice), (CAssignment | CMultipleAssignment | CAny | CGuarded | CIf | CSkip | CNDChoice)+)>
+
+        <!ELEMENT VariablesList (CVariable+)>
+
+        <!ELEMENT CGuardedEvent ((CInDomain | CFalse | CTrue | CNot | CAnd | COr | CEquals | CGreaterOrEqual | CGreater | CLowerOrEqual | CLowerThan), (CAssignment | CMultipleAssignment | CAny | CGuarded | CIf | CSkip | CNDChoice | CParallel))>
+        <!ATTLIST CGuardedEvent name CDATA #REQUIRED>
+        <!ELEMENT CNonGuardedEvent (CAssignment | CMultipleAssignment | CAny | CGuarded | CIf | CSkip | CNDChoice | CParallel)>
+        <!ATTLIST CNonGuardedEvent name CDATA #REQUIRED>
+        <!ELEMENT CAnyEvent (VariablesList, (CInDomain | CFalse | CTrue | CNot | CAnd | COr | CEquals | CGreaterOrEqual | CGreater | CLowerOrEqual | CLowerThan), (CAssignment | CMultipleAssignment | CAny | CGuarded | CIf | CSkip | CNDChoice | CParallel))>
+        <!ATTLIST CAnyEvent name CDATA #REQUIRED>

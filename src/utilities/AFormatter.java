@@ -2,6 +2,8 @@ package utilities;
 
 import java.util.Collections;
 
+import static utilities.Chars.TABULATION;
+
 /**
  * Created by gvoiron on 25/11/16.
  * Time : 15:00
@@ -15,7 +17,7 @@ public abstract class AFormatter {
     }
 
     public String indent() {
-        return String.join("", Collections.nCopies(indentation, Chars.TABULATION));
+        return String.join("", Collections.nCopies(indentation, TABULATION));
     }
 
     public void indentLeft() {

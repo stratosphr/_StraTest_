@@ -1,15 +1,19 @@
 package eventb.exprs.arith;
 
+import eventb.exprs.INaryOperation;
 import eventb.visitors.EventBFormatter;
+import eventb.visitors.SMTLibFormatter;
 
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by gvoiron on 24/11/16.
  * Time : 16:56
  */
-public final class Sum extends AArithExpr {
+public final class Sum extends AArithExpr implements INaryOperation {
 
     private final List<AArithExpr> operands;
 
@@ -25,6 +29,17 @@ public final class Sum extends AArithExpr {
         return visitor.visit(this);
     }
 
+    @Override
+    public String accept(SMTLibFormatter visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
+    public LinkedHashSet<IntVariable> getVariables() {
+        return getOperands().stream().flatMap(operand -> operand.getVariables().stream()).collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    @Override
     public List<AArithExpr> getOperands() {
         return operands;
     }

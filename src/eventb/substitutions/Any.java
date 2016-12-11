@@ -1,4 +1,4 @@
-package eventb.events;
+package eventb.substitutions;
 
 import eventb.exprs.arith.IntVariable;
 import eventb.exprs.bool.ABoolExpr;

@@ -1,0 +1,85 @@
+<MACHINE name="system">
+
+    <VARIABLES>
+        <CVariable val="var1"/>
+        <CVariable val="var2"/>
+    </VARIABLES>
+
+    <INVARIANT>
+        <COr>
+            <CAnd>
+                <CNot>
+                    <CTrue/>
+                </CNot>
+                <CFalse/>
+            </CAnd>
+            <CTrue/>
+        </COr>
+    </INVARIANT>
+
+    <INITIALISATION>
+        <CParallel>
+            <CAssignment>
+                <CVariable val="var1"/>
+                <CVariable val="var2"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="var1"/>
+                <CSum>
+                    <CVariable val="var1"/>
+                    <CVariable val="var2"/>
+                    <CNumber val="10"/>
+                </CSum>
+            </CAssignment>
+            <CAny>
+                <VariablesList>
+                    <CVariable val="i"/>
+                    <CVariable val="j"/>
+                </VariablesList>
+                <CAnd>
+                    <CNot>
+                        <CFalse/>
+                    </CNot>
+                    <CNot>
+                        <CNot>
+                            <COr>
+                                <CTrue/>
+                                <CFalse/>
+                            </COr>
+                        </CNot>
+                    </CNot>
+                </CAnd>
+                <CParallel>
+                    <CAssignment>
+                        <CVariable val="var1"/>
+                        <CVariable val="i"/>
+                    </CAssignment>
+                    <CAssignment>
+                        <CVariable val="var2"/>
+                        <CVariable val="j"/>
+                    </CAssignment>
+                </CParallel>
+            </CAny>
+        </CParallel>
+    </INITIALISATION>
+
+    <EVENTS>
+        <CGuardedEvent name="ev1">
+            <CEquals>
+                <CVariable val="var1"/>
+                <CVariable val="var2"/>
+            </CEquals>
+            <CAssignment>
+                <CVariable val="var1"/>
+                <CNumber val="100"/>
+            </CAssignment>
+        </CGuardedEvent>
+        <CNonGuardedEvent name="ev2">
+            <CAssignment>
+                <CVariable val="var1"/>
+                <CVariable val="var2"/>
+            </CAssignment>
+        </CNonGuardedEvent>
+    </EVENTS>
+
+</MACHINE>
