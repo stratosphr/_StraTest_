@@ -10,12 +10,12 @@ import eventb.visitors.IEventBFormatterVisitable;
 public abstract class AEventBObject implements IEventBFormatterVisitable {
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return (getClass() + "_" + toString()).hashCode();
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         return getClass().equals(o.getClass()) && ((this == o) || toString().equals(o.toString()));
     }
 

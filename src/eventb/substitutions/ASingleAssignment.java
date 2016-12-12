@@ -1,7 +1,9 @@
 package eventb.substitutions;
 
+import eventb.Machine;
 import eventb.exprs.arith.AArithExpr;
 import eventb.exprs.arith.AAssignable;
+import eventb.exprs.bool.ABoolExpr;
 
 /**
  * Created by gvoiron on 25/11/16.
@@ -16,6 +18,8 @@ public abstract class ASingleAssignment extends AAssignment {
         this.assignable = assignable;
         this.value = value;
     }
+
+    protected abstract ABoolExpr getPrd_(Machine machine, boolean isInMultipleAssignment);
 
     public AAssignable getAssignable() {
         return assignable;

@@ -5,4 +5,5 @@ package eventb.substitutions;
  * Time : 17:39
  */
 public abstract class AAssignment extends ASubstitution {
+
 }

@@ -3,6 +3,7 @@ package eventb.substitutions;
 import eventb.Machine;
 import eventb.exprs.bool.ABoolExpr;
 import eventb.exprs.bool.And;
+import eventb.exprs.bool.Equals;
 import eventb.visitors.EventBFormatter;
 
 import java.util.LinkedHashSet;
@@ -31,7 +32,7 @@ public final class MultipleAssignment extends AAssignment {
 
     @Override
     public ABoolExpr getPrd(Machine machine) {
-        return new And(getAssignments().stream().map(assignment -> assignment.getPrd(machine)).toArray(ABoolExpr[]::new));
+        return new And(Stream.concat(getAssignments().stream().map(singleAssignment -> singleAssignment.getPrd_(machine, true)), machine.getAssignables().stream().filter(assignable -> getAssignments().stream().noneMatch(singleAssignment -> singleAssignment.getAssignable().equals(assignable))).map(assignable -> new Equals(assignable.prime(), assignable))).toArray(ABoolExpr[]::new));
     }
 
     public LinkedHashSet<ASingleAssignment> getAssignments() {
