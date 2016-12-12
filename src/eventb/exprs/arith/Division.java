@@ -2,6 +2,7 @@ package eventb.exprs.arith;
 
 import eventb.exprs.INaryOperation;
 import eventb.visitors.EventBFormatter;
+import eventb.visitors.Primer;
 import eventb.visitors.SMTLibFormatter;
 
 import java.util.Arrays;
@@ -22,6 +23,11 @@ public final class Division extends AArithExpr implements INaryOperation {
             throw new Error("A division requires at least 2 operands (" + operands.length + " given).");
         }
         this.operands = Arrays.asList(operands);
+    }
+
+    @Override
+    public AArithExpr accept(Primer visitor) {
+        return visitor.visit(this);
     }
 
     @Override

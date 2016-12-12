@@ -4,6 +4,7 @@ import eventb.exprs.IBinaryOperation;
 import eventb.exprs.arith.AArithExpr;
 import eventb.exprs.arith.IntVariable;
 import eventb.visitors.EventBFormatter;
+import eventb.visitors.Primer;
 import eventb.visitors.SMTLibFormatter;
 
 import java.util.LinkedHashSet;
@@ -22,6 +23,11 @@ public final class Equals extends ABoolExpr implements IBinaryOperation {
     public Equals(AArithExpr left, AArithExpr right) {
         this.left = left;
         this.right = right;
+    }
+
+    @Override
+    public ABoolExpr accept(Primer visitor) {
+        return visitor.visit(this);
     }
 
     @Override

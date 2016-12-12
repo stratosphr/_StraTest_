@@ -1,5 +1,8 @@
 package eventb.substitutions;
 
+import eventb.Machine;
+import eventb.exprs.bool.ABoolExpr;
+import eventb.exprs.bool.Or;
 import eventb.visitors.EventBFormatter;
 
 import java.util.Arrays;
@@ -18,6 +21,11 @@ public final class Choice extends ASubstitution {
             throw new Error("A \"Choice\" substitution requires at least one substitution (none given).");
         }
         this.substitutions = Arrays.asList(substitutions);
+    }
+
+    @Override
+    public ABoolExpr getPrd(Machine machine) {
+        return new Or(getSubstitutions().stream().map(substitution -> substitution.getPrd(machine)).toArray(ABoolExpr[]::new));
     }
 
     @Override

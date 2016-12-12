@@ -1,5 +1,8 @@
 package eventb.substitutions;
 
+import eventb.Machine;
+import eventb.exprs.bool.ABoolExpr;
+import eventb.exprs.bool.True;
 import eventb.visitors.EventBFormatter;
 
 /**
@@ -11,6 +14,11 @@ public final class Skip extends ASubstitution {
     @Override
     public String accept(EventBFormatter visitor) {
         return visitor.visit(this);
+    }
+
+    @Override
+    public ABoolExpr getPrd(Machine machine) {
+        return new True();
     }
 
 }

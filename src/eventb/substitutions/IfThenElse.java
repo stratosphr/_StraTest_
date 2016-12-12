@@ -1,6 +1,8 @@
 package eventb.substitutions;
 
+import eventb.Machine;
 import eventb.exprs.bool.ABoolExpr;
+import eventb.exprs.bool.Not;
 import eventb.visitors.EventBFormatter;
 
 /**
@@ -21,6 +23,11 @@ public final class IfThenElse extends ASubstitution {
         this.condition = condition;
         this.thenPart = thenPart;
         this.elsePart = elsePart;
+    }
+
+    @Override
+    public ABoolExpr getPrd(Machine machine) {
+        return new Choice(new Select(getCondition(), getThenPart()), new Select(new Not(getCondition()), getElsePart())).getPrd(machine);
     }
 
     public ABoolExpr getCondition() {

@@ -39,7 +39,7 @@ public final class EventBParser {
     }
 
     private static LinkedHashSet<AAssignable> parseVariables(XMLNode node) {
-        return node.getChildren().stream().map(EventBParser::parseAssignable).collect(Collectors.toCollection(LinkedHashSet::new));
+        return node.getChildren().stream().map(EventBParser::parseVariable).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     private static Invariant parseInvariant(XMLNode node) {
@@ -75,8 +75,8 @@ public final class EventBParser {
         }
     }
 
-    private static IntVariable[] parseQuantifiedVariables(XMLNode node) {
-        return node.getChildren().stream().map(EventBParser::parseVariable).toArray(IntVariable[]::new);
+    private static QuantifiedVariable[] parseQuantifiedVariables(XMLNode node) {
+        return node.getChildren().stream().map(EventBParser::parseQuantifiedVariable).toArray(QuantifiedVariable[]::new);
     }
 
     private static Event parseNonGuardedEvent(XMLNode node) {
@@ -101,8 +101,8 @@ public final class EventBParser {
                 return parseSkip(node);
             case EBMEntities.PARALLEL:
                 return parseParallel(node);
-            case EBMEntities.ASSIGNMENT:
-                return parseAssignment(node);
+            case EBMEntities.VARIABLE_ASSIGNMENT:
+                return parseVariableAssignment(node);
             case EBMEntities.MULTIPLE_ASSIGNMENT:
                 return parseMultipleAssignment(node);
             case EBMEntities.SELECT:
@@ -118,8 +118,16 @@ public final class EventBParser {
         }
     }
 
+    private static ASubstitution parseParallel(XMLNode node) {
+        return new Parallel(node.getChildren().stream().map(EventBParser::parseSubstitution).toArray(ASubstitution[]::new));
+    }
+
     private static ASubstitution parseSkip(XMLNode node) {
         return new Skip();
+    }
+
+    private static ASubstitution parseVariableAssignment(XMLNode node) {
+        return new VariableAssignment(parseVariable(node.getChildren().get(0)), parseArithExpr(node.getChildren().get(1)));
     }
 
     private static ASubstitution parseIf(XMLNode node) {
@@ -130,14 +138,6 @@ public final class EventBParser {
         } else {
             throw new Error("Unable to parse node \"" + node.getName() + "\": this node is not handled yet by the parser.");
         }
-    }
-
-    private static ASubstitution parseParallel(XMLNode node) {
-        return new Parallel(node.getChildren().stream().map(EventBParser::parseSubstitution).toArray(ASubstitution[]::new));
-    }
-
-    private static ASubstitution parseAssignment(XMLNode node) {
-        return new Assignment(parseAssignable(node.getChildren().get(0)), parseArithExpr(node.getChildren().get(1)));
     }
 
     private static ASubstitution parseMultipleAssignment(XMLNode node) {
@@ -198,21 +198,16 @@ public final class EventBParser {
         }
     }
 
-    private static AAssignable parseAssignable(XMLNode node) {
-        switch (node.getName()) {
-            case VARIABLE:
-                return parseVariable(node);
-            default:
-                throw new Error("Unable to parse node \"" + node.getName() + "\": this node is not handled yet by the parser.");
-        }
-    }
-
     private static IntVariable parseVariable(XMLNode node) {
         if (!node.getAttributes().get(VAL).matches(IDENTIFIER)) {
             throw new Error("The \"" + VAL + "\" attribute for a \"" + node.getName() + "\" node must match the regular expression \"" + IDENTIFIER + "\" (\"" + node.getAttributes().get(VAL) + "\" given).");
         } else {
             return new IntVariable(node.getAttributes().get(VAL));
         }
+    }
+
+    private static QuantifiedVariable parseQuantifiedVariable(XMLNode node) {
+        return new QuantifiedVariable(parseVariable(node));
     }
 
     private static AArithExpr parseSum(XMLNode node) {
@@ -391,12 +386,12 @@ public final class EventBParser {
                 if (node.getChildren().size() != 2) {
                     throw new Error("The number of children for a \"CAssignment\" node must be 2 (" + node.getChildren().size() + " given)");
                 }
-                return new Assignment((AAssignable) parseNode(node.getChildren().get(0)), (AArithExpr) parseNode(node.getChildren().get(1)));
+                return new ASingleAssignment((AAssignable) parseNode(node.getChildren().get(0)), (AArithExpr) parseNode(node.getChildren().get(1)));
             case "CMultipleAssignment":
                 if (node.getChildren().isEmpty()) {
                     throw new Error("A \"CMultipleAssignment\" node must have at least 1 child (none given).");
                 }
-                return new Parallel(node.getChildren().stream().map(assignment -> (Assignment) parseNode(assignment)).toArray(Assignment[]::new));
+                return new Parallel(node.getChildren().stream().map(assignment -> (ASingleAssignment) parseNode(assignment)).toArray(ASingleAssignment[]::new));
             case "CGuarded":
                 if (node.getChildren().size() != 2) {
                     throw new Error("The number of children for a \"CGuardedEvent\" node must be 2 (" + node.getChildren().size() + " given)");

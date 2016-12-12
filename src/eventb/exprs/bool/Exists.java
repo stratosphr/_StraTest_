@@ -1,17 +1,25 @@
 package eventb.exprs.bool;
 
 import eventb.exprs.arith.IntVariable;
+import eventb.exprs.arith.QuantifiedVariable;
 import eventb.visitors.EventBFormatter;
 import eventb.visitors.Primer;
 import eventb.visitors.SMTLibFormatter;
 
+import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.stream.Collectors;
 
 /**
- * Created by gvoiron on 28/11/16.
- * Time : 08:59
+ * Created by gvoiron on 12/12/16.
+ * Time : 14:36
  */
-public final class False extends ABoolExpr {
+public final class Exists extends AQuantifier {
+
+    public Exists(ABoolExpr expression, QuantifiedVariable... quantifiedVariables) {
+        super(expression, quantifiedVariables);
+
+    }
 
     @Override
     public ABoolExpr accept(Primer visitor) {
@@ -30,7 +38,7 @@ public final class False extends ABoolExpr {
 
     @Override
     public LinkedHashSet<IntVariable> getVariables() {
-        return new LinkedHashSet<>();
+        return getExpression().getVariables().stream().filter(intVariable -> getQuantifiedVariables().stream().noneMatch(quantifiedVariable -> quantifiedVariable.getVariable().equals(intVariable))).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
 }

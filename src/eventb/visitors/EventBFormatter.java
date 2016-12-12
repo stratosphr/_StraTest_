@@ -2,9 +2,9 @@ package eventb.visitors;
 
 import eventb.Event;
 import eventb.Machine;
-import eventb.substitutions.*;
 import eventb.exprs.arith.*;
 import eventb.exprs.bool.*;
+import eventb.substitutions.*;
 import utilities.AFormatter;
 
 import java.util.stream.Collectors;
@@ -23,6 +23,10 @@ public final class EventBFormatter extends AFormatter {
 
     public String visit(IntVariable intVariable) {
         return intVariable.getName();
+    }
+
+    public String visit(QuantifiedVariable quantifiedVariable) {
+        return quantifiedVariable.getVariable().accept(this);
     }
 
     public String visit(Sum sum) {
@@ -51,6 +55,10 @@ public final class EventBFormatter extends AFormatter {
 
     public String visit(Predicate predicate) {
         return "(" + predicate.getName() + " " + EQ_DEF + " " + predicate.getExpression().accept(this) + ")";
+    }
+
+    public String visit(Invariant invariant) {
+        return invariant.getExpression().accept(this);
     }
 
     public String visit(Not not) {
@@ -85,8 +93,12 @@ public final class EventBFormatter extends AFormatter {
         return "(" + greaterOrEqual.getLeft().accept(this) + " " + GEQ + " " + greaterOrEqual.getRight().accept(this) + ")";
     }
 
-    public String visit(Invariant invariant) {
-        return invariant.getExpression().accept(this);
+    public String visit(Exists exists) {
+        return EXISTS + "(" + exists.getQuantifiedVariables().stream().map(intVariable -> intVariable.accept(this)).collect(Collectors.joining(", ")) + ").(" + exists.getExpression().accept(this) + ")";
+    }
+
+    public String visit(ForAll forAll) {
+        return FORALL + "(" + forAll.getQuantifiedVariables().stream().map(intVariable -> intVariable.accept(this)).collect(Collectors.joining(", ")) + ").(" + forAll.getExpression().accept(this) + ")";
     }
 
     public String visit(Machine machine) {
@@ -136,8 +148,16 @@ public final class EventBFormatter extends AFormatter {
         return "SKIP";
     }
 
-    public String visit(Assignment assignment) {
-        return assignment.getAssignable().accept(this) + " := " + assignment.getValue().accept(this);
+    public String visit(Parallel parallel) {
+        return parallel.getSubstitutions().stream().map(substitution -> substitution.accept(this)).collect(Collectors.joining(" ||" + NEW_LINE + indent()));
+    }
+
+    public String visit(VariableAssignment variableAssignment) {
+        return variableAssignment.getAssignable().accept(this) + " := " + variableAssignment.getValue().accept(this);
+    }
+
+    public String visit(MultipleAssignment multipleAssignment) {
+        return multipleAssignment.getAssignments().stream().map(assignment -> assignment.accept(this)).collect(Collectors.joining(" ||" + NEW_LINE + indent()));
     }
 
     public String visit(Select select) {
@@ -204,10 +224,6 @@ public final class EventBFormatter extends AFormatter {
         indentLeft();
         str += indent() + "END";
         return str;
-    }
-
-    public String visit(Parallel parallel) {
-        return parallel.getSubstitutions().stream().map(substitution -> substitution.accept(this)).collect(Collectors.joining(" ||" + NEW_LINE + indent()));
     }
 
 }

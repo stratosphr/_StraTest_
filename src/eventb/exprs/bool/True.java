@@ -2,6 +2,7 @@ package eventb.exprs.bool;
 
 import eventb.exprs.arith.IntVariable;
 import eventb.visitors.EventBFormatter;
+import eventb.visitors.Primer;
 import eventb.visitors.SMTLibFormatter;
 
 import java.util.LinkedHashSet;
@@ -25,6 +26,11 @@ public final class True extends ABoolExpr {
     @Override
     public LinkedHashSet<IntVariable> getVariables() {
         return new LinkedHashSet<>();
+    }
+
+    @Override
+    public ABoolExpr accept(Primer visitor) {
+        return visitor.visit(this);
     }
 
 }

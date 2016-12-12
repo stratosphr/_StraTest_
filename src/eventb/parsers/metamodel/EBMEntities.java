@@ -24,7 +24,7 @@ public final class EBMEntities {
 
     public static final String PARALLEL = "CParallel";
 
-    public static final String ASSIGNMENT = "CAssignment";
+    public static final String VARIABLE_ASSIGNMENT = "CAssignment";
 
     public static final String MULTIPLE_ASSIGNMENT = "CMultipleAssignment";
 

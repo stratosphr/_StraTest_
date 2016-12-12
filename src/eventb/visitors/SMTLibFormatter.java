@@ -60,6 +60,10 @@ public final class SMTLibFormatter extends AFormatter {
         return intVariable.getName();
     }
 
+    public String visit(QuantifiedVariable quantifiedVariable) {
+        return quantifiedVariable.getName();
+    }
+
     public String visit(Sum sum) {
         return visit(sum, "+");
     }
@@ -86,6 +90,10 @@ public final class SMTLibFormatter extends AFormatter {
 
     public String visit(Predicate predicate) {
         return predicate.getExpression().accept(this);
+    }
+
+    public String visit(Invariant invariant) {
+        return invariant.getExpression().accept(this);
     }
 
     public String visit(Not not) {
@@ -116,8 +124,24 @@ public final class SMTLibFormatter extends AFormatter {
         return visit(greaterOrEqual, ">=");
     }
 
-    public String visit(Invariant invariant) {
-        return invariant.getExpression().accept(this);
+    public String visit(Exists exists) {
+        String formatted = "(exists" + NEW_LINE;
+        indentRight();
+        formatted += indent() + "(" + exists.getQuantifiedVariables().stream().map(intVariable -> "(" + intVariable.accept(this) + " Int)").collect(Collectors.joining(NEW_LINE + indent())) + NEW_LINE;
+        formatted += indent() + exists.getExpression().accept(this) + NEW_LINE;
+        indentLeft();
+        formatted += indent() + ")";
+        return formatted;
+    }
+
+    public String visit(ForAll forAll) {
+        String formatted = "(forall" + NEW_LINE;
+        indentRight();
+        formatted += indent() + "(" + forAll.getQuantifiedVariables().stream().map(intVariable -> "(" + intVariable.accept(this) + " Int)").collect(Collectors.joining(NEW_LINE + indent())) + NEW_LINE;
+        formatted += indent() + forAll.getExpression().accept(this) + NEW_LINE;
+        indentLeft();
+        formatted += indent() + ")";
+        return formatted;
     }
 
 }

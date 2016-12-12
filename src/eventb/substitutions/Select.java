@@ -1,6 +1,8 @@
 package eventb.substitutions;
 
+import eventb.Machine;
 import eventb.exprs.bool.ABoolExpr;
+import eventb.exprs.bool.And;
 import eventb.visitors.EventBFormatter;
 
 /**
@@ -17,6 +19,11 @@ public final class Select extends ASubstitution {
         this.substitution = substitution;
     }
 
+    @Override
+    public String accept(EventBFormatter visitor) {
+        return visitor.visit(this);
+    }
+
     public ABoolExpr getCondition() {
         return condition;
     }
@@ -26,8 +33,8 @@ public final class Select extends ASubstitution {
     }
 
     @Override
-    public String accept(EventBFormatter visitor) {
-        return visitor.visit(this);
+    public ABoolExpr getPrd(Machine machine) {
+        return new And(getCondition(), getSubstitution().getPrd(machine));
     }
 
 }

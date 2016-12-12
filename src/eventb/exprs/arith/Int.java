@@ -1,6 +1,7 @@
 package eventb.exprs.arith;
 
 import eventb.visitors.EventBFormatter;
+import eventb.visitors.Primer;
 import eventb.visitors.SMTLibFormatter;
 
 import java.util.LinkedHashSet;
@@ -34,6 +35,11 @@ public final class Int extends AArithExpr {
 
     public Integer getValue() {
         return value;
+    }
+
+    @Override
+    public AArithExpr accept(Primer visitor) {
+        return visitor.visit(this);
     }
 
 }

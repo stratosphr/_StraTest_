@@ -2,6 +2,7 @@ package eventb.exprs.bool;
 
 import eventb.exprs.arith.IntVariable;
 import eventb.visitors.EventBFormatter;
+import eventb.visitors.Primer;
 import eventb.visitors.SMTLibFormatter;
 
 import java.util.LinkedHashSet;
@@ -16,6 +17,11 @@ public final class Invariant extends ABoolExpr {
 
     public Invariant(ABoolExpr expression) {
         this.expression = expression;
+    }
+
+    @Override
+    public ABoolExpr accept(Primer visitor) {
+        return visitor.visit(this);
     }
 
     @Override

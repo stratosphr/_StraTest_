@@ -1,6 +1,7 @@
 package eventb.exprs.arith;
 
 import eventb.visitors.EventBFormatter;
+import eventb.visitors.Primer;
 import eventb.visitors.SMTLibFormatter;
 
 import java.util.Collections;
@@ -29,6 +30,11 @@ public final class IntVariable extends AAssignable {
     @Override
     public LinkedHashSet<IntVariable> getVariables() {
         return new LinkedHashSet<>(Collections.singletonList(this));
+    }
+
+    @Override
+    public AArithExpr accept(Primer visitor) {
+        return visitor.visit(this);
     }
 
 }

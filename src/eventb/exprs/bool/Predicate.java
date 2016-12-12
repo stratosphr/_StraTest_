@@ -2,6 +2,7 @@ package eventb.exprs.bool;
 
 import eventb.exprs.arith.IntVariable;
 import eventb.visitors.EventBFormatter;
+import eventb.visitors.Primer;
 import eventb.visitors.SMTLibFormatter;
 
 import java.util.LinkedHashSet;
@@ -18,6 +19,11 @@ public class Predicate extends ABoolExpr {
     public Predicate(String name, ABoolExpr expression) {
         this.name = name;
         this.expression = expression;
+    }
+
+    @Override
+    public ABoolExpr accept(Primer visitor) {
+        return visitor.visit(this);
     }
 
     @Override

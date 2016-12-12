@@ -3,6 +3,7 @@ package eventb.exprs.bool;
 import eventb.exprs.IUnaryOperation;
 import eventb.exprs.arith.IntVariable;
 import eventb.visitors.EventBFormatter;
+import eventb.visitors.Primer;
 import eventb.visitors.SMTLibFormatter;
 
 import java.util.LinkedHashSet;
@@ -37,6 +38,11 @@ public final class Not extends ABoolExpr implements IUnaryOperation {
     @Override
     public ABoolExpr getOperand() {
         return operand;
+    }
+
+    @Override
+    public ABoolExpr accept(Primer visitor) {
+        return visitor.visit(this);
     }
 
 }

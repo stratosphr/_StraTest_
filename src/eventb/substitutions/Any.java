@@ -1,11 +1,15 @@
 package eventb.substitutions;
 
-import eventb.exprs.arith.IntVariable;
+import eventb.Machine;
+import eventb.exprs.arith.QuantifiedVariable;
 import eventb.exprs.bool.ABoolExpr;
+import eventb.exprs.bool.And;
+import eventb.exprs.bool.Exists;
 import eventb.visitors.EventBFormatter;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Created by gvoiron on 25/11/16.
@@ -15,18 +19,28 @@ public final class Any extends ASubstitution {
 
     private final ASubstitution substitution;
     private final ABoolExpr condition;
-    private final List<IntVariable> quantifiedVariables;
+    private final Set<QuantifiedVariable> quantifiedVariables;
 
-    public Any(ABoolExpr condition, ASubstitution substitution, IntVariable... quantifiedVariables) {
+    public Any(ABoolExpr condition, ASubstitution substitution, QuantifiedVariable... quantifiedVariables) {
         if (quantifiedVariables.length == 0) {
             throw new Error("A \"ANY\" substitution requires at least one quantified variable declaration (none given).");
         }
-        this.quantifiedVariables = Arrays.asList(quantifiedVariables);
+        this.quantifiedVariables = new LinkedHashSet<>(Arrays.asList(quantifiedVariables));
         this.condition = condition;
         this.substitution = substitution;
     }
 
-    public List<IntVariable> getQuantifiedVariables() {
+    @Override
+    public ABoolExpr getPrd(Machine machine) {
+        return new Exists(new And(getCondition(), getSubstitution().getPrd(machine)), getQuantifiedVariables().stream().toArray(QuantifiedVariable[]::new));
+    }
+
+    @Override
+    public String accept(EventBFormatter visitor) {
+        return visitor.visit(this);
+    }
+
+    public Set<QuantifiedVariable> getQuantifiedVariables() {
         return quantifiedVariables;
     }
 
@@ -36,11 +50,6 @@ public final class Any extends ASubstitution {
 
     public ASubstitution getSubstitution() {
         return substitution;
-    }
-
-    @Override
-    public String accept(EventBFormatter visitor) {
-        return visitor.visit(this);
     }
 
 }
