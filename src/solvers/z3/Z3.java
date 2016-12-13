@@ -31,6 +31,7 @@ public final class Z3 {
     }
 
     public void setCode(ABoolExpr expression) {
+        reset();
         Stream.of(SMTLibFormatter.format(expression).split(NEW_LINE)).forEach(code::add);
     }
 
@@ -44,15 +45,20 @@ public final class Z3 {
         }
     }
 
-    public Model getModel() {
-        return getSolver().getModel();
+    private void reset() {
+        code.clear();
+        solver.reset();
     }
 
-    private ArrayList<String> getCode() {
+    public Model getModel() {
+        return new Model(this, getSolver().getModel());
+    }
+
+    public ArrayList<String> getCode() {
         return code;
     }
 
-    private Context getContext() {
+    public Context getContext() {
         return context;
     }
 

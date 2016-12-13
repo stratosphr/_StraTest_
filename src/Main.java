@@ -1,6 +1,13 @@
+import com.microsoft.z3.Status;
 import eventb.Event;
 import eventb.Machine;
+import eventb.exprs.arith.Int;
+import eventb.exprs.arith.IntVariable;
+import eventb.exprs.bool.ABoolExpr;
+import eventb.exprs.bool.And;
+import eventb.exprs.bool.Equals;
 import eventb.parsers.EventBParser;
+import solvers.z3.Z3;
 
 import java.io.File;
 
@@ -24,6 +31,35 @@ public class Main {
         Event repair = threeBatteries.getEvents().stream().filter(event -> event.getName().equals("Repair")).findFirst().orElse(null);
         Event commute = threeBatteries.getEvents().stream().filter(event -> event.getName().equals("Commute")).findFirst().orElse(null);
         Event fail = threeBatteries.getEvents().stream().filter(event -> event.getName().equals("Fail")).findFirst().orElse(null);
+        Z3 z3 = new Z3();
+        ABoolExpr c = new And(
+                new Equals(
+                        new IntVariable("h"),
+                        new Int(1)
+                )
+        );
+        ABoolExpr c_ = new And(
+                new Equals(
+                        new IntVariable("h"),
+                        new Int(0)
+                )
+        ).prime();
+        z3.setCode(new And(
+                threeBatteries.getInvariant(),
+                threeBatteries.getInvariant().prime(),
+                c,
+                tic.getSubstitution().getPrd(threeBatteries),
+                c_
+        ));
+        Status status = z3.checkSAT();
+        if (status == Status.SATISFIABLE) {
+            /*for (String s : z3.getCode()) {
+                System.out.println(s);
+            }*/
+            System.out.println(z3.getModel());
+        } else {
+            System.out.println(status);
+        }
     }
 
 }
