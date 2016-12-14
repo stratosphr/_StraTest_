@@ -5,6 +5,8 @@ import eventb.Machine;
 import eventb.exprs.arith.*;
 import eventb.exprs.bool.*;
 import eventb.substitutions.*;
+import graphs.eventb.AbstractState;
+import graphs.eventb.ConcreteState;
 import utilities.AFormatter;
 
 import java.util.stream.Collectors;
@@ -55,6 +57,14 @@ public final class EventBFormatter extends AFormatter {
 
     public String visit(Predicate predicate) {
         return "(" + predicate.getName() + " " + EQ_DEF + " " + predicate.getExpression().accept(this) + ")";
+    }
+
+    public String visit(AbstractState abstractState) {
+        return new Predicate(abstractState.getName(), abstractState.getExpression()).accept(this);
+    }
+
+    public String visit(ConcreteState concreteState) {
+        return new Predicate(concreteState.getName(), concreteState.getExpression()).accept(this);
     }
 
     public String visit(Invariant invariant) {

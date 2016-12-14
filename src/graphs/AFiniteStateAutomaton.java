@@ -9,7 +9,7 @@ import static utilities.Chars.NEW_LINE;
  * Created by gvoiron on 09/12/16.
  * Time : 14:49
  */
-public final class FiniteStateAutomaton<State, Label, Transition extends LabelledTransition<State, Label>> {
+public abstract class AFiniteStateAutomaton<State, Label, Transition extends ALabelledTransition<State, Label>> {
 
     private final Set<State> states;
     private final Set<State> initialStates;
@@ -17,7 +17,7 @@ public final class FiniteStateAutomaton<State, Label, Transition extends Labelle
     private final Set<Transition> transitions;
     private final Map<State, Map<Label, Set<State>>> transitionsTable;
 
-    public FiniteStateAutomaton(Set<State> states, Set<State> initialStates, Set<State> finalStates, Set<Transition> transitions) {
+    public AFiniteStateAutomaton(Set<State> states, Set<State> initialStates, Set<State> finalStates, Set<Transition> transitions) {
         this.states = new HashSet<>();
         this.initialStates = new HashSet<>(initialStates);
         this.finalStates = new HashSet<>(finalStates);
@@ -51,7 +51,7 @@ public final class FiniteStateAutomaton<State, Label, Transition extends Labelle
 
     public Set<Transition> findReachableTransitions_(State root, Set<Transition> visitedTransitions) {
         for (Transition transition : getTransitions().stream().filter(transition -> transition.getSource().equals(root)).collect(Collectors.toList())) {
-            if(visitedTransitions.add(transition)){
+            if (visitedTransitions.add(transition)) {
                 findReachableTransitions_(transition.getTarget(), visitedTransitions);
             }
         }

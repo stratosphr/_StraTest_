@@ -4,13 +4,13 @@ package graphs;
  * Created by gvoiron on 09/12/16.
  * Time : 14:58
  */
-public final class LabelledTransition<State, Label> {
+public abstract class ALabelledTransition<State, Label> {
 
     private final State source;
     private final Label label;
     private final State target;
 
-    public LabelledTransition(State source, Label label, State target) {
+    public ALabelledTransition(State source, Label label, State target) {
         this.source = source;
         this.label = label;
         this.target = target;
@@ -35,7 +35,7 @@ public final class LabelledTransition<State, Label> {
 
     @Override
     public boolean equals(Object o) {
-        return o == this || o instanceof LabelledTransition && getSource().equals(((LabelledTransition) o).getSource()) && getLabel().equals(((LabelledTransition) o).getLabel()) && getTarget().equals(((LabelledTransition) o).getTarget());
+        return o == this || o instanceof ALabelledTransition && getSource().equals(((ALabelledTransition) o).getSource()) && getLabel().equals(((ALabelledTransition) o).getLabel()) && getTarget().equals(((ALabelledTransition) o).getTarget());
     }
 
     @Override

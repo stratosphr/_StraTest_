@@ -10,4 +10,6 @@ public interface IPrimerVisitable<T extends AExpr> {
 
     T accept(Primer visitor);
 
+    T accept(UnPrimer visitor);
+
 }

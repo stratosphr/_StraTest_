@@ -5,6 +5,8 @@ import eventb.exprs.INaryOperation;
 import eventb.exprs.IUnaryOperation;
 import eventb.exprs.arith.*;
 import eventb.exprs.bool.*;
+import graphs.eventb.AbstractState;
+import graphs.eventb.ConcreteState;
 import utilities.AFormatter;
 
 import java.util.stream.Collectors;
@@ -92,6 +94,14 @@ public final class SMTLibFormatter extends AFormatter {
         return predicate.getExpression().accept(this);
     }
 
+    public String visit(AbstractState abstractState) {
+        return new Predicate(abstractState.getName(), abstractState.getExpression()).accept(this);
+    }
+
+    public String visit(ConcreteState concreteState) {
+        return new Predicate(concreteState.getName(), concreteState.getExpression()).accept(this);
+    }
+
     public String visit(Invariant invariant) {
         return invariant.getExpression().accept(this);
     }
@@ -127,7 +137,7 @@ public final class SMTLibFormatter extends AFormatter {
     public String visit(Exists exists) {
         String formatted = "(exists" + NEW_LINE;
         indentRight();
-        formatted += indent() + "(" + exists.getQuantifiedVariables().stream().map(intVariable -> "(" + intVariable.accept(this) + " Int)").collect(Collectors.joining(NEW_LINE + indent())) + NEW_LINE;
+        formatted += indent() + "(" + exists.getQuantifiedVariables().stream().map(intVariable -> "(" + intVariable.accept(this) + " Int)").collect(Collectors.joining(NEW_LINE + indent())) + ")" + NEW_LINE;
         formatted += indent() + exists.getExpression().accept(this) + NEW_LINE;
         indentLeft();
         formatted += indent() + ")";
@@ -137,7 +147,7 @@ public final class SMTLibFormatter extends AFormatter {
     public String visit(ForAll forAll) {
         String formatted = "(forall" + NEW_LINE;
         indentRight();
-        formatted += indent() + "(" + forAll.getQuantifiedVariables().stream().map(intVariable -> "(" + intVariable.accept(this) + " Int)").collect(Collectors.joining(NEW_LINE + indent())) + NEW_LINE;
+        formatted += indent() + "(" + forAll.getQuantifiedVariables().stream().map(intVariable -> "(" + intVariable.accept(this) + " Int)").collect(Collectors.joining(NEW_LINE + indent())) + ")" + NEW_LINE;
         formatted += indent() + forAll.getExpression().accept(this) + NEW_LINE;
         indentLeft();
         formatted += indent() + ")";

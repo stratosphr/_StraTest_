@@ -2,8 +2,12 @@ package eventb.visitors;
 
 import eventb.exprs.arith.*;
 import eventb.exprs.bool.*;
+import graphs.eventb.AbstractState;
+import graphs.eventb.ConcreteState;
 
 import java.util.LinkedHashSet;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  * Created by gvoiron on 12/12/16.
@@ -11,7 +15,7 @@ import java.util.LinkedHashSet;
  */
 public final class Primer {
 
-    private static final String PRIME_SUFFIX = "_";
+    public static final String PRIME_SUFFIX = "_";
 
     private LinkedHashSet<QuantifiedVariable> quantifiedVariables;
 
@@ -64,7 +68,19 @@ public final class Primer {
     }
 
     public ABoolExpr visit(Predicate predicate) {
-        return predicate.getExpression().accept(this);
+        return new Predicate(predicate.getName(), predicate.getExpression().accept(this));
+    }
+
+    public ABoolExpr visit(AbstractState abstractState) {
+        return new AbstractState(abstractState.getName(), abstractState.getPredicates().stream().map(predicate -> predicate.accept(this)).collect(Collectors.toCollection(LinkedHashSet::new)));
+    }
+
+    public ABoolExpr visit(ConcreteState concreteState) {
+        TreeMap<IntVariable, Int> state = new TreeMap<>();
+        for (IntVariable intVariable : concreteState.getState().keySet()) {
+            state.put((IntVariable) intVariable.accept(this), (Int) concreteState.getState().get(intVariable).accept(this));
+        }
+        return new ConcreteState(concreteState.getName(), state);
     }
 
     public ABoolExpr visit(Invariant invariant) {

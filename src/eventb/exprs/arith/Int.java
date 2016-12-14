@@ -3,6 +3,7 @@ package eventb.exprs.arith;
 import eventb.visitors.EventBFormatter;
 import eventb.visitors.Primer;
 import eventb.visitors.SMTLibFormatter;
+import eventb.visitors.UnPrimer;
 
 import java.util.LinkedHashSet;
 
@@ -29,17 +30,22 @@ public final class Int extends AArithExpr {
     }
 
     @Override
+    public AArithExpr accept(Primer visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
+    public AArithExpr accept(UnPrimer visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
     public LinkedHashSet<IntVariable> getVariables() {
         return new LinkedHashSet<>();
     }
 
     public Integer getValue() {
         return value;
-    }
-
-    @Override
-    public AArithExpr accept(Primer visitor) {
-        return visitor.visit(this);
     }
 
 }

@@ -4,6 +4,7 @@ import eventb.exprs.arith.IntVariable;
 import eventb.visitors.EventBFormatter;
 import eventb.visitors.Primer;
 import eventb.visitors.SMTLibFormatter;
+import eventb.visitors.UnPrimer;
 
 import java.util.LinkedHashSet;
 
@@ -11,18 +12,19 @@ import java.util.LinkedHashSet;
  * Created by gvoiron on 27/11/16.
  * Time : 12:54
  */
-public class Predicate extends ABoolExpr {
-
-    private final String name;
-    private final ABoolExpr expression;
+public final class Predicate extends APredicate {
 
     public Predicate(String name, ABoolExpr expression) {
-        this.name = name;
-        this.expression = expression;
+        super(name, expression);
     }
 
     @Override
     public ABoolExpr accept(Primer visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
+    public ABoolExpr accept(UnPrimer visitor) {
         return visitor.visit(this);
     }
 
@@ -39,14 +41,6 @@ public class Predicate extends ABoolExpr {
     @Override
     public LinkedHashSet<IntVariable> getVariables() {
         return getExpression().getVariables();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public ABoolExpr getExpression() {
-        return expression;
     }
 
 }

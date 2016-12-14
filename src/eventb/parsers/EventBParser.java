@@ -38,6 +38,18 @@ public final class EventBParser {
         return new Machine(name, sets, assignables, invariant, initialisation, events);
     }
 
+    public static LinkedHashSet<Predicate> parseAbstractionPredicates(File file) {
+        // TODO: Create DTD for abstraction predicates
+        //XMLDocument document = XMLParser.parse(file, "AbstractionPredicatesList", new File("resources/eventb/ap.dtd"), new ErrorHandler());
+        XMLDocument document = XMLParser.parse(file);
+        XMLNode root = document.getRoot();
+        LinkedHashSet<Predicate> abstractionPredicates = new LinkedHashSet<>();
+        for (int i = 0; i < root.getChildren().size(); i++) {
+            abstractionPredicates.add(new Predicate("p" + i, parseBoolExpr(root.getChildren().get(i))));
+        }
+        return abstractionPredicates;
+    }
+
     private static LinkedHashSet<AAssignable> parseVariables(XMLNode node) {
         return node.getChildren().stream().map(EventBParser::parseVariable).collect(Collectors.toCollection(LinkedHashSet::new));
     }

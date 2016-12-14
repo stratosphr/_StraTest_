@@ -1,65 +1,62 @@
-import com.microsoft.z3.Status;
-import eventb.Event;
+import algorithms.ApproximatedTransitionSystemComputer;
+import algorithms.utilities.AbstractStatesComputer;
+import algorithms.utilities.ApproximatedTransitionSystem;
+import algorithms.visitors.DOTFormatter;
 import eventb.Machine;
-import eventb.exprs.arith.Int;
-import eventb.exprs.arith.IntVariable;
-import eventb.exprs.bool.ABoolExpr;
-import eventb.exprs.bool.And;
-import eventb.exprs.bool.Equals;
+import eventb.exprs.bool.Predicate;
 import eventb.parsers.EventBParser;
-import solvers.z3.Z3;
+import graphs.eventb.AbstractState;
 
 import java.io.File;
+import java.util.*;
 
 public class Main {
 
     public static void main(String[] args) {
-        /*Machine carAlarm = EventBParser.parseMachine(new File("resources/eventb/carAlarm/carAlarm.ebm"));
-        Machine coffeeMachine = EventBParser.parseMachine(new File("resources/eventb/coffeeMachine/coffeeMachine.ebm"));
-        Machine creditCard = EventBParser.parseMachine(new File("resources/eventb/creditCard/creditCard.ebm"));
-        Machine frontWiper = EventBParser.parseMachine(new File("resources/eventb/frontWiper/frontWiper.ebm"));
-        Machine phone = EventBParser.parseMachine(new File("resources/eventb/phone/phone.ebm"));*/
         Machine threeBatteries = EventBParser.parseMachine(new File("resources/eventb/threeBatteries/threeBatteries.ebm"));
-        //Machine simple = EventBParser.parseMachine(new File("resources/eventb/simple/simple.ebm"));
-        /*List<Machine> machines = Arrays.asList(carAlarm, coffeeMachine, creditCard, frontWiper, phone, threeBatteries, simple);
-        for (Machine machine : machines) {
-            for (Event event : machine.getEvents()) {
-                System.out.println(event.getSubstitution().getPrd(machine));
-            }
-        }*/
-        Event tic = threeBatteries.getEvents().stream().filter(event -> event.getName().equals("Tic")).findFirst().orElse(null);
-        Event repair = threeBatteries.getEvents().stream().filter(event -> event.getName().equals("Repair")).findFirst().orElse(null);
-        Event commute = threeBatteries.getEvents().stream().filter(event -> event.getName().equals("Commute")).findFirst().orElse(null);
-        Event fail = threeBatteries.getEvents().stream().filter(event -> event.getName().equals("Fail")).findFirst().orElse(null);
-        Z3 z3 = new Z3();
-        ABoolExpr c = new And(
-                new Equals(
-                        new IntVariable("h"),
-                        new Int(1)
-                )
-        );
-        ABoolExpr c_ = new And(
-                new Equals(
-                        new IntVariable("h"),
-                        new Int(0)
-                )
-        ).prime();
-        z3.setCode(new And(
-                threeBatteries.getInvariant(),
-                threeBatteries.getInvariant().prime(),
-                c,
-                tic.getSubstitution().getPrd(threeBatteries),
-                c_
-        ));
-        Status status = z3.checkSAT();
-        if (status == Status.SATISFIABLE) {
-            /*for (String s : z3.getCode()) {
-                System.out.println(s);
-            }*/
-            System.out.println(z3.getModel());
-        } else {
-            System.out.println(status);
-        }
+        LinkedHashSet<Predicate> threeBatteries_default = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_default.ap"));
+        LinkedHashSet<Predicate> threeBatteries_1guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_1guard.ap"));
+        LinkedHashSet<Predicate> threeBatteries_2guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_2guard.ap"));
+        LinkedHashSet<Predicate> threeBatteries_1post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_1post.ap"));
+        Machine carAlarm = EventBParser.parseMachine(new File("resources/eventb/carAlarm/carAlarm.ebm"));
+        LinkedHashSet<Predicate> carAlarm_1guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/carAlarm/carAlarm_1guard.ap"));
+        LinkedHashSet<Predicate> carAlarm_2guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/carAlarm/carAlarm_2guard.ap"));
+        LinkedHashSet<Predicate> carAlarm_1post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/carAlarm/carAlarm_1post.ap"));
+        LinkedHashSet<Predicate> carAlarm_2post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/carAlarm/carAlarm_2post.ap"));
+        Machine coffeeMachine = EventBParser.parseMachine(new File("resources/eventb/coffeeMachine/coffeeMachine.ebm"));
+        LinkedHashSet<Predicate> coffeeMachine_1guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/coffeeMachine/coffeeMachine_1guard.ap"));
+        LinkedHashSet<Predicate> coffeeMachine_2guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/coffeeMachine/coffeeMachine_2guard.ap"));
+        LinkedHashSet<Predicate> coffeeMachine_1post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/coffeeMachine/coffeeMachine_1post.ap"));
+        LinkedHashSet<Predicate> coffeeMachine_2post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/coffeeMachine/coffeeMachine_2post.ap"));
+        Machine creditCard = EventBParser.parseMachine(new File("resources/eventb/creditCard/creditCard.ebm"));
+        LinkedHashSet<Predicate> creditCard_1guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/creditCard/creditCard_1guard.ap"));
+        LinkedHashSet<Predicate> creditCard_2guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/creditCard/creditCard_2guard.ap"));
+        LinkedHashSet<Predicate> creditCard_1post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/creditCard/creditCard_1post.ap"));
+        LinkedHashSet<Predicate> creditCard_2post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/creditCard/creditCard_2post.ap"));
+        Machine frontWiper = EventBParser.parseMachine(new File("resources/eventb/frontWiper/frontWiper.ebm"));
+        LinkedHashSet<Predicate> frontWiper_1guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/frontWiper/frontWiper_1guard.ap"));
+        LinkedHashSet<Predicate> frontWiper_2guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/frontWiper/frontWiper_2guard.ap"));
+        Machine phone = EventBParser.parseMachine(new File("resources/eventb/phone/phone.ebm"));
+        LinkedHashSet<Predicate> phone_1guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/phone/phone_1guard.ap"));
+        LinkedHashSet<Predicate> phone_2guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/phone/phone_2guard.ap"));
+        LinkedHashSet<Predicate> phone_1post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/phone/phone_1post.ap"));
+        LinkedHashSet<Predicate> phone_2post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/phone/phone_2post.ap"));
+        Map<Machine, List<LinkedHashSet<Predicate>>> examples = new LinkedHashMap<>();
+        examples.put(creditCard, Arrays.asList(creditCard_1guard, creditCard_2guard, creditCard_1post, creditCard_2post));
+        examples.put(threeBatteries, Arrays.asList(threeBatteries_default, threeBatteries_1guard, threeBatteries_2guard, threeBatteries_1post));
+        examples.put(carAlarm, Arrays.asList(carAlarm_1guard, carAlarm_2guard, carAlarm_1post, carAlarm_2post));
+        examples.put(coffeeMachine, Arrays.asList(coffeeMachine_1guard, coffeeMachine_2guard, coffeeMachine_1post, coffeeMachine_2post));
+        examples.put(frontWiper, Arrays.asList(frontWiper_1guard, frontWiper_2guard));
+        examples.put(phone, Arrays.asList(phone_1guard, phone_2guard, phone_1post, phone_2post));
+        examples.keySet().forEach(machine -> examples.get(machine).forEach(abstractionPredicates -> go(machine, abstractionPredicates)));
+    }
+
+    private static void go(Machine machine, LinkedHashSet<Predicate> abstractionPredicates) {
+        LinkedHashSet<AbstractState> abstractStates = new LinkedHashSet<>(AbstractStatesComputer.computeAbstractStates(machine, new ArrayList<>(abstractionPredicates)));
+        ApproximatedTransitionSystemComputer approximatedTransitionSystemComputer = new ApproximatedTransitionSystemComputer(machine, abstractStates);
+        ApproximatedTransitionSystem approximatedTransitionSystem = approximatedTransitionSystemComputer.computeATS();
+        //System.out.println(approximatedTransitionSystem.accept(new DOTFormatter()));
+        System.out.println(approximatedTransitionSystem.accept(new DOTFormatter(false)));
     }
 
 }

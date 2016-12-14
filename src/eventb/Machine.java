@@ -1,12 +1,11 @@
 package eventb;
 
-import eventb.substitutions.ASubstitution;
 import eventb.exprs.arith.AAssignable;
 import eventb.exprs.bool.Invariant;
+import eventb.substitutions.ASubstitution;
 import eventb.visitors.EventBFormatter;
 
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 import static eventb.parsers.metamodel.EventBRegex.IDENTIFIER;
 
@@ -63,7 +62,7 @@ public final class Machine extends AEventBObject {
         return initialisation;
     }
 
-    public Set<Event> getEvents() {
+    public LinkedHashSet<Event> getEvents() {
         return events;
     }
 

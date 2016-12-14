@@ -5,6 +5,7 @@ import eventb.exprs.arith.IntVariable;
 import eventb.visitors.EventBFormatter;
 import eventb.visitors.Primer;
 import eventb.visitors.SMTLibFormatter;
+import eventb.visitors.UnPrimer;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -45,6 +46,11 @@ public final class And extends ABoolExpr implements INaryOperation {
 
     @Override
     public ABoolExpr accept(Primer visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
+    public ABoolExpr accept(UnPrimer visitor) {
         return visitor.visit(this);
     }
 
