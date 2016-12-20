@@ -4,9 +4,9 @@ import eventb.Event;
 import eventb.Machine;
 import eventb.exprs.arith.*;
 import eventb.exprs.bool.*;
+import eventb.graphs.AbstractState;
+import eventb.graphs.ConcreteState;
 import eventb.substitutions.*;
-import graphs.eventb.AbstractState;
-import graphs.eventb.ConcreteState;
 import utilities.AFormatter;
 
 import java.util.stream.Collectors;

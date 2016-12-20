@@ -1,10 +1,10 @@
-package graphs.eventb;
+package eventb.graphs;
 
 import eventb.Event;
 
 /**
- * Created by gvoiron on 13/12/16.
- * Time : 13:10
+ * Created by gvoiron on 20/12/16.
+ * Time : 18:41
  */
 public final class AbstractTransition extends ATransition<AbstractState> {
 

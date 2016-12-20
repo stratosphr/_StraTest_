@@ -5,8 +5,8 @@ import eventb.exprs.INaryOperation;
 import eventb.exprs.IUnaryOperation;
 import eventb.exprs.arith.*;
 import eventb.exprs.bool.*;
-import graphs.eventb.AbstractState;
-import graphs.eventb.ConcreteState;
+import eventb.graphs.AbstractState;
+import eventb.graphs.ConcreteState;
 import utilities.AFormatter;
 
 import java.util.stream.Collectors;

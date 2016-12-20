@@ -1,25 +1,23 @@
-package graphs.eventb;
+package eventb.graphs;
 
 import eventb.exprs.bool.ABoolExpr;
 import eventb.exprs.bool.And;
+import eventb.exprs.bool.Not;
 import eventb.visitors.EventBFormatter;
 import eventb.visitors.Primer;
 import eventb.visitors.SMTLibFormatter;
 import eventb.visitors.UnPrimer;
 
-import java.util.LinkedHashSet;
+import java.util.TreeMap;
 
 /**
- * Created by gvoiron on 13/12/16.
- * Time : 13:07
+ * Created by gvoiron on 20/12/16.
+ * Time : 18:41
  */
-public final class AbstractState extends AState {
+public final class AbstractState extends AState<ABoolExpr, Boolean> {
 
-    private final LinkedHashSet<ABoolExpr> predicates;
-
-    public AbstractState(String name, LinkedHashSet<ABoolExpr> predicates) {
-        super(name, new And(predicates.stream().toArray(ABoolExpr[]::new)));
-        this.predicates = predicates;
+    public AbstractState(String name, TreeMap<ABoolExpr, Boolean> mapping) {
+        super(name, new And(mapping.keySet().stream().map(predicate -> mapping.get(predicate) ? predicate : new Not(predicate)).toArray(ABoolExpr[]::new)), mapping);
     }
 
     @Override
@@ -40,10 +38,6 @@ public final class AbstractState extends AState {
     @Override
     public String accept(SMTLibFormatter visitor) {
         return visitor.visit(this);
-    }
-
-    public LinkedHashSet<ABoolExpr> getPredicates() {
-        return predicates;
     }
 
 }

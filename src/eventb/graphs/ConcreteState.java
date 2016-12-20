@@ -1,4 +1,4 @@
-package graphs.eventb;
+package eventb.graphs;
 
 import eventb.exprs.arith.Int;
 import eventb.exprs.arith.IntVariable;
@@ -13,16 +13,13 @@ import eventb.visitors.UnPrimer;
 import java.util.TreeMap;
 
 /**
- * Created by gvoiron on 13/12/16.
- * Time : 13:07
+ * Created by gvoiron on 20/12/16.
+ * Time : 18:41
  */
-public final class ConcreteState extends AState {
+public final class ConcreteState extends AState<IntVariable, Int> {
 
-    private final TreeMap<IntVariable, Int> state;
-
-    public ConcreteState(String name, TreeMap<IntVariable, Int> state) {
-        super(name, new And(state.keySet().stream().map(intVariable -> new Equals(intVariable, state.get(intVariable))).toArray(ABoolExpr[]::new)));
-        this.state = state;
+    public ConcreteState(String name, TreeMap<IntVariable, Int> mapping) {
+        super(name, new And(mapping.keySet().stream().map(intVariable -> new Equals(intVariable, mapping.get(intVariable))).toArray(ABoolExpr[]::new)), mapping);
     }
 
     @Override
@@ -43,10 +40,6 @@ public final class ConcreteState extends AState {
     @Override
     public String accept(SMTLibFormatter visitor) {
         return visitor.visit(this);
-    }
-
-    public TreeMap<IntVariable, Int> getState() {
-        return state;
     }
 
 }

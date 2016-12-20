@@ -1,11 +1,6 @@
-import algorithms.ApproximatedTransitionSystemComputer;
-import algorithms.utilities.AbstractStatesComputer;
-import algorithms.utilities.ApproximatedTransitionSystem;
-import algorithms.visitors.DOTFormatter;
 import eventb.Machine;
 import eventb.exprs.bool.Predicate;
 import eventb.parsers.EventBParser;
-import graphs.eventb.AbstractState;
 
 import java.io.File;
 import java.util.*;
@@ -13,6 +8,10 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
+        System.out.println("ok");
+    }
+
+    private static Machine getMachine(String machineName) {
         Machine threeBatteries = EventBParser.parseMachine(new File("resources/eventb/threeBatteries/threeBatteries.ebm"));
         LinkedHashSet<Predicate> threeBatteries_default = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_default.ap"));
         LinkedHashSet<Predicate> threeBatteries_1guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_1guard.ap"));
@@ -48,15 +47,15 @@ public class Main {
         examples.put(coffeeMachine, Arrays.asList(coffeeMachine_1guard, coffeeMachine_2guard, coffeeMachine_1post, coffeeMachine_2post));
         examples.put(frontWiper, Arrays.asList(frontWiper_1guard, frontWiper_2guard));
         examples.put(phone, Arrays.asList(phone_1guard, phone_2guard, phone_1post, phone_2post));
-        examples.keySet().forEach(machine -> examples.get(machine).forEach(abstractionPredicates -> go(machine, abstractionPredicates)));
+        return examples.keySet().stream().filter(machine -> machine.getName().equals(machineName)).findFirst().orElse(null);
     }
 
     private static void go(Machine machine, LinkedHashSet<Predicate> abstractionPredicates) {
-        LinkedHashSet<AbstractState> abstractStates = new LinkedHashSet<>(AbstractStatesComputer.computeAbstractStates(machine, new ArrayList<>(abstractionPredicates)));
+        /*LinkedHashSet<AbstractState> abstractStates = new LinkedHashSet<>(AbstractStatesComputer.computeAbstractStates(machine, new ArrayList<>(abstractionPredicates)));
         ApproximatedTransitionSystemComputer approximatedTransitionSystemComputer = new ApproximatedTransitionSystemComputer(machine, abstractStates);
         ApproximatedTransitionSystem approximatedTransitionSystem = approximatedTransitionSystemComputer.computeATS();
         //System.out.println(approximatedTransitionSystem.accept(new DOTFormatter()));
-        System.out.println(approximatedTransitionSystem.accept(new DOTFormatter(false)));
+        System.out.println(approximatedTransitionSystem.accept(new DOTFormatter(false)));*/
     }
 
 }

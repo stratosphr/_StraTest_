@@ -2,12 +2,11 @@ package eventb.visitors;
 
 import eventb.exprs.arith.*;
 import eventb.exprs.bool.*;
-import graphs.eventb.AbstractState;
-import graphs.eventb.ConcreteState;
+import eventb.graphs.AbstractState;
+import eventb.graphs.ConcreteState;
 
 import java.util.LinkedHashSet;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 /**
  * Created by gvoiron on 12/12/16.
@@ -72,13 +71,17 @@ public final class Primer {
     }
 
     public ABoolExpr visit(AbstractState abstractState) {
-        return new AbstractState(abstractState.getName(), abstractState.getPredicates().stream().map(predicate -> predicate.accept(this)).collect(Collectors.toCollection(LinkedHashSet::new)));
+        TreeMap<ABoolExpr, Boolean> mapping = new TreeMap<>();
+        for (ABoolExpr predicate : abstractState.getMapping().keySet()) {
+            mapping.put(predicate.accept(this), abstractState.getMapping().get(predicate));
+        }
+        return new AbstractState(abstractState.getName(), mapping);
     }
 
     public ABoolExpr visit(ConcreteState concreteState) {
         TreeMap<IntVariable, Int> state = new TreeMap<>();
-        for (IntVariable intVariable : concreteState.getState().keySet()) {
-            state.put((IntVariable) intVariable.accept(this), (Int) concreteState.getState().get(intVariable).accept(this));
+        for (IntVariable intVariable : concreteState.getMapping().keySet()) {
+            state.put((IntVariable) intVariable.accept(this), (Int) concreteState.getMapping().get(intVariable).accept(this));
         }
         return new ConcreteState(concreteState.getName(), state);
     }
