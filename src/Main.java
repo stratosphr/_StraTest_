@@ -1,5 +1,8 @@
+import algorithms.utilities.AbstractStateComputer;
+import algorithms.utilities.AbstractStatesComputer;
 import eventb.Machine;
-import eventb.exprs.bool.Predicate;
+import eventb.exprs.bool.*;
+import eventb.graphs.AbstractState;
 import eventb.parsers.EventBParser;
 
 import java.io.File;
@@ -8,7 +11,8 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("ok");
+        LinkedHashSet<Predicate> threeBatteries_default = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_default.ap"));
+        go(getMachine("threeBatteries"), threeBatteries_default);
     }
 
     private static Machine getMachine(String machineName) {
@@ -51,11 +55,14 @@ public class Main {
     }
 
     private static void go(Machine machine, LinkedHashSet<Predicate> abstractionPredicates) {
-        /*LinkedHashSet<AbstractState> abstractStates = new LinkedHashSet<>(AbstractStatesComputer.computeAbstractStates(machine, new ArrayList<>(abstractionPredicates)));
-        ApproximatedTransitionSystemComputer approximatedTransitionSystemComputer = new ApproximatedTransitionSystemComputer(machine, abstractStates);
-        ApproximatedTransitionSystem approximatedTransitionSystem = approximatedTransitionSystemComputer.computeATS();
-        //System.out.println(approximatedTransitionSystem.accept(new DOTFormatter()));
-        System.out.println(approximatedTransitionSystem.accept(new DOTFormatter(false)));*/
+        LinkedHashSet<AbstractState> abstractStates = new AbstractStatesComputer(machine.getInvariant(), abstractionPredicates).compute();
+        abstractionPredicates.forEach(System.out::println);
+        System.out.println();
+        abstractStates.forEach(System.out::println);
+        ABoolExpr c = new And(new True());
+        AbstractState abstractState = new AbstractStateComputer(c, machine.getInvariant(), abstractStates).compute();
+        System.out.println();
+        System.out.println(abstractState);
     }
 
 }

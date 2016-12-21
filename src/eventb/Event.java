@@ -7,7 +7,7 @@ import eventb.visitors.EventBFormatter;
  * Created by gvoiron on 25/11/16.
  * Time : 16:34
  */
-public final class Event extends AEventBObject implements Comparable<Event> {
+public final class Event extends AEventBObject {
 
     private final String name;
     private final ASubstitution substitution;
@@ -28,11 +28,6 @@ public final class Event extends AEventBObject implements Comparable<Event> {
 
     public ASubstitution getSubstitution() {
         return substitution;
-    }
-
-    @Override
-    public int compareTo(Event event) {
-        return toString().compareTo(event.toString());
     }
 
 }

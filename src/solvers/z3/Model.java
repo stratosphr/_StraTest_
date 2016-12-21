@@ -31,7 +31,6 @@ public final class Model {
                 } else {
                     source.put(new IntVariable(name), value);
                 }
-                //put(new IntVariable(variable.getName().toString()), value);
             } catch (NumberFormatException ignored) {
                 //throw new Error("The value \"" + stringValue + "\" returned by Z3 is not a valid integer.");
             }

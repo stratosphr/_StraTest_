@@ -7,7 +7,7 @@ import eventb.visitors.IEventBFormatterVisitable;
  * Created by gvoiron on 25/11/16.
  * Time : 19:31
  */
-public abstract class AEventBObject implements IEventBFormatterVisitable {
+public abstract class AEventBObject implements IEventBFormatterVisitable, Comparable<AEventBObject> {
 
     @Override
     public int hashCode() {
@@ -22,6 +22,11 @@ public abstract class AEventBObject implements IEventBFormatterVisitable {
     @Override
     public final String toString() {
         return accept(new EventBFormatter());
+    }
+
+    @Override
+    public int compareTo(AEventBObject eventBObject) {
+        return toString().compareTo(eventBObject.toString());
     }
 
 }
