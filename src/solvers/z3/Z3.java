@@ -1,6 +1,9 @@
 package solvers.z3;
 
-import com.microsoft.z3.*;
+import com.microsoft.z3.Context;
+import com.microsoft.z3.Solver;
+import com.microsoft.z3.Status;
+import com.microsoft.z3.Z3Exception;
 import eventb.exprs.bool.ABoolExpr;
 import eventb.visitors.SMTLibFormatter;
 import utilities.Chars;

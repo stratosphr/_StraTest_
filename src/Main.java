@@ -1,7 +1,8 @@
-import algorithms.utilities.AbstractStateComputer;
+import algorithms.ATSComputer;
+import algorithms.outputs.ApproximatedTransitionSystem;
 import algorithms.utilities.AbstractStatesComputer;
 import eventb.Machine;
-import eventb.exprs.bool.*;
+import eventb.exprs.bool.Predicate;
 import eventb.graphs.AbstractState;
 import eventb.parsers.EventBParser;
 
@@ -56,13 +57,7 @@ public class Main {
 
     private static void go(Machine machine, LinkedHashSet<Predicate> abstractionPredicates) {
         LinkedHashSet<AbstractState> abstractStates = new AbstractStatesComputer(machine.getInvariant(), abstractionPredicates).compute();
-        abstractionPredicates.forEach(System.out::println);
-        System.out.println();
-        abstractStates.forEach(System.out::println);
-        ABoolExpr c = new And(new True());
-        AbstractState abstractState = new AbstractStateComputer(c, machine.getInvariant(), abstractStates).compute();
-        System.out.println();
-        System.out.println(abstractState);
+        ApproximatedTransitionSystem approximatedTransitionSystem = new ATSComputer(machine, abstractStates).compute();
     }
 
 }

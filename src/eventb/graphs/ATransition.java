@@ -30,4 +30,9 @@ public abstract class ATransition<State extends AState> {
         return target;
     }
 
+    @Override
+    public String toString() {
+        return getSource() + " -[ " + getEvent().getName() + " ]-> " + getTarget();
+    }
+
 }
