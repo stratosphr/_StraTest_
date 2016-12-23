@@ -1,4 +1,4 @@
-package algorithms.utilities;
+package algorithms.heuristics;
 
 /**
  * Created by gvoiron on 22/12/16.

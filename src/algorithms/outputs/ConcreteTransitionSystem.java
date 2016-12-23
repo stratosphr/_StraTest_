@@ -1,6 +1,6 @@
 package algorithms.outputs;
 
-import algorithms.utilities.EConcreteStateColor;
+import algorithms.heuristics.EConcreteStateColor;
 import eventb.graphs.AbstractState;
 import eventb.graphs.ConcreteState;
 import eventb.graphs.ConcreteTransition;

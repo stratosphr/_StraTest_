@@ -1,10 +1,10 @@
 package algorithms;
 
+import algorithms.heuristics.*;
 import algorithms.outputs.ApproximatedTransitionSystem;
 import algorithms.outputs.ConcreteTransitionSystem;
 import algorithms.outputs.EventSystem;
 import algorithms.outputs.TriModalTransitionSystem;
-import algorithms.utilities.EConcreteStateColor;
 import eventb.Event;
 import eventb.Machine;
 import eventb.exprs.bool.ABoolExpr;
@@ -16,14 +16,15 @@ import eventb.graphs.ConcreteState;
 import eventb.graphs.ConcreteTransition;
 import solvers.z3.Model;
 import solvers.z3.Z3;
+import utilities.Tuple;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
 
-import static algorithms.utilities.EConcreteStateColor.BLUE;
-import static algorithms.utilities.EConcreteStateColor.GREEN;
+import static algorithms.heuristics.EConcreteStateColor.BLUE;
+import static algorithms.heuristics.EConcreteStateColor.GREEN;
 import static com.microsoft.z3.Status.SATISFIABLE;
 
 /**
@@ -34,6 +35,9 @@ public class ATSComputer implements IComputer<ApproximatedTransitionSystem> {
 
     private final Machine machine;
     private final LinkedHashSet<AbstractState> A;
+    private final IEventsOrderingFunction eventsOrderingFunction;
+    private final IAbstractStatesOrderingFunction abstractStatesOrderingFunction;
+    private final boolean isExclusive;
     private final LinkedHashSet<AbstractState> RQ;
     private final LinkedHashSet<AbstractState> Q0;
     private final LinkedHashSet<AbstractState> Q;
@@ -48,8 +52,35 @@ public class ATSComputer implements IComputer<ApproximatedTransitionSystem> {
     private final Z3 z3;
 
     public ATSComputer(Machine machine, LinkedHashSet<AbstractState> A) {
+        this(machine, A, new DefaultAbstractStatesOrderingFunction(), new DefaultEventsOrderingFunction(), true);
+    }
+
+    public ATSComputer(Machine machine, LinkedHashSet<AbstractState> A, IAbstractStatesOrderingFunction abstractStatesOrderingFunction) {
+        this(machine, A, abstractStatesOrderingFunction, new DefaultEventsOrderingFunction(), true);
+    }
+
+    public ATSComputer(Machine machine, LinkedHashSet<AbstractState> A, IEventsOrderingFunction eventsOrderingFunction) {
+        this(machine, A, new DefaultAbstractStatesOrderingFunction(), eventsOrderingFunction, true);
+    }
+
+    public ATSComputer(Machine machine, LinkedHashSet<AbstractState> A, boolean isExclusive) {
+        this(machine, A, new DefaultAbstractStatesOrderingFunction(), new DefaultEventsOrderingFunction(), isExclusive);
+    }
+
+    public ATSComputer(Machine machine, LinkedHashSet<AbstractState> A, IAbstractStatesOrderingFunction abstractStatesOrderingFunction, boolean isExclusive) {
+        this(machine, A, abstractStatesOrderingFunction, new DefaultEventsOrderingFunction(), isExclusive);
+    }
+
+    public ATSComputer(Machine machine, LinkedHashSet<AbstractState> A, IEventsOrderingFunction eventsOrderingFunction, boolean isExclusive) {
+        this(machine, A, new DefaultAbstractStatesOrderingFunction(), eventsOrderingFunction, isExclusive);
+    }
+
+    public ATSComputer(Machine machine, LinkedHashSet<AbstractState> A, IAbstractStatesOrderingFunction abstractStatesOrderingFunction, IEventsOrderingFunction eventsOrderingFunction, boolean isExclusive) {
         this.machine = machine;
         this.A = A;
+        this.eventsOrderingFunction = eventsOrderingFunction;
+        this.abstractStatesOrderingFunction = abstractStatesOrderingFunction;
+        this.isExclusive = isExclusive;
         this.RQ = new LinkedHashSet<>();
         this.Q0 = new LinkedHashSet<>();
         this.Q = new LinkedHashSet<>();
@@ -94,17 +125,30 @@ public class ATSComputer implements IComputer<ApproximatedTransitionSystem> {
             AbstractState q = RQ.iterator().next();
             RQ.remove(q);
             Q.add(q);
-            for (AbstractState q_ : getA()) {
-                for (Event e : getMachine().getEvents()) {
+            for (AbstractState q_ : abstractStatesOrderingFunction.apply(new Tuple<>(q, getA()))) {
+                for (Event e : eventsOrderingFunction.apply(getMachine().getEvents())) {
                     z3.setCode(new And(getMachine().getInvariant(), getMachine().getInvariant().prime(), q, e.getSubstitution().getPrd(getMachine()), q_.prime()));
                     if (z3.checkSAT() == SATISFIABLE) {
                         Model model = z3.getModel();
-                        getDelta().add(new AbstractTransition(q, e, q_));
-                        instantiateFromGreenToBlue(new AbstractTransition(q, e, q_));
-                        instantiateFromGreenToAny(new AbstractTransition(q, e, q_));
-                        instantiateFromBlueToBlue(new AbstractTransition(q, e, q_));
-                        instantiateFromBlueToAny(new AbstractTransition(q, e, q_));
-                        instantiateFromWitnesses(new AbstractTransition(q, e, q_), model);
+                        AbstractTransition abstractTransition = new AbstractTransition(q, e, q_);
+                        getDelta().add(abstractTransition);
+                        if (isExclusive) {
+                            if (!instantiateFromGreenToBlue(abstractTransition)) {
+                                if (!instantiateFromGreenToAny(abstractTransition)) {
+                                    if (!instantiateFromBlueToBlue(abstractTransition)) {
+                                        if (!instantiateFromBlueToAny(abstractTransition)) {
+                                            instantiateFromWitnesses(abstractTransition, model);
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            instantiateFromGreenToBlue(abstractTransition);
+                            instantiateFromGreenToAny(abstractTransition);
+                            instantiateFromBlueToBlue(abstractTransition);
+                            instantiateFromBlueToAny(abstractTransition);
+                            instantiateFromWitnesses(abstractTransition, model);
+                        }
                         if (!Q.contains(q_)) {
                             RQ.add(q_);
                         }
@@ -112,17 +156,10 @@ public class ATSComputer implements IComputer<ApproximatedTransitionSystem> {
                 }
             }
         }
-    }
-
-    private void instantiateFromWitnesses(AbstractTransition abstractTransition, Model model) {
-        ConcreteState c = new ConcreteState("c_" + abstractTransition.getSource().getName(), model.getSource());
-        ConcreteState c_ = new ConcreteState("c_" + abstractTransition.getTarget().getName(), model.getTarget());
-        C.addAll(Arrays.asList(c, c_));
-        Alpha.put(c, abstractTransition.getSource());
-        Alpha.put(c_, abstractTransition.getTarget());
-        Kappa.put(c, BLUE);
-        Kappa.put(c_, BLUE);
-        DeltaC.add(new ConcreteTransition(c, abstractTransition.getEvent(), c_));
+        System.out.println();
+        for (ConcreteTransition concreteTransition : DeltaC) {
+            System.out.println(concreteTransition);
+        }
     }
 
     public boolean instantiateFromGreenToBlue(AbstractTransition abstractTransition) {
@@ -136,7 +173,6 @@ public class ATSComputer implements IComputer<ApproximatedTransitionSystem> {
                 ConcreteState c_ = new ConcreteState("c_" + abstractTransition.getTarget().getName(), model.getTarget());
                 DeltaC.add(new ConcreteTransition(c, abstractTransition.getEvent(), c_));
                 Kappa.put(c_, GREEN);
-                System.out.println(new ConcreteTransition(c, abstractTransition.getEvent(), c_));
                 return true;
             }
         }
@@ -155,7 +191,6 @@ public class ATSComputer implements IComputer<ApproximatedTransitionSystem> {
                 DeltaC.add(new ConcreteTransition(c, abstractTransition.getEvent(), c_));
                 Alpha.put(c_, abstractTransition.getTarget());
                 Kappa.put(c_, GREEN);
-                System.out.println(new ConcreteTransition(c, abstractTransition.getEvent(), c_));
                 return true;
             }
         }
@@ -172,7 +207,6 @@ public class ATSComputer implements IComputer<ApproximatedTransitionSystem> {
                 ConcreteState c = new ConcreteState("c_" + abstractTransition.getSource().getName(), model.getSource());
                 ConcreteState c_ = new ConcreteState("c_" + abstractTransition.getTarget().getName(), model.getTarget());
                 DeltaC.add(new ConcreteTransition(c, abstractTransition.getEvent(), c_));
-                System.out.println(new ConcreteTransition(c, abstractTransition.getEvent(), c_));
                 return true;
             }
         }
@@ -189,13 +223,23 @@ public class ATSComputer implements IComputer<ApproximatedTransitionSystem> {
                 ConcreteState c_ = new ConcreteState("c_" + abstractTransition.getTarget().getName(), model.getTarget());
                 C.add(c_);
                 Alpha.put(c_, abstractTransition.getTarget());
-                Kappa.put(c_, GREEN);
+                Kappa.putIfAbsent(c_, BLUE);
                 DeltaC.add(new ConcreteTransition(c, abstractTransition.getEvent(), c_));
-                System.out.println(new ConcreteTransition(c, abstractTransition.getEvent(), c_));
                 return true;
             }
         }
         return false;
+    }
+
+    private void instantiateFromWitnesses(AbstractTransition abstractTransition, Model model) {
+        ConcreteState c = new ConcreteState("c_" + abstractTransition.getSource().getName(), model.getSource());
+        ConcreteState c_ = new ConcreteState("c_" + abstractTransition.getTarget().getName(), model.getTarget());
+        C.addAll(Arrays.asList(c, c_));
+        Alpha.put(c, abstractTransition.getSource());
+        Alpha.put(c_, abstractTransition.getTarget());
+        Kappa.putIfAbsent(c, BLUE);
+        Kappa.putIfAbsent(c_, BLUE);
+        DeltaC.add(new ConcreteTransition(c, abstractTransition.getEvent(), c_));
     }
 
     public Machine getMachine() {
@@ -204,6 +248,14 @@ public class ATSComputer implements IComputer<ApproximatedTransitionSystem> {
 
     public LinkedHashSet<AbstractState> getA() {
         return A;
+    }
+
+    public IEventsOrderingFunction getEventsOrderingFunction() {
+        return eventsOrderingFunction;
+    }
+
+    public IAbstractStatesOrderingFunction getAbstractStatesOrderingFunction() {
+        return abstractStatesOrderingFunction;
     }
 
     public LinkedHashSet<AbstractState> getQ0() {
