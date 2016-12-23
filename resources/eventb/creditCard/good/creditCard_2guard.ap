@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AbstractionPredicatesList>
+    <CAnd>
+        <CEquals>
+            <CVariable val="DB_state"/>
+            <CNumber val="4"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="ATM_state"/>
+            <CNumber val="13"/>
+        </CEquals>
+    </CAnd>
+
+    <CAnd>
+        <CEquals>
+            <CVariable val="CARD_state"/>
+            <CNumber val="4"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="ATM_state"/>
+            <CNumber val="7"/>
+        </CEquals>
+    </CAnd>
+
+    <CAnd>
+        <CEquals>
+            <CVariable val="DB_state"/>
+            <CNumber val="5"/>
+        </CEquals>
+        <COr>
+            <CEquals>
+                <CVariable val="ATM_state"/>
+                <CNumber val="9"/>
+            </CEquals>
+            <CEquals>
+                <CVariable val="ATM_state"/>
+                <CNumber val="14"/>
+            </CEquals>
+        </COr>
+    </CAnd>
+</AbstractionPredicatesList>

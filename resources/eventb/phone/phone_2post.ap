@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<AbstractionPredicatesList>
+    <CEquals>
+        <CVariable val="NbEssai"/>
+        <CNumber val="1"/>
+    </CEquals>
+
+    <CEquals>
+        <CVariable val="NbEssai"/>
+        <CNumber val="0"/>
+    </CEquals>
+
+    <CAnd>
+        <CEquals>
+            <CVariable val="Etat"/>
+            <CNumber val="4"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Combine"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="NbEssai"/>
+            <CNumber val="0"/>
+        </CEquals>
+    </CAnd>
+
+    <COr>
+        <CNot>
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Etat"/>
+                    <CNumber val="2"/>
+                </CEquals>
+            </CAnd>
+        </CNot>
+        <CAnd>
+            <CEquals>
+                <CVariable val="Etat"/>
+                <CNumber val="5"/>
+            </CEquals>
+        </CAnd>
+    </COr>
+
+    <COr>
+        <CNot>
+            <CAnd>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Etat"/>
+                        <CNumber val="2"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="NbEssai"/>
+                    <CNumber val="2"/>
+                </CEquals>
+            </CAnd>
+        </CNot>
+        <CAnd>
+            <CEquals>
+                <CVariable val="Etat"/>
+                <CNumber val="5"/>
+            </CEquals>
+        </CAnd>
+    </COr>
+
+    <COr>
+        <CNot>
+            <CAnd>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Etat"/>
+                        <CNumber val="2"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="NbEssai"/>
+                        <CNumber val="2"/>
+                    </CEquals>
+                </CNot>
+            </CAnd>
+        </CNot>
+        <COr>
+            <CEquals>
+                <CVariable val="NbEssai"/>
+                <CNumber val="1"/>
+            </CEquals>
+            <CEquals>
+                <CVariable val="NbEssai"/>
+                <CNumber val="2"/>
+            </CEquals>
+        </COr>
+    </COr>
+</AbstractionPredicatesList>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<AbstractionPredicatesList>
+    <CEquals>
+        <CVariable val="Balance"/>
+        <CNumber val="0"/>
+    </CEquals>
+
+    <CGreater>
+        <CNumber val="60"/>
+        <CVariable val="Balance"/>
+    </CGreater>
+
+    <CAnd>
+        <CEquals>
+            <CVariable val="Statut"/>
+            <CNumber val="1"/>
+        </CEquals>
+        <COr>
+            <CGreater>
+                <CVariable val="Balance"/>
+                <CNumber val="60"/>
+            </CGreater>
+            <CEquals>
+                <CVariable val="Balance"/>
+                <CNumber val="60"/>
+            </CEquals>
+        </COr>
+    </CAnd>
+</AbstractionPredicatesList>
+

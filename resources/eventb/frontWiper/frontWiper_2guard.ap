@@ -1,0 +1,20 @@
+<AbstractionPredicatesList>
+
+    <CNot>
+        <CEquals>
+            <CVariable val="etat_moteur_ess_av"/>
+            <CNumber val="8"/>
+        </CEquals>
+    </CNot>
+    <CNot>
+        <CEquals>
+            <CVariable val="dmd_commodo_user"/>
+            <CNumber val="0"/>
+        </CEquals>
+    </CNot>
+    <CEquals>
+        <CVariable val="etat_commodo"/>
+        <CNumber val="1"/>
+    </CEquals>
+
+</AbstractionPredicatesList>

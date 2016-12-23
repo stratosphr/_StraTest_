@@ -156,10 +156,6 @@ public class ATSComputer implements IComputer<ApproximatedTransitionSystem> {
                 }
             }
         }
-        System.out.println();
-        for (ConcreteTransition concreteTransition : DeltaC) {
-            System.out.println(concreteTransition);
-        }
     }
 
     public boolean instantiateFromGreenToBlue(AbstractTransition abstractTransition) {

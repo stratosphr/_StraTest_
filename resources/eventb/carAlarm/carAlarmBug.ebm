@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MACHINE name="CarAlarm">
+    <VARIABLES>
+        <CVariable val="A"/>
+        <CVariable val="P"/>
+        <CVariable val="S"/>
+        <CVariable val="CA"/>
+        <CVariable val="Wa"/>
+        <CVariable val="Vi"/>
+        <CVariable val="E"/>
+        <CVariable val="M"/>
+        <CVariable val="D"/>
+        <CVariable val="T"/>
+        <CVariable val="F"/>
+        <CVariable val="Ut"/>
+    </VARIABLES>
+    <INVARIANT>
+        <CAnd>
+            <COr>
+                <CEquals>
+                    <CVariable val="A"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="A"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="P"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="P"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="S"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="S"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="CA"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="CA"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Wa"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Wa"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Vi"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Vi"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="E"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="E"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="M"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="M"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <CAnd>
+                <CGreater>
+                    <CVariable val="D"/>
+                    <CNumber val="-1"/>
+                </CGreater>
+                <CGreater>
+                    <CNumber val="11"/>
+                    <CVariable val="D"/>
+                </CGreater>
+            </CAnd>
+            <COr>
+                <CEquals>
+                    <CVariable val="T"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="T"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="F"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="F"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Ut"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Ut"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CAnd>
+                        <CEquals>
+                            <CVariable val="CA"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <CEquals>
+                            <CVariable val="Ut"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                    </CAnd>
+                </CNot>
+                <CEquals>
+                    <CVariable val="P"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="A"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="CA"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="CA"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="A"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Wa"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="A"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="A"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Wa"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Wa"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="A"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="S"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <COr>
+                    <CEquals>
+                        <CVariable val="P"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                    <CEquals>
+                        <CVariable val="Ut"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                </COr>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="A"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Wa"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Ut"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="A"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="S"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Vi"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="A"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Vi"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="M"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="P"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="M"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="CA"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="M"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Ut"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="M"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CAnd>
+                    <CEquals>
+                        <CVariable val="D"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                    <CEquals>
+                        <CVariable val="T"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                </CAnd>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="F"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="S"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="F"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="CA"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="F"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="T"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="T"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="S"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="S"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="S"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+        </CAnd>
+    </INVARIANT>
+    <INITIALISATION>
+        <CMultipleAssignment>
+            <CAssignment>
+                <CVariable val="P"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="S"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="CA"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Ut"/>
+                <CNumber val="1"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="A"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="F"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Wa"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Vi"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="E"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="M"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="D"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="T"/>
+                <CNumber val="0"/>
+            </CAssignment>
+        </CMultipleAssignment>
+    </INITIALISATION>
+    <EVENTS>
+        <CGuardedEvent name="e12">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="T"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Vi"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="S"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="Vi"/>
+                <CNumber val="1"/>
+            </CAssignment>
+        </CGuardedEvent>
+    </EVENTS>
+</MACHINE>

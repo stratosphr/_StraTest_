@@ -5,6 +5,8 @@ import eventb.Machine;
 import eventb.exprs.bool.Predicate;
 import eventb.graphs.AbstractState;
 import eventb.parsers.EventBParser;
+import utilities.graphviz.graphs.AGraphvizGraph;
+import utilities.graphviz.graphs.directed.DirectedGraphvizTransition;
 
 import java.io.File;
 import java.util.*;
@@ -57,7 +59,12 @@ public class Main {
 
     private static void go(Machine machine, LinkedHashSet<Predicate> abstractionPredicates) {
         LinkedHashSet<AbstractState> abstractStates = new AbstractStatesComputer(machine.getInvariant(), abstractionPredicates).compute();
-        ApproximatedTransitionSystem approximatedTransitionSystem = new ATSComputer(machine, abstractStates).compute();
+        ApproximatedTransitionSystem ats1 = new ATSComputer(machine, abstractStates).compute();
+        ApproximatedTransitionSystem ats2 = new ATSComputer(machine, abstractStates, false).compute();
+        AGraphvizGraph<DirectedGraphvizTransition> graph1 = ats1.getTriModalTransitionSystem().getCorrespondingGraphvizGraph();
+        AGraphvizGraph<DirectedGraphvizTransition> graph2 = ats2.getTriModalTransitionSystem().getCorrespondingGraphvizGraph();
+        System.out.println(graph1);
+        System.out.println(graph2);
     }
 
 }

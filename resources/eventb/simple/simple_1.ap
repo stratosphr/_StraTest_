@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AbstractionPredicatesList>
+
+    <CEquals>
+        <CVariable val="var1"/>
+        <CNumber val="1"/>
+    </CEquals>
+
+</AbstractionPredicatesList>

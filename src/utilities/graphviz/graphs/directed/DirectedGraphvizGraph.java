@@ -14,12 +14,12 @@ import java.util.List;
  */
 public final class DirectedGraphvizGraph extends AGraphvizGraph<DirectedGraphvizTransition> {
 
-    public DirectedGraphvizGraph(LinkedHashSet<AGraphvizNode> states, LinkedHashSet<DirectedGraphvizTransition> directedGraphvizTransitions) {
-        super(states, directedGraphvizTransitions);
+    public DirectedGraphvizGraph(LinkedHashSet<AGraphvizNode> states, LinkedHashSet<DirectedGraphvizTransition> transitions) {
+        super(states, transitions);
     }
 
-    public DirectedGraphvizGraph(LinkedHashSet<AGraphvizNode> states, LinkedHashSet<DirectedGraphvizTransition> directedGraphvizTransitions, List<AGraphvizParameter> parameters) {
-        super(states, directedGraphvizTransitions, parameters);
+    public DirectedGraphvizGraph(LinkedHashSet<AGraphvizNode> states, LinkedHashSet<DirectedGraphvizTransition> transitions, List<AGraphvizParameter> parameters) {
+        super(states, transitions, parameters);
     }
 
     @Override

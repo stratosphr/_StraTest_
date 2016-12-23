@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<AbstractionPredicatesList>
+    <CEquals>
+        <CVariable val="NbEssai"/>
+        <CNumber val="1"/>
+    </CEquals>
+
+    <CEquals>
+        <CVariable val="NbEssai"/>
+        <CNumber val="0"/>
+    </CEquals>
+
+    <COr>
+        <CEquals>
+            <CVariable val="Combine"/>
+            <CNumber val="1"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Etat"/>
+            <CNumber val="5"/>
+        </CEquals>
+    </COr>
+
+    <CAnd>
+        <CEquals>
+            <CVariable val="Combine"/>
+            <CNumber val="1"/>
+        </CEquals>
+        <CNot>
+            <CEquals>
+                <CVariable val="Etat"/>
+                <CNumber val="5"/>
+            </CEquals>
+        </CNot>
+    </CAnd>
+</AbstractionPredicatesList>
+

@@ -2,6 +2,8 @@
   <dictionary name="gvoiron">
     <words>
       <w>bgcolor</w>
+      <w>graphable</w>
+      <w>rankdir</w>
       <w>subgraph</w>
       <w>substates</w>
       <w>subtransitions</w>

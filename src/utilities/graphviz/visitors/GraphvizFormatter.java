@@ -66,11 +66,11 @@ public final class GraphvizFormatter extends AFormatter {
     }
 
     public String visit(UndirectedGraphvizTransition undirectedGraphvizTransition) {
-        return undirectedGraphvizTransition.getSource().getName() + " - " + undirectedGraphvizTransition.getTarget().getName() + ";";
+        return undirectedGraphvizTransition.getSource().getName() + " - " + undirectedGraphvizTransition.getTarget().getName() + undirectedGraphvizTransition.getParameters().stream().map(parameter -> parameter.accept(this)).collect(Collectors.joining(", ", " [", "]")) + ";";
     }
 
     public String visit(DirectedGraphvizTransition directedGraphvizTransition) {
-        return directedGraphvizTransition.getSource().getName() + " -> " + directedGraphvizTransition.getTarget().getName() + ";";
+        return directedGraphvizTransition.getSource().getName() + " -> " + directedGraphvizTransition.getTarget().getName() + directedGraphvizTransition.getParameters().stream().map(parameter -> parameter.accept(this)).collect(Collectors.joining(", ", " [", "]")) + ";";
     }
 
     public String visit(GraphvizParameter graphvizParameter) {

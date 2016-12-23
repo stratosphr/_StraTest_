@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MACHINE name="QuiDoc">
+  <VARIABLES>
+    <CVariable val="Combine" />
+    <CVariable val="NbEssai" />
+    <CVariable val="Etat" />
+  </VARIABLES>
+  <INVARIANT>
+    <CAnd>
+      <CAnd>
+        <CGreater>
+          <CVariable val="Combine" />
+          <CNumber val="-1" />
+        </CGreater>
+        <CGreater>
+          <CNumber val="2" />
+          <CVariable val="Combine" />
+        </CGreater>
+      </CAnd>
+      <CAnd>
+        <CGreater>
+          <CVariable val="NbEssai" />
+          <CNumber val="-1" />
+        </CGreater>
+        <CGreater>
+          <CNumber val="3" />
+          <CVariable val="NbEssai" />
+        </CGreater>
+      </CAnd>
+      <CAnd>
+        <CGreater>
+          <CVariable val="Etat" />
+          <CNumber val="-1" />
+        </CGreater>
+        <CGreater>
+          <CNumber val="6" />
+          <CVariable val="Etat" />
+        </CGreater>
+      </CAnd>
+      <CAnd>
+        <COr>
+          <CNot>
+            <CEquals>
+              <CVariable val="Etat" />
+              <CNumber val="4" />
+            </CEquals>
+          </CNot>
+          <CEquals>
+            <CVariable val="Combine" />
+            <CNumber val="0" />
+          </CEquals>
+        </COr>
+        <COr>
+          <CNot>
+            <CEquals>
+              <CVariable val="Combine" />
+              <CNumber val="0" />
+            </CEquals>
+          </CNot>
+          <CEquals>
+            <CVariable val="Etat" />
+            <CNumber val="4" />
+          </CEquals>
+        </COr>
+        <COr>
+          <CNot>
+            <CEquals>
+              <CVariable val="Etat" />
+              <CNumber val="4" />
+            </CEquals>
+          </CNot>
+          <CEquals>
+            <CVariable val="NbEssai" />
+            <CNumber val="0" />
+          </CEquals>
+        </COr>
+      </CAnd>
+    </CAnd>
+  </INVARIANT>
+  <INITIALISATION>
+    <CMultipleAssignment>
+      <CAssignment>
+        <CVariable val="Combine" />
+        <CNumber val="0" />
+      </CAssignment>
+      <CAssignment>
+        <CVariable val="NbEssai" />
+        <CNumber val="0" />
+      </CAssignment>
+      <CAssignment>
+        <CVariable val="Etat" />
+        <CNumber val="4" />
+      </CAssignment>
+    </CMultipleAssignment>
+  </INITIALISATION>
+  <EVENTS>
+    <CGuardedEvent name="Start">
+      <CAnd>
+        <CEquals>
+          <CVariable val="Combine" />
+          <CNumber val="1" />
+        </CEquals>
+        <CNot>
+          <CEquals>
+            <CVariable val="Etat" />
+            <CNumber val="5" />
+          </CEquals>
+        </CNot>
+        <CNot>
+          <CEquals>
+            <CVariable val="Etat" />
+            <CNumber val="4" />
+          </CEquals>
+        </CNot>
+      </CAnd>
+      <CAny>
+        <VariablesList>
+          <CVariable val="e" />
+        </VariablesList>
+        <CAnd>
+          <CGreater>
+            <CVariable val="e" />
+            <CNumber val="-1" />
+          </CGreater>
+          <CGreater>
+            <CNumber val="7" />
+            <CVariable val="e" />
+          </CGreater>
+        </CAnd>
+        <CIf>
+          <CAnd>
+            <CEquals>
+              <CVariable val="e" />
+              <CNumber val="6" />
+            </CEquals>
+            <CEquals>
+              <CVariable val="Etat" />
+              <CNumber val="0" />
+            </CEquals>
+          </CAnd>
+          <CAssignment>
+            <CVariable val="Etat" />
+            <CNumber val="1" />
+          </CAssignment>
+          <CIf>
+            <CAnd>
+              <CEquals>
+                <CVariable val="e" />
+                <CNumber val="3" />
+              </CEquals>
+              <CEquals>
+                <CVariable val="Etat" />
+                <CNumber val="1" />
+              </CEquals>
+            </CAnd>
+            <CAssignment>
+              <CVariable val="Etat" />
+              <CNumber val="3" />
+            </CAssignment>
+            <CIf>
+              <CAnd>
+                <CEquals>
+                  <CVariable val="e" />
+                  <CNumber val="6" />
+                </CEquals>
+                <CEquals>
+                  <CVariable val="Etat" />
+                  <CNumber val="2" />
+                </CEquals>
+              </CAnd>
+              <CAssignment>
+                <CVariable val="Etat" />
+                <CNumber val="1" />
+              </CAssignment>
+              <CIf>
+                <CAnd>
+                  <CEquals>
+                    <CVariable val="e" />
+                    <CNumber val="6" />
+                  </CEquals>
+                  <CEquals>
+                    <CVariable val="Etat" />
+                    <CNumber val="3" />
+                  </CEquals>
+                </CAnd>
+                <CAssignment>
+                  <CVariable val="Etat" />
+                  <CNumber val="1" />
+                </CAssignment>
+                <CSkip />
+              </CIf>
+            </CIf>
+          </CIf>
+        </CIf>
+      </CAny>
+    </CGuardedEvent>
+    <CGuardedEvent name="Timeout">
+      <CAnd>
+        <CEquals>
+          <CVariable val="Combine" />
+          <CNumber val="1" />
+        </CEquals>
+        <CNot>
+          <CEquals>
+            <CVariable val="Etat" />
+            <CNumber val="5" />
+          </CEquals>
+        </CNot>
+      </CAnd>
+      <CIf>
+        <CEquals>
+          <CVariable val="Etat" />
+          <CNumber val="2" />
+        </CEquals>
+        <CAssignment>
+          <CVariable val="Etat" />
+          <CNumber val="5" />
+        </CAssignment>
+        <CIf>
+          <CEquals>
+            <CVariable val="NbEssai" />
+            <CNumber val="2" />
+          </CEquals>
+          <CAssignment>
+            <CVariable val="Etat" />
+            <CNumber val="5" />
+          </CAssignment>
+          <CAssignment>
+            <CVariable val="NbEssai" />
+            <CPlus>
+              <CVariable val="NbEssai" />
+              <CNumber val="1" />
+            </CPlus>
+          </CAssignment>
+        </CIf>
+      </CIf>
+    </CGuardedEvent>
+    <CGuardedEvent name="HangUp">
+      <COr>
+        <CEquals>
+          <CVariable val="Combine" />
+          <CNumber val="1" />
+        </CEquals>
+        <CEquals>
+          <CVariable val="Etat" />
+          <CNumber val="5" />
+        </CEquals>
+      </COr>
+      <CMultipleAssignment>
+        <CAssignment>
+          <CVariable val="Etat" />
+          <CNumber val="4" />
+        </CAssignment>
+        <CAssignment>
+          <CVariable val="Combine" />
+          <CNumber val="0" />
+        </CAssignment>
+        <CAssignment>
+          <CVariable val="NbEssai" />
+          <CNumber val="0" />
+        </CAssignment>
+      </CMultipleAssignment>
+    </CGuardedEvent>
+    <CGuardedEvent name="Appel_Qui_Donc">
+      <CEquals>
+        <CVariable val="Combine" />
+        <CNumber val="0" />
+      </CEquals>
+      <CMultipleAssignment>
+        <CAssignment>
+          <CVariable val="Combine" />
+          <CNumber val="1" />
+        </CAssignment>
+        <CAssignment>
+          <CVariable val="Etat" />
+          <CNumber val="0" />
+        </CAssignment>
+      </CMultipleAssignment>
+    </CGuardedEvent>
+  </EVENTS>
+</MACHINE>

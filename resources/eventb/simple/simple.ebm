@@ -1,0 +1,65 @@
+<MACHINE name="simple">
+
+    <VARIABLES>
+        <CVariable val="var1"/>
+        <CVariable val="var2"/>
+    </VARIABLES>
+
+    <INVARIANT>
+        <CAnd>
+            <COr>
+                <CEquals>
+                    <CVariable val="var1"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="var1"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="var2"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="var2"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+        </CAnd>
+    </INVARIANT>
+
+    <INITIALISATION>
+        <CMultipleAssignment>
+            <CAssignment>
+                <CVariable val="var1"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="var2"/>
+                <CNumber val="0"/>
+            </CAssignment>
+        </CMultipleAssignment>
+    </INITIALISATION>
+
+    <EVENTS>
+        <CGuardedEvent name="event1">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="var1"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="var2"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="var1"/>
+                <CNumber val="1"/>
+            </CAssignment>
+        </CGuardedEvent>
+    </EVENTS>
+
+</MACHINE>
