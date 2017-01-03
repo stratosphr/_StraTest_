@@ -2,13 +2,13 @@ package algorithms.outputs;
 
 import eventb.graphs.AbstractState;
 import eventb.graphs.AbstractTransition;
-import utilities.graphviz.graphs.AGraphvizGraph;
 import utilities.graphviz.graphs.AGraphvizNode;
 import utilities.graphviz.graphs.GraphvizNode;
 import utilities.graphviz.graphs.directed.DirectedGraphvizGraph;
 import utilities.graphviz.graphs.directed.DirectedGraphvizTransition;
 import utilities.graphviz.graphs.parameters.GlobalGraphvizParameter;
-import utilities.graphviz.graphs.parameters.GraphvizParameter;
+import utilities.graphviz.graphs.parameters.HtmlGraphvizParameter;
+import utilities.graphviz.graphs.parameters.StringGraphvizParameter;
 import utilities.graphviz.visitors.IGraphvizGraphable;
 
 import java.util.Arrays;
@@ -22,7 +22,7 @@ import java.util.stream.Stream;
  * Created by gvoiron on 22/12/16.
  * Time : 13:42
  */
-public final class TriModalTransitionSystem implements IGraphvizGraphable<DirectedGraphvizTransition> {
+public final class TriModalTransitionSystem implements IGraphvizGraphable {
 
     private final LinkedHashSet<AbstractState> Q0;
     private final LinkedHashSet<AbstractState> Q;
@@ -39,15 +39,15 @@ public final class TriModalTransitionSystem implements IGraphvizGraphable<Direct
     }
 
     @Override
-    public AGraphvizGraph<DirectedGraphvizTransition> getCorrespondingGraphvizGraph() {
-        LinkedHashSet<AGraphvizNode> states = getQ().stream().map(abstractState -> new GraphvizNode(abstractState.getName(), Collections.singletonList(new GraphvizParameter("label", abstractState.getExpression().toString())))).collect(Collectors.toCollection(LinkedHashSet::new));
+    public DirectedGraphvizGraph getCorrespondingGraphvizGraph() {
+        LinkedHashSet<AGraphvizNode> states = getQ().stream().map(abstractState -> new GraphvizNode(abstractState.getName(), Collections.singletonList(new StringGraphvizParameter("label", abstractState.getExpression().toString())))).collect(Collectors.toCollection(LinkedHashSet::new));
         LinkedHashSet<DirectedGraphvizTransition> transitions = new LinkedHashSet<>();
-        LinkedHashSet<DirectedGraphvizTransition> DeltaSharp = DeltaMinus.stream().filter(DeltaPlus::contains).map(abstractTransition -> new DirectedGraphvizTransition(new GraphvizNode(abstractTransition.getSource().getName(), Collections.singletonList(new GraphvizParameter("label", abstractTransition.getSource().getExpression().toString()))), new GraphvizNode(abstractTransition.getTarget().getName(), Collections.singletonList(new GraphvizParameter("label", abstractTransition.getTarget().getExpression().toString()))), Collections.singletonList(new GraphvizParameter("label", "# " + abstractTransition.getEvent().getName())))).collect(Collectors.toCollection(LinkedHashSet::new));
-        LinkedHashSet<DirectedGraphvizTransition> DeltaPureMinus = DeltaMinus.stream().filter(abstractTransition -> !DeltaPlus.contains(abstractTransition)).map(abstractTransition -> new DirectedGraphvizTransition(new GraphvizNode(abstractTransition.getSource().getName(), Collections.singletonList(new GraphvizParameter("label", abstractTransition.getSource().getExpression().toString()))), new GraphvizNode(abstractTransition.getTarget().getName(), Collections.singletonList(new GraphvizParameter("label", abstractTransition.getTarget().getExpression().toString()))), Collections.singletonList(new GraphvizParameter("label", "- " + abstractTransition.getEvent().getName())))).collect(Collectors.toCollection(LinkedHashSet::new));
-        LinkedHashSet<DirectedGraphvizTransition> DeltaPurePlus = DeltaPlus.stream().filter(abstractTransition -> !DeltaMinus.contains(abstractTransition)).map(abstractTransition -> new DirectedGraphvizTransition(new GraphvizNode(abstractTransition.getSource().getName(), Collections.singletonList(new GraphvizParameter("label", abstractTransition.getSource().getExpression().toString()))), new GraphvizNode(abstractTransition.getTarget().getName(), Collections.singletonList(new GraphvizParameter("label", abstractTransition.getTarget().getExpression().toString()))), Collections.singletonList(new GraphvizParameter("label", "+ " + abstractTransition.getEvent().getName())))).collect(Collectors.toCollection(LinkedHashSet::new));
-        LinkedHashSet<DirectedGraphvizTransition> DeltaPureMay = Delta.stream().filter(abstractTransition -> !DeltaMinus.contains(abstractTransition) && !DeltaPlus.contains(abstractTransition)).map(abstractTransition -> new DirectedGraphvizTransition(new GraphvizNode(abstractTransition.getSource().getName(), Collections.singletonList(new GraphvizParameter("label", abstractTransition.getSource().getExpression().toString()))), new GraphvizNode(abstractTransition.getTarget().getName(), Collections.singletonList(new GraphvizParameter("label", abstractTransition.getTarget().getExpression().toString()))), Collections.singletonList(new GraphvizParameter("label", abstractTransition.getEvent().getName())))).collect(Collectors.toCollection(LinkedHashSet::new));
-        transitions.addAll(Stream.of(DeltaSharp, DeltaPureMinus, DeltaPurePlus, DeltaPureMay).flatMap(Collection::stream).collect(Collectors.toCollection(LinkedHashSet::new)));
-        return new DirectedGraphvizGraph(states, transitions, Arrays.asList(new GraphvizParameter("rankdir", "LR"), new GlobalGraphvizParameter("node", Arrays.asList(new GraphvizParameter("shape", "box"), new GraphvizParameter("style", "rounded,filled"), new GraphvizParameter("color", "lightblue2")))));
+        LinkedHashSet<DirectedGraphvizTransition> DeltaPureMay = Delta.stream().filter(abstractTransition -> !DeltaMinus.contains(abstractTransition) && !DeltaPlus.contains(abstractTransition)).map(abstractTransition -> new DirectedGraphvizTransition(new GraphvizNode(abstractTransition.getSource().getName(), Collections.singletonList(new StringGraphvizParameter("label", abstractTransition.getSource().getExpression().toString()))), new GraphvizNode(abstractTransition.getTarget().getName(), Collections.singletonList(new StringGraphvizParameter("label", abstractTransition.getTarget().getExpression().toString()))), Collections.singletonList(new StringGraphvizParameter("label", abstractTransition.getEvent().getName())))).collect(Collectors.toCollection(LinkedHashSet::new));
+        LinkedHashSet<DirectedGraphvizTransition> DeltaSharp = DeltaMinus.stream().filter(DeltaPlus::contains).map(abstractTransition -> new DirectedGraphvizTransition(new GraphvizNode(abstractTransition.getSource().getName(), Collections.singletonList(new StringGraphvizParameter("label", abstractTransition.getSource().getExpression().toString()))), new GraphvizNode(abstractTransition.getTarget().getName(), Collections.singletonList(new StringGraphvizParameter("label", abstractTransition.getTarget().getExpression().toString()))))).collect(Collectors.toCollection(LinkedHashSet::new));
+        LinkedHashSet<DirectedGraphvizTransition> DeltaPureMinus = DeltaMinus.stream().filter(abstractTransition -> !DeltaPlus.contains(abstractTransition)).map(abstractTransition -> new DirectedGraphvizTransition(new GraphvizNode(abstractTransition.getSource().getName(), Collections.singletonList(new StringGraphvizParameter("label", abstractTransition.getSource().getExpression().toString()))), new GraphvizNode(abstractTransition.getTarget().getName(), Collections.singletonList(new StringGraphvizParameter("label", abstractTransition.getTarget().getExpression().toString()))), Collections.singletonList(new HtmlGraphvizParameter("label", "<" + abstractTransition.getEvent().getName() + "<sup>-</sup>>")))).collect(Collectors.toCollection(LinkedHashSet::new));
+        LinkedHashSet<DirectedGraphvizTransition> DeltaPurePlus = DeltaPlus.stream().filter(abstractTransition -> !DeltaMinus.contains(abstractTransition)).map(abstractTransition -> new DirectedGraphvizTransition(new GraphvizNode(abstractTransition.getSource().getName(), Collections.singletonList(new StringGraphvizParameter("label", abstractTransition.getSource().getExpression().toString()))), new GraphvizNode(abstractTransition.getTarget().getName(), Collections.singletonList(new StringGraphvizParameter("label", abstractTransition.getTarget().getExpression().toString()))))).collect(Collectors.toCollection(LinkedHashSet::new));
+        transitions.addAll(Stream.of(DeltaPureMay, DeltaSharp, DeltaPureMinus, DeltaPurePlus).flatMap(Collection::stream).collect(Collectors.toCollection(LinkedHashSet::new)));
+        return new DirectedGraphvizGraph(states, transitions, Arrays.asList(new StringGraphvizParameter("rankdir", "LR"), new GlobalGraphvizParameter("node", Arrays.asList(new StringGraphvizParameter("shape", "box"), new StringGraphvizParameter("style", "rounded,filled"), new StringGraphvizParameter("color", "lightblue2")))));
     }
 
     public LinkedHashSet<AbstractState> getQ0() {

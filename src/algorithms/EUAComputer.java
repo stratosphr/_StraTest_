@@ -7,9 +7,9 @@ import algorithms.outputs.EventSystem;
 import algorithms.outputs.TriModalTransitionSystem;
 import eventb.Event;
 import eventb.Machine;
-import eventb.exprs.bool.ABoolExpr;
-import eventb.exprs.bool.And;
-import eventb.exprs.bool.Or;
+import eventb.exprs.AExpr;
+import eventb.exprs.arith.QuantifiedVariable;
+import eventb.exprs.bool.*;
 import eventb.graphs.AbstractState;
 import eventb.graphs.AbstractTransition;
 import eventb.graphs.ConcreteState;
@@ -26,12 +26,13 @@ import java.util.stream.Collectors;
 import static algorithms.heuristics.EConcreteStateColor.BLUE;
 import static algorithms.heuristics.EConcreteStateColor.GREEN;
 import static com.microsoft.z3.Status.SATISFIABLE;
+import static com.microsoft.z3.Status.UNSATISFIABLE;
 
 /**
  * Created by gvoiron on 22/12/16.
  * Time : 13:36
  */
-public class ATSComputer implements IComputer<ApproximatedTransitionSystem> {
+public final class EUAComputer implements IComputer<ApproximatedTransitionSystem> {
 
     private final Machine machine;
     private final LinkedHashSet<AbstractState> A;
@@ -51,31 +52,31 @@ public class ATSComputer implements IComputer<ApproximatedTransitionSystem> {
     private final LinkedHashSet<ConcreteTransition> DeltaC;
     private final Z3 z3;
 
-    public ATSComputer(Machine machine, LinkedHashSet<AbstractState> A) {
+    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A) {
         this(machine, A, new DefaultAbstractStatesOrderingFunction(), new DefaultEventsOrderingFunction(), true);
     }
 
-    public ATSComputer(Machine machine, LinkedHashSet<AbstractState> A, IAbstractStatesOrderingFunction abstractStatesOrderingFunction) {
+    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A, IAbstractStatesOrderingFunction abstractStatesOrderingFunction) {
         this(machine, A, abstractStatesOrderingFunction, new DefaultEventsOrderingFunction(), true);
     }
 
-    public ATSComputer(Machine machine, LinkedHashSet<AbstractState> A, IEventsOrderingFunction eventsOrderingFunction) {
+    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A, IEventsOrderingFunction eventsOrderingFunction) {
         this(machine, A, new DefaultAbstractStatesOrderingFunction(), eventsOrderingFunction, true);
     }
 
-    public ATSComputer(Machine machine, LinkedHashSet<AbstractState> A, boolean isExclusive) {
+    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A, boolean isExclusive) {
         this(machine, A, new DefaultAbstractStatesOrderingFunction(), new DefaultEventsOrderingFunction(), isExclusive);
     }
 
-    public ATSComputer(Machine machine, LinkedHashSet<AbstractState> A, IAbstractStatesOrderingFunction abstractStatesOrderingFunction, boolean isExclusive) {
+    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A, IAbstractStatesOrderingFunction abstractStatesOrderingFunction, boolean isExclusive) {
         this(machine, A, abstractStatesOrderingFunction, new DefaultEventsOrderingFunction(), isExclusive);
     }
 
-    public ATSComputer(Machine machine, LinkedHashSet<AbstractState> A, IEventsOrderingFunction eventsOrderingFunction, boolean isExclusive) {
+    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A, IEventsOrderingFunction eventsOrderingFunction, boolean isExclusive) {
         this(machine, A, new DefaultAbstractStatesOrderingFunction(), eventsOrderingFunction, isExclusive);
     }
 
-    public ATSComputer(Machine machine, LinkedHashSet<AbstractState> A, IAbstractStatesOrderingFunction abstractStatesOrderingFunction, IEventsOrderingFunction eventsOrderingFunction, boolean isExclusive) {
+    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A, IAbstractStatesOrderingFunction abstractStatesOrderingFunction, IEventsOrderingFunction eventsOrderingFunction, boolean isExclusive) {
         this.machine = machine;
         this.A = A;
         this.eventsOrderingFunction = eventsOrderingFunction;
@@ -132,6 +133,8 @@ public class ATSComputer implements IComputer<ApproximatedTransitionSystem> {
                         Model model = z3.getModel();
                         AbstractTransition abstractTransition = new AbstractTransition(q, e, q_);
                         getDelta().add(abstractTransition);
+                        registerMustMinus(abstractTransition);
+                        registerMustPlus(abstractTransition);
                         if (isExclusive) {
                             if (!instantiateFromGreenToBlue(abstractTransition)) {
                                 if (!instantiateFromGreenToAny(abstractTransition)) {
@@ -156,6 +159,24 @@ public class ATSComputer implements IComputer<ApproximatedTransitionSystem> {
                 }
             }
         }
+    }
+
+    private boolean registerMustMinus(AbstractTransition abstractTransition) {
+        z3.setCode(new And(getMachine().getInvariant().prime(), new Not(new Exists(new And(getMachine().getInvariant(), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), abstractTransition.getSource()), getMachine().getQuantifiedVariables().stream().toArray(QuantifiedVariable[]::new))), abstractTransition.getTarget().getExpression().prime()));
+        if (z3.checkSAT() == UNSATISFIABLE) {
+            DeltaMinus.add(abstractTransition);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean registerMustPlus(AbstractTransition abstractTransition) {
+        z3.setCode(new And(getMachine().getInvariant(), abstractTransition.getSource().getExpression(), new Not(new Exists(new And(getMachine().getInvariant().prime(), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), abstractTransition.getTarget().getExpression().prime()), getMachine().getQuantifiedVariables().stream().map(AExpr::prime).toArray(QuantifiedVariable[]::new)))));
+        if (z3.checkSAT() == UNSATISFIABLE) {
+            DeltaPlus.add(abstractTransition);
+            return true;
+        }
+        return false;
     }
 
     public boolean instantiateFromGreenToBlue(AbstractTransition abstractTransition) {

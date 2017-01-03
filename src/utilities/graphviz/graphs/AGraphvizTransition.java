@@ -1,7 +1,7 @@
 package utilities.graphviz.graphs;
 
 import utilities.graphviz.AGraphvizObject;
-import utilities.graphviz.graphs.parameters.GraphvizParameter;
+import utilities.graphviz.graphs.parameters.ANonGlobalGraphvizParameter;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,13 +14,13 @@ public abstract class AGraphvizTransition extends AGraphvizObject {
 
     private final AGraphvizNode source;
     private final AGraphvizNode target;
-    private final List<GraphvizParameter> parameters;
+    private final List<ANonGlobalGraphvizParameter> parameters;
 
     public AGraphvizTransition(AGraphvizNode source, AGraphvizNode target) {
         this(source, target, Collections.emptyList());
     }
 
-    public AGraphvizTransition(AGraphvizNode source, AGraphvizNode target, List<GraphvizParameter> parameters) {
+    public AGraphvizTransition(AGraphvizNode source, AGraphvizNode target, List<ANonGlobalGraphvizParameter> parameters) {
         this.source = source;
         this.target = target;
         this.parameters = parameters;
@@ -34,7 +34,7 @@ public abstract class AGraphvizTransition extends AGraphvizObject {
         return target;
     }
 
-    public List<GraphvizParameter> getParameters() {
+    public List<ANonGlobalGraphvizParameter> getParameters() {
         return parameters;
     }
 

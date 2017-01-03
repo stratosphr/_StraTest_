@@ -2,8 +2,13 @@
 <AbstractionPredicatesList>
 
     <CEquals>
-        <CVariable val="var1"/>
+        <CVariable val="x"/>
         <CNumber val="1"/>
+    </CEquals>
+
+    <CEquals>
+        <CVariable val="y"/>
+        <CNumber val="0"/>
     </CEquals>
 
 </AbstractionPredicatesList>

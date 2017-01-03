@@ -3,7 +3,7 @@ package utilities.graphviz.graphs.directed;
 import utilities.graphviz.graphs.AGraphvizGraph;
 import utilities.graphviz.graphs.AGraphvizNode;
 import utilities.graphviz.graphs.parameters.AGraphvizParameter;
-import utilities.graphviz.visitors.GraphvizFormatter;
+import utilities.graphviz.visitors.AGraphvizFormatter;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -23,7 +23,7 @@ public final class DirectedGraphvizGraph extends AGraphvizGraph<DirectedGraphviz
     }
 
     @Override
-    public String accept(GraphvizFormatter visitor) {
+    public String accept(AGraphvizFormatter visitor) {
         return visitor.visit(this);
     }
 

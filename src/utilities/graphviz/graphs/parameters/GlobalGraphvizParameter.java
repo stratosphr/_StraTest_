@@ -1,6 +1,6 @@
 package utilities.graphviz.graphs.parameters;
 
-import utilities.graphviz.visitors.GraphvizFormatter;
+import utilities.graphviz.visitors.AGraphvizFormatter;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ import java.util.List;
 public final class GlobalGraphvizParameter extends AGraphvizParameter {
 
     private final String scope;
-    private final List<GraphvizParameter> parameters;
+    private final List<StringGraphvizParameter> parameters;
 
-    public GlobalGraphvizParameter(String scope, List<GraphvizParameter> parameters) {
+    public GlobalGraphvizParameter(String scope, List<StringGraphvizParameter> parameters) {
         this.scope = scope;
         this.parameters = parameters;
     }
@@ -22,12 +22,12 @@ public final class GlobalGraphvizParameter extends AGraphvizParameter {
         return scope;
     }
 
-    public List<GraphvizParameter> getParameters() {
+    public List<StringGraphvizParameter> getParameters() {
         return parameters;
     }
 
     @Override
-    public String accept(GraphvizFormatter visitor) {
+    public String accept(AGraphvizFormatter visitor) {
         return visitor.visit(this);
     }
 

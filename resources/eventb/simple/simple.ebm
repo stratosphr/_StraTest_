@@ -1,62 +1,76 @@
 <MACHINE name="simple">
 
     <VARIABLES>
-        <CVariable val="var1"/>
-        <CVariable val="var2"/>
+        <CVariable val="x"/>
+        <CVariable val="y"/>
     </VARIABLES>
 
     <INVARIANT>
         <CAnd>
-            <COr>
-                <CEquals>
-                    <CVariable val="var1"/>
-                    <CNumber val="0"/>
-                </CEquals>
-                <CEquals>
-                    <CVariable val="var1"/>
-                    <CNumber val="1"/>
-                </CEquals>
-            </COr>
-            <COr>
-                <CEquals>
-                    <CVariable val="var2"/>
-                    <CNumber val="0"/>
-                </CEquals>
-                <CEquals>
-                    <CVariable val="var2"/>
-                    <CNumber val="1"/>
-                </CEquals>
-            </COr>
+            <CAnd>
+                <CGreater>
+                    <CVariable val="x"/>
+                    <CNumber val="-1"/>
+                </CGreater>
+                <CGreater>
+                    <CNumber val="4"/>
+                    <CVariable val="x"/>
+                </CGreater>
+            </CAnd>
+            <CAnd>
+                <CGreater>
+                    <CVariable val="y"/>
+                    <CNumber val="-1"/>
+                </CGreater>
+                <CGreater>
+                    <CNumber val="2"/>
+                    <CVariable val="y"/>
+                </CGreater>
+            </CAnd>
         </CAnd>
     </INVARIANT>
 
     <INITIALISATION>
         <CMultipleAssignment>
             <CAssignment>
-                <CVariable val="var1"/>
+                <CVariable val="x"/>
                 <CNumber val="0"/>
             </CAssignment>
             <CAssignment>
-                <CVariable val="var2"/>
+                <CVariable val="y"/>
                 <CNumber val="0"/>
             </CAssignment>
         </CMultipleAssignment>
     </INITIALISATION>
 
     <EVENTS>
-        <CGuardedEvent name="event1">
-            <CAnd>
-                <CEquals>
-                    <CVariable val="var1"/>
-                    <CNumber val="0"/>
-                </CEquals>
-                <CEquals>
-                    <CVariable val="var2"/>
-                    <CNumber val="0"/>
-                </CEquals>
-            </CAnd>
+        <CGuardedEvent name="e0">
+            <CEquals>
+                <CVariable val="x"/>
+                <CNumber val="0"/>
+            </CEquals>
             <CAssignment>
-                <CVariable val="var1"/>
+                <CVariable val="x"/>
+                <CNumber val="1"/>
+            </CAssignment>
+        </CGuardedEvent>
+        <CGuardedEvent name="e1">
+            <CEquals>
+                <CVariable val="x"/>
+                <CNumber val="1"/>
+            </CEquals>
+            <CAssignment>
+                <CVariable val="y"/>
+                <CNumber val="0"/>
+            </CAssignment>
+        </CGuardedEvent>
+        <CGuardedEvent name="e2">
+            <CEquals>
+                <CVariable val="x"/>
+                <CNumber val="1"/>
+            </CEquals>
+            <CAssignment>
+                <CVariable val="y"/>
                 <CNumber val="1"/>
             </CAssignment>
         </CGuardedEvent>

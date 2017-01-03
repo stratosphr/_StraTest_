@@ -2,8 +2,8 @@ package utilities.graphviz.graphs.directed;
 
 import utilities.graphviz.graphs.AGraphvizNode;
 import utilities.graphviz.graphs.AGraphvizTransition;
-import utilities.graphviz.graphs.parameters.GraphvizParameter;
-import utilities.graphviz.visitors.GraphvizFormatter;
+import utilities.graphviz.graphs.parameters.ANonGlobalGraphvizParameter;
+import utilities.graphviz.visitors.AGraphvizFormatter;
 
 import java.util.List;
 
@@ -17,12 +17,12 @@ public final class DirectedGraphvizTransition extends AGraphvizTransition {
         super(source, target);
     }
 
-    public DirectedGraphvizTransition(AGraphvizNode source, AGraphvizNode target, List<GraphvizParameter> parameters) {
+    public DirectedGraphvizTransition(AGraphvizNode source, AGraphvizNode target, List<ANonGlobalGraphvizParameter> parameters) {
         super(source, target, parameters);
     }
 
     @Override
-    public String accept(GraphvizFormatter visitor) {
+    public String accept(AGraphvizFormatter visitor) {
         return visitor.visit(this);
     }
 

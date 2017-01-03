@@ -1,11 +1,13 @@
 package eventb;
 
 import eventb.exprs.arith.AAssignable;
+import eventb.exprs.arith.QuantifiedVariable;
 import eventb.exprs.bool.Invariant;
 import eventb.substitutions.ASubstitution;
 import eventb.visitors.EventBFormatter;
 
 import java.util.LinkedHashSet;
+import java.util.stream.Collectors;
 
 import static eventb.parsers.metamodel.EventBRegex.IDENTIFIER;
 
@@ -21,6 +23,7 @@ public final class Machine extends AEventBObject {
     private final Invariant invariant;
     private final ASubstitution initialisation;
     private final LinkedHashSet<Event> events;
+    private QuantifiedVariable quantifiedVariables;
 
     public Machine(String name, LinkedHashSet<Object> sets, LinkedHashSet<AAssignable> assignables, Invariant invariant, ASubstitution initialisation, LinkedHashSet<Event> events) throws Error {
         if (!name.matches(IDENTIFIER)) {
@@ -64,6 +67,10 @@ public final class Machine extends AEventBObject {
 
     public LinkedHashSet<Event> getEvents() {
         return events;
+    }
+
+    public LinkedHashSet<QuantifiedVariable> getQuantifiedVariables() {
+        return getAssignables().stream().flatMap(assignable -> assignable.getVariables().stream()).map(QuantifiedVariable::new).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
 }

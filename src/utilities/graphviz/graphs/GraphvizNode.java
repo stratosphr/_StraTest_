@@ -1,7 +1,8 @@
 package utilities.graphviz.graphs;
 
-import utilities.graphviz.graphs.parameters.GraphvizParameter;
-import utilities.graphviz.visitors.GraphvizFormatter;
+import utilities.graphviz.graphs.parameters.AGraphvizParameter;
+import utilities.graphviz.graphs.parameters.ANonGlobalGraphvizParameter;
+import utilities.graphviz.visitors.AGraphvizFormatter;
 
 import java.util.List;
 
@@ -15,12 +16,12 @@ public final class GraphvizNode extends AGraphvizNode {
         super(name);
     }
 
-    public GraphvizNode(String name, List<GraphvizParameter> parameters) {
+    public GraphvizNode(String name, List<ANonGlobalGraphvizParameter> parameters) {
         super(name, parameters);
     }
 
     @Override
-    public String accept(GraphvizFormatter visitor) {
+    public String accept(AGraphvizFormatter visitor) {
         return visitor.visit(this);
     }
 

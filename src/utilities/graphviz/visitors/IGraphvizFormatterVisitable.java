@@ -6,6 +6,6 @@ package utilities.graphviz.visitors;
  */
 public interface IGraphvizFormatterVisitable {
 
-    String accept(GraphvizFormatter visitor);
+    String accept(AGraphvizFormatter visitor);
 
 }

@@ -2,7 +2,7 @@ package utilities.graphviz.graphs.directed;
 
 import utilities.graphviz.graphs.AGraphvizCluster;
 import utilities.graphviz.graphs.AGraphvizNode;
-import utilities.graphviz.visitors.GraphvizFormatter;
+import utilities.graphviz.visitors.AGraphvizFormatter;
 
 import java.util.LinkedHashSet;
 
@@ -17,7 +17,7 @@ public final class DirectedGraphvizCluster extends AGraphvizCluster<DirectedGrap
     }
 
     @Override
-    public String accept(GraphvizFormatter visitor) {
+    public String accept(AGraphvizFormatter visitor) {
         return visitor.visit(this);
     }
 

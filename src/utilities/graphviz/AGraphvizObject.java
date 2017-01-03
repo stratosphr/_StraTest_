@@ -1,5 +1,6 @@
 package utilities.graphviz;
 
+import utilities.graphviz.visitors.AGraphvizFormatter;
 import utilities.graphviz.visitors.GraphvizFormatter;
 import utilities.graphviz.visitors.IGraphvizFormatterVisitable;
 

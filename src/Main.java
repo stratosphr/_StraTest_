@@ -1,12 +1,11 @@
-import algorithms.ATSComputer;
+import algorithms.EUAComputer;
 import algorithms.outputs.ApproximatedTransitionSystem;
 import algorithms.utilities.AbstractStatesComputer;
 import eventb.Machine;
 import eventb.exprs.bool.Predicate;
 import eventb.graphs.AbstractState;
 import eventb.parsers.EventBParser;
-import utilities.graphviz.graphs.AGraphvizGraph;
-import utilities.graphviz.graphs.directed.DirectedGraphvizTransition;
+import utilities.graphviz.graphs.directed.DirectedGraphvizGraph;
 
 import java.io.File;
 import java.util.*;
@@ -15,10 +14,13 @@ public class Main {
 
     public static void main(String[] args) {
         LinkedHashSet<Predicate> threeBatteries_default = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_default.ap"));
-        go(getMachine("threeBatteries"), threeBatteries_default);
+        LinkedHashSet<Predicate> simple_1 = EventBParser.parseAbstractionPredicates(new File("resources/eventb/simple/simple_1.ap"));
+        go(getMachine("simple"), simple_1);
     }
 
     private static Machine getMachine(String machineName) {
+        Machine simple = EventBParser.parseMachine(new File("resources/eventb/simple/simple.ebm"));
+        LinkedHashSet<Predicate> simple_1 = EventBParser.parseAbstractionPredicates(new File("resources/eventb/simple/simple_1.ap"));
         Machine threeBatteries = EventBParser.parseMachine(new File("resources/eventb/threeBatteries/threeBatteries.ebm"));
         LinkedHashSet<Predicate> threeBatteries_default = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_default.ap"));
         LinkedHashSet<Predicate> threeBatteries_1guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_1guard.ap"));
@@ -48,10 +50,11 @@ public class Main {
         LinkedHashSet<Predicate> phone_1post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/phone/phone_1post.ap"));
         LinkedHashSet<Predicate> phone_2post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/phone/phone_2post.ap"));
         Map<Machine, List<LinkedHashSet<Predicate>>> examples = new LinkedHashMap<>();
-        examples.put(creditCard, Arrays.asList(creditCard_1guard, creditCard_2guard, creditCard_1post, creditCard_2post));
+        examples.put(simple, Collections.singletonList(simple_1));
         examples.put(threeBatteries, Arrays.asList(threeBatteries_default, threeBatteries_1guard, threeBatteries_2guard, threeBatteries_1post));
         examples.put(carAlarm, Arrays.asList(carAlarm_1guard, carAlarm_2guard, carAlarm_1post, carAlarm_2post));
         examples.put(coffeeMachine, Arrays.asList(coffeeMachine_1guard, coffeeMachine_2guard, coffeeMachine_1post, coffeeMachine_2post));
+        examples.put(creditCard, Arrays.asList(creditCard_1guard, creditCard_2guard, creditCard_1post, creditCard_2post));
         examples.put(frontWiper, Arrays.asList(frontWiper_1guard, frontWiper_2guard));
         examples.put(phone, Arrays.asList(phone_1guard, phone_2guard, phone_1post, phone_2post));
         return examples.keySet().stream().filter(machine -> machine.getName().equals(machineName)).findFirst().orElse(null);
@@ -59,10 +62,9 @@ public class Main {
 
     private static void go(Machine machine, LinkedHashSet<Predicate> abstractionPredicates) {
         LinkedHashSet<AbstractState> abstractStates = new AbstractStatesComputer(machine.getInvariant(), abstractionPredicates).compute();
-        ApproximatedTransitionSystem ats1 = new ATSComputer(machine, abstractStates).compute();
-        ApproximatedTransitionSystem ats2 = new ATSComputer(machine, abstractStates, false).compute();
-        AGraphvizGraph<DirectedGraphvizTransition> graph1 = ats1.getTriModalTransitionSystem().getCorrespondingGraphvizGraph();
-        AGraphvizGraph<DirectedGraphvizTransition> graph2 = ats2.getTriModalTransitionSystem().getCorrespondingGraphvizGraph();
+        ApproximatedTransitionSystem ats1 = new EUAComputer(machine, abstractStates).compute();
+        DirectedGraphvizGraph graph1 = ats1.getTriModalTransitionSystem().getCorrespondingGraphvizGraph();
+        DirectedGraphvizGraph graph2 = ats1.getConcreteTransitionSystem().getCorrespondingGraphvizGraph();
         System.out.println(graph1);
         System.out.println(graph2);
     }
