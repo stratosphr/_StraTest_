@@ -1,7 +1,7 @@
 package algorithms.heuristics;
 
 import eventb.graphs.AbstractState;
-import utilities.Tuple;
+import utilities.sets.Tuple;
 
 import java.util.LinkedHashSet;
 import java.util.List;

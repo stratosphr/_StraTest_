@@ -1,4 +1,5 @@
 import algorithms.EUAComputer;
+import algorithms.UUAComputer;
 import algorithms.outputs.ApproximatedTransitionSystem;
 import algorithms.utilities.AbstractStatesComputer;
 import eventb.Machine;
@@ -15,7 +16,7 @@ public class Main {
     public static void main(String[] args) {
         LinkedHashSet<Predicate> threeBatteries_default = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_default.ap"));
         LinkedHashSet<Predicate> simple_1 = EventBParser.parseAbstractionPredicates(new File("resources/eventb/simple/simple_1.ap"));
-        go(getMachine("simple"), simple_1);
+        go(getMachine("threeBatteries"), threeBatteries_default);
     }
 
     private static Machine getMachine(String machineName) {
@@ -62,11 +63,10 @@ public class Main {
 
     private static void go(Machine machine, LinkedHashSet<Predicate> abstractionPredicates) {
         LinkedHashSet<AbstractState> abstractStates = new AbstractStatesComputer(machine.getInvariant(), abstractionPredicates).compute();
-        ApproximatedTransitionSystem ats1 = new EUAComputer(machine, abstractStates).compute();
-        DirectedGraphvizGraph graph1 = ats1.getTriModalTransitionSystem().getCorrespondingGraphvizGraph();
-        DirectedGraphvizGraph graph2 = ats1.getConcreteTransitionSystem().getCorrespondingGraphvizGraph();
-        System.out.println(graph1);
-        System.out.println(graph2);
+        ApproximatedTransitionSystem eua = new EUAComputer(machine, abstractStates).compute();
+        DirectedGraphvizGraph euaGraph = eua.getTriModalTransitionSystem().getCorrespondingGraphvizGraph();
+        System.out.println(euaGraph);
+        ApproximatedTransitionSystem uua = new UUAComputer(machine, eua).compute();
     }
 
 }

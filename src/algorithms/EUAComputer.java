@@ -7,7 +7,7 @@ import algorithms.outputs.EventSystem;
 import algorithms.outputs.TriModalTransitionSystem;
 import eventb.Event;
 import eventb.Machine;
-import eventb.exprs.AExpr;
+import eventb.exprs.arith.IntVariable;
 import eventb.exprs.arith.QuantifiedVariable;
 import eventb.exprs.bool.*;
 import eventb.graphs.AbstractState;
@@ -16,7 +16,7 @@ import eventb.graphs.ConcreteState;
 import eventb.graphs.ConcreteTransition;
 import solvers.z3.Model;
 import solvers.z3.Z3;
-import utilities.Tuple;
+import utilities.sets.Tuple;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -171,7 +171,7 @@ public final class EUAComputer implements IComputer<ApproximatedTransitionSystem
     }
 
     private boolean registerMustPlus(AbstractTransition abstractTransition) {
-        z3.setCode(new And(getMachine().getInvariant(), abstractTransition.getSource().getExpression(), new Not(new Exists(new And(getMachine().getInvariant().prime(), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), abstractTransition.getTarget().getExpression().prime()), getMachine().getQuantifiedVariables().stream().map(AExpr::prime).toArray(QuantifiedVariable[]::new)))));
+        z3.setCode(new And(getMachine().getInvariant(), abstractTransition.getSource(), new Not(new Exists(new And(getMachine().getInvariant().prime(), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), abstractTransition.getTarget().prime()), getMachine().getQuantifiedVariables().stream().map(quantifiedVariable -> new QuantifiedVariable((IntVariable) new IntVariable(quantifiedVariable.getName()).prime())).toArray(QuantifiedVariable[]::new)))));
         if (z3.checkSAT() == UNSATISFIABLE) {
             DeltaPlus.add(abstractTransition);
             return true;

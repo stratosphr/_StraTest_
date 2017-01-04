@@ -27,7 +27,9 @@ public final class Model {
                 Int value = new Int(Integer.parseInt(stringValue));
                 String name = variable.getName().toString();
                 if (name.endsWith(Primer.PRIME_SUFFIX)) {
-                    target.put((IntVariable) new IntVariable(name).unPrime(), value);
+                    if (!new IntVariable(name).unPrime().toString().endsWith(Primer.PRIME_SUFFIX)) {
+                        target.put((IntVariable) new IntVariable(name).unPrime(), value);
+                    }
                 } else {
                     source.put(new IntVariable(name), value);
                 }

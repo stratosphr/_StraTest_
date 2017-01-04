@@ -74,6 +74,22 @@
                 <CNumber val="1"/>
             </CAssignment>
         </CGuardedEvent>
+        <CGuardedEvent name="e3">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="x"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="y"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="y"/>
+                <CNumber val="0"/>
+            </CAssignment>
+        </CGuardedEvent>
     </EVENTS>
 
 </MACHINE>

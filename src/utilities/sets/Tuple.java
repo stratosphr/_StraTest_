@@ -1,4 +1,4 @@
-package utilities;
+package utilities.sets;
 
 /**
  * Created by gvoiron on 13/12/16.
@@ -20,6 +20,11 @@ public final class Tuple<First, Second> {
 
     public Second getSecond() {
         return second;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + getFirst() + ", " + getSecond() + ")";
     }
 
 }
