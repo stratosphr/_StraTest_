@@ -13,6 +13,7 @@ import java.io.File;
 import java.util.*;
 
 import static algorithms.heuristics.EEUAComputerHeuristics.EXCLUSIVE;
+import static algorithms.heuristics.EEUAComputerHeuristics.EXHAUSTIVE;
 import static algorithms.heuristics.EEUAComputerHeuristics.OLD_EXCLUSIVE;
 
 public class Main {
@@ -33,9 +34,13 @@ public class Main {
         LinkedHashSet<AbstractState> abstractStates = asResult.getResult();
         ComputerResult<ApproximatedTransitionSystem> eua0Result = new EUAComputer(machine, abstractStates, OLD_EXCLUSIVE).compute();
         ComputerResult<ApproximatedTransitionSystem> eua1Result = new EUAComputer(machine, abstractStates, EXCLUSIVE).compute();
+        ComputerResult<ApproximatedTransitionSystem> eua2Result = new EUAComputer(machine, abstractStates, EXHAUSTIVE).compute();
         ApproximatedTransitionSystem eua0 = eua0Result.getResult();
         ApproximatedTransitionSystem eua1 = eua1Result.getResult();
+        ApproximatedTransitionSystem eua2 = eua2Result.getResult();
         System.out.println(new ATSStatistics(eua0));
+        System.out.println(new ATSStatistics(eua1));
+        System.out.println(new ATSStatistics(eua2));
         /*System.out.println("---------------------------------------------------");
         /*ApproximatedTransitionSystem uua = new UUAComputer(machine, eua).compute_();
         DirectedGraphvizGraph uuaGraph = uua.getTriModalTransitionSystem().getCorrespondingGraphvizGraph();

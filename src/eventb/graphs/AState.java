@@ -18,16 +18,6 @@ public abstract class AState<Domain, CoDomain> extends APredicate {
         this.mapping = mapping;
     }
 
-    @Override
-    public String getName() {
-        return super.getName();
-    }
-
-    @Override
-    public ABoolExpr getExpression() {
-        return super.getExpression();
-    }
-
     public TreeMap<Domain, CoDomain> getMapping() {
         return mapping;
     }

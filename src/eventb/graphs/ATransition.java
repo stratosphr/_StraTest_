@@ -35,7 +35,17 @@ public abstract class ATransition<State extends AState> implements ICloneable<AT
     }
 
     @Override
-    public String toString() {
+    public final int hashCode() {
+        return (getClass() + "_" + toString()).hashCode();
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        return getClass().equals(o.getClass()) && ((this == o) || toString().equals(o.toString()));
+    }
+
+    @Override
+    public final String toString() {
         return getSource() + " -[ " + getEvent().getName() + " ]-> " + getTarget();
     }
 

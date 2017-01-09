@@ -35,6 +35,9 @@ public final class ATSStatistics extends AFormatter {
         abstractionStatistics.put("# abstract states", approximatedTransitionSystem.getTriModalTransitionSystem().getQ().size());
         abstractionStatistics.put("# reachable abstract states", reachableAbstractPart.getFirst().size());
         abstractionStatistics.put("# abstract transitions", approximatedTransitionSystem.getTriModalTransitionSystem().getDelta().size());
+        for (AbstractTransition abstractTransition : reachableAbstractPart.getSecond()) {
+            System.out.println(abstractTransition);
+        }
         abstractionStatistics.put("# reachable abstract transitions", reachableAbstractPart.getSecond().size());
         abstractionStatistics.put("# pure may transitions", approximatedTransitionSystem.getTriModalTransitionSystem().getDeltaPureMay().size());
         abstractionStatistics.put("# pure must- transitions", approximatedTransitionSystem.getTriModalTransitionSystem().getDeltaPureMinus().size());
