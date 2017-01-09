@@ -21,6 +21,11 @@ public final class ForAll extends AQuantifier {
     }
 
     @Override
+    public ForAll clone() {
+        return new ForAll(getExpression().clone(), getQuantifiedVariables().stream().map(QuantifiedVariable::clone).toArray(QuantifiedVariable[]::new));
+    }
+
+    @Override
     public ABoolExpr accept(Primer visitor) {
         return visitor.visit(this);
     }

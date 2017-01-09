@@ -6,4 +6,7 @@ package eventb.substitutions;
  */
 public abstract class AAssignment extends ASubstitution {
 
+    @Override
+    public abstract AAssignment clone();
+
 }

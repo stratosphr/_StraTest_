@@ -12,4 +12,7 @@ public abstract class ASubstitution extends AEventBObject {
 
     public abstract ABoolExpr getPrd(Machine machine);
 
+    @Override
+    public abstract ASubstitution clone();
+
 }

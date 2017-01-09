@@ -3,6 +3,7 @@ package eventb;
 import eventb.exprs.arith.AAssignable;
 import eventb.exprs.arith.QuantifiedVariable;
 import eventb.exprs.bool.Invariant;
+import eventb.exprs.sets.NamedSet;
 import eventb.substitutions.ASubstitution;
 import eventb.visitors.EventBFormatter;
 
@@ -18,14 +19,14 @@ import static eventb.parsers.metamodel.EventBRegex.IDENTIFIER;
 public final class Machine extends AEventBObject {
 
     private final String name;
-    private final LinkedHashSet<Object> sets;
+    private final LinkedHashSet<NamedSet> sets;
     private final LinkedHashSet<AAssignable> variables;
     private final Invariant invariant;
     private final ASubstitution initialisation;
     private final LinkedHashSet<Event> events;
     private QuantifiedVariable quantifiedVariables;
 
-    public Machine(String name, LinkedHashSet<Object> sets, LinkedHashSet<AAssignable> assignables, Invariant invariant, ASubstitution initialisation, LinkedHashSet<Event> events) throws Error {
+    public Machine(String name, LinkedHashSet<NamedSet> sets, LinkedHashSet<AAssignable> assignables, Invariant invariant, ASubstitution initialisation, LinkedHashSet<Event> events) throws Error {
         if (!name.matches(IDENTIFIER)) {
             throw new Error("The name of a machine must match the regular expression \"" + IDENTIFIER + "\" (\"" + name + "\" given).");
         }
@@ -41,6 +42,11 @@ public final class Machine extends AEventBObject {
     }
 
     @Override
+    public Machine clone() {
+        return new Machine(getName(), new LinkedHashSet<>(getSets().stream().map(NamedSet::clone).collect(Collectors.toList())), new LinkedHashSet<>(getAssignables().stream().map(AAssignable::clone).collect(Collectors.toList())), getInvariant().clone(), getInitialisation().clone(), new LinkedHashSet<>(getEvents().stream().map(Event::clone).collect(Collectors.toList())));
+    }
+
+    @Override
     public String accept(EventBFormatter visitor) {
         return visitor.visit(this);
     }
@@ -49,7 +55,7 @@ public final class Machine extends AEventBObject {
         return name;
     }
 
-    public LinkedHashSet<Object> getSets() {
+    public LinkedHashSet<NamedSet> getSets() {
         return sets;
     }
 

@@ -21,6 +21,11 @@ public final class Invariant extends ABoolExpr {
     }
 
     @Override
+    public Invariant clone() {
+        return new Invariant(getExpression().clone());
+    }
+
+    @Override
     public ABoolExpr accept(Primer visitor) {
         return visitor.visit(this);
     }

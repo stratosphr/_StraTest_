@@ -7,4 +7,8 @@ import eventb.exprs.AExpr;
  * Time : 15:17
  */
 public abstract class ABoolExpr extends AExpr<ABoolExpr> {
+
+    @Override
+    public abstract ABoolExpr clone();
+
 }

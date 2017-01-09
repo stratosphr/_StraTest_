@@ -19,6 +19,11 @@ public final class Predicate extends APredicate {
     }
 
     @Override
+    public Predicate clone() {
+        return new Predicate(getName(), getExpression().clone());
+    }
+
+    @Override
     public ABoolExpr accept(Primer visitor) {
         return visitor.visit(this);
     }

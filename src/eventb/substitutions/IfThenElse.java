@@ -26,6 +26,11 @@ public final class IfThenElse extends ASubstitution {
     }
 
     @Override
+    public IfThenElse clone() {
+        return new IfThenElse(getCondition().clone(), getThenPart().clone(), getElsePart().clone());
+    }
+
+    @Override
     public ABoolExpr getPrd(Machine machine) {
         return new Choice(new Select(getCondition(), getThenPart()), new Select(new Not(getCondition()), getElsePart())).getPrd(machine);
     }

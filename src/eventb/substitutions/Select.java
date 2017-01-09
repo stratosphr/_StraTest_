@@ -20,6 +20,11 @@ public final class Select extends ASubstitution {
     }
 
     @Override
+    public Select clone() {
+        return new Select(getCondition().clone(), getSubstitution().clone());
+    }
+
+    @Override
     public String accept(EventBFormatter visitor) {
         return visitor.visit(this);
     }

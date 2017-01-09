@@ -27,6 +27,11 @@ public final class GreaterThan extends ABoolExpr implements IBinaryOperation {
     }
 
     @Override
+    public GreaterThan clone() {
+        return new GreaterThan(getLeft().clone(), getRight().clone());
+    }
+
+    @Override
     public ABoolExpr accept(Primer visitor) {
         return visitor.visit(this);
     }

@@ -23,6 +23,11 @@ public final class ConcreteState extends AState<IntVariable, Int> {
     }
 
     @Override
+    public ConcreteState clone() {
+        return new ConcreteState(getName(), getMapping());
+    }
+
+    @Override
     public String accept(EventBFormatter visitor) {
         return visitor.visit(this);
     }

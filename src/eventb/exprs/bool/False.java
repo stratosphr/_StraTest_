@@ -15,6 +15,11 @@ import java.util.LinkedHashSet;
 public final class False extends ABoolExpr {
 
     @Override
+    public False clone() {
+        return new False();
+    }
+
+    @Override
     public ABoolExpr accept(Primer visitor) {
         return visitor.visit(this);
     }

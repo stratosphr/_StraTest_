@@ -22,6 +22,11 @@ public final class Not extends ABoolExpr implements IUnaryOperation {
     }
 
     @Override
+    public Not clone() {
+        return new Not(getOperand().clone());
+    }
+
+    @Override
     public String accept(EventBFormatter visitor) {
         return visitor.visit(this);
     }

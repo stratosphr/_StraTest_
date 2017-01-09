@@ -25,6 +25,11 @@ public final class And extends ABoolExpr implements INaryOperation {
     }
 
     @Override
+    public And clone() {
+        return new And(operands.stream().map(ABoolExpr::clone).toArray(ABoolExpr[]::new));
+    }
+
+    @Override
     public String accept(EventBFormatter visitor) {
         return visitor.visit(this);
     }

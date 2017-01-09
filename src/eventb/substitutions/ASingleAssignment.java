@@ -19,6 +19,9 @@ public abstract class ASingleAssignment extends AAssignment {
         this.value = value;
     }
 
+    @Override
+    public abstract ASingleAssignment clone();
+
     protected abstract ABoolExpr getPrd_(Machine machine, boolean isInMultipleAssignment);
 
     public AAssignable getAssignable() {

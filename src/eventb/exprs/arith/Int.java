@@ -20,6 +20,11 @@ public final class Int extends AArithExpr {
     }
 
     @Override
+    public Int clone() {
+        return new Int(getValue());
+    }
+
+    @Override
     public String accept(EventBFormatter visitor) {
         return visitor.visit(this);
     }

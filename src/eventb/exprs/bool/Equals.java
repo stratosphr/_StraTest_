@@ -27,6 +27,11 @@ public final class Equals extends ABoolExpr implements IBinaryOperation {
     }
 
     @Override
+    public Equals clone() {
+        return new Equals(getLeft().clone(), getRight().clone());
+    }
+
+    @Override
     public ABoolExpr accept(Primer visitor) {
         return visitor.visit(this);
     }

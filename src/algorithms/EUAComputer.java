@@ -32,13 +32,13 @@ import static com.microsoft.z3.Status.UNSATISFIABLE;
  * Created by gvoiron on 22/12/16.
  * Time : 13:36
  */
-public final class EUAComputer implements IComputer<ApproximatedTransitionSystem> {
+public final class EUAComputer extends AComputer<ApproximatedTransitionSystem> {
 
     private final Machine machine;
     private final LinkedHashSet<AbstractState> A;
     private final IEventsOrderingFunction eventsOrderingFunction;
     private final IAbstractStatesOrderingFunction abstractStatesOrderingFunction;
-    private final boolean isExclusive;
+    private final EEUAComputerHeuristics heuristics;
     private final LinkedHashSet<AbstractState> RQ;
     private final LinkedHashSet<AbstractState> Q0;
     private final LinkedHashSet<AbstractState> Q;
@@ -52,36 +52,24 @@ public final class EUAComputer implements IComputer<ApproximatedTransitionSystem
     private final LinkedHashSet<ConcreteTransition> DeltaC;
     private final Z3 z3;
 
-    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A) {
-        this(machine, A, new DefaultAbstractStatesOrderingFunction(), new DefaultEventsOrderingFunction(), true);
+    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A, EEUAComputerHeuristics heuristics) {
+        this(machine, A, new DefaultAbstractStatesOrderingFunction(), new DefaultEventsOrderingFunction(), heuristics);
     }
 
-    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A, IAbstractStatesOrderingFunction abstractStatesOrderingFunction) {
-        this(machine, A, abstractStatesOrderingFunction, new DefaultEventsOrderingFunction(), true);
+    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A, IAbstractStatesOrderingFunction abstractStatesOrderingFunction, EEUAComputerHeuristics heuristics) {
+        this(machine, A, abstractStatesOrderingFunction, new DefaultEventsOrderingFunction(), heuristics);
     }
 
-    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A, IEventsOrderingFunction eventsOrderingFunction) {
-        this(machine, A, new DefaultAbstractStatesOrderingFunction(), eventsOrderingFunction, true);
+    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A, IEventsOrderingFunction eventsOrderingFunction, EEUAComputerHeuristics heuristics) {
+        this(machine, A, new DefaultAbstractStatesOrderingFunction(), eventsOrderingFunction, heuristics);
     }
 
-    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A, boolean isExclusive) {
-        this(machine, A, new DefaultAbstractStatesOrderingFunction(), new DefaultEventsOrderingFunction(), isExclusive);
-    }
-
-    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A, IAbstractStatesOrderingFunction abstractStatesOrderingFunction, boolean isExclusive) {
-        this(machine, A, abstractStatesOrderingFunction, new DefaultEventsOrderingFunction(), isExclusive);
-    }
-
-    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A, IEventsOrderingFunction eventsOrderingFunction, boolean isExclusive) {
-        this(machine, A, new DefaultAbstractStatesOrderingFunction(), eventsOrderingFunction, isExclusive);
-    }
-
-    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A, IAbstractStatesOrderingFunction abstractStatesOrderingFunction, IEventsOrderingFunction eventsOrderingFunction, boolean isExclusive) {
+    public EUAComputer(Machine machine, LinkedHashSet<AbstractState> A, IAbstractStatesOrderingFunction abstractStatesOrderingFunction, IEventsOrderingFunction eventsOrderingFunction, EEUAComputerHeuristics heuristics) {
         this.machine = machine;
         this.A = A;
         this.eventsOrderingFunction = eventsOrderingFunction;
         this.abstractStatesOrderingFunction = abstractStatesOrderingFunction;
-        this.isExclusive = isExclusive;
+        this.heuristics = heuristics;
         this.RQ = new LinkedHashSet<>();
         this.Q0 = new LinkedHashSet<>();
         this.Q = new LinkedHashSet<>();
@@ -97,7 +85,7 @@ public final class EUAComputer implements IComputer<ApproximatedTransitionSystem
     }
 
     @Override
-    public ApproximatedTransitionSystem compute() {
+    public ApproximatedTransitionSystem compute_() {
         step1();
         step2();
         EventSystem eventSystem = new EventSystem(getMachine().getAssignables(), getMachine().getInvariant(), getMachine().getInitialisation(), getMachine().getEvents());
@@ -135,22 +123,34 @@ public final class EUAComputer implements IComputer<ApproximatedTransitionSystem
                         getDelta().add(abstractTransition);
                         registerMustMinus(abstractTransition);
                         registerMustPlus(abstractTransition);
-                        if (isExclusive) {
-                            if (!instantiateFromGreenToBlue(abstractTransition)) {
-                                if (!instantiateFromGreenToAny(abstractTransition)) {
-                                    if (!instantiateFromBlueToBlue(abstractTransition)) {
-                                        if (!instantiateFromBlueToAny(abstractTransition)) {
-                                            instantiateFromWitnesses(abstractTransition, model);
+                        switch (heuristics) {
+                            case OLD_EXCLUSIVE:
+                                if (!instantiateFromBlueToAny(abstractTransition)) {
+                                    instantiateFromWitnesses(abstractTransition, model);
+                                }
+                                break;
+                            case OLD_EXHAUSTIVE:
+                                instantiateFromBlueToAny(abstractTransition);
+                                instantiateFromWitnesses(abstractTransition, model);
+                                break;
+                            case EXCLUSIVE:
+                                if (!instantiateFromGreenToBlue(abstractTransition)) {
+                                    if (!instantiateFromGreenToAny(abstractTransition)) {
+                                        if (!instantiateFromBlueToBlue(abstractTransition)) {
+                                            if (!instantiateFromBlueToAny(abstractTransition)) {
+                                                instantiateFromWitnesses(abstractTransition, model);
+                                            }
                                         }
                                     }
                                 }
-                            }
-                        } else {
-                            instantiateFromGreenToBlue(abstractTransition);
-                            instantiateFromGreenToAny(abstractTransition);
-                            instantiateFromBlueToBlue(abstractTransition);
-                            instantiateFromBlueToAny(abstractTransition);
-                            instantiateFromWitnesses(abstractTransition, model);
+                                break;
+                            case EXHAUSTIVE:
+                                instantiateFromGreenToBlue(abstractTransition);
+                                instantiateFromGreenToAny(abstractTransition);
+                                instantiateFromBlueToBlue(abstractTransition);
+                                instantiateFromBlueToAny(abstractTransition);
+                                instantiateFromWitnesses(abstractTransition, model);
+                                break;
                         }
                         if (!Q.contains(q_)) {
                             RQ.add(q_);

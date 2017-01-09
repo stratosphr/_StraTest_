@@ -12,4 +12,9 @@ public final class AbstractTransition extends ATransition<AbstractState> {
         super(source, event, target);
     }
 
+    @Override
+    public AbstractTransition clone() {
+        return new AbstractTransition(getSource().clone(), getEvent().clone(), getTarget().clone());
+    }
+
 }

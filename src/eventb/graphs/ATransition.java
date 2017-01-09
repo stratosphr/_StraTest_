@@ -1,12 +1,13 @@
 package eventb.graphs;
 
 import eventb.Event;
+import utilities.ICloneable;
 
 /**
  * Created by gvoiron on 20/12/16.
  * Time : 18:41
  */
-public abstract class ATransition<State extends AState> {
+public abstract class ATransition<State extends AState> implements ICloneable<ATransition<State>> {
 
     private final State source;
     private final Event event;
@@ -17,6 +18,9 @@ public abstract class ATransition<State extends AState> {
         this.event = event;
         this.target = target;
     }
+
+    @Override
+    public abstract ATransition<State> clone();
 
     public State getSource() {
         return source;

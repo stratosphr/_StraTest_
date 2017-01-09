@@ -15,6 +15,11 @@ import java.util.LinkedHashSet;
 public final class True extends ABoolExpr {
 
     @Override
+    public True clone() {
+        return new True();
+    }
+
+    @Override
     public String accept(EventBFormatter visitor) {
         return visitor.visit(this);
     }

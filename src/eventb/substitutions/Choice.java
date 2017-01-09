@@ -24,6 +24,11 @@ public final class Choice extends ASubstitution {
     }
 
     @Override
+    public Choice clone() {
+        return new Choice(substitutions.stream().map(ASubstitution::clone).toArray(ASubstitution[]::new));
+    }
+
+    @Override
     public ABoolExpr getPrd(Machine machine) {
         return new Or(getSubstitutions().stream().map(substitution -> substitution.getPrd(machine)).toArray(ABoolExpr[]::new));
     }

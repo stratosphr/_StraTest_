@@ -24,6 +24,11 @@ public final class Parallel extends ASubstitution {
     }
 
     @Override
+    public ASubstitution clone() {
+        return new Parallel(substitutions.stream().map(ASubstitution::clone).toArray(ASubstitution[]::new));
+    }
+
+    @Override
     public ABoolExpr getPrd(Machine machine) {
         return getSurrogate().getPrd(machine);
     }
@@ -49,7 +54,7 @@ public final class Parallel extends ASubstitution {
         } else if (leftSubstitution instanceof IfThenElse) {
             return new IfThenElse(((IfThenElse) leftSubstitution).getCondition(), new Parallel(((IfThenElse) leftSubstitution).getThenPart(), rightSubstitution).getSurrogate(), new Parallel(((IfThenElse) leftSubstitution).getElsePart(), rightSubstitution).getSurrogate());
         }
-        throw new Error("Unable to compute parallel substitution's surrogate: unhandled substitution of type \"" + leftSubstitution.getClass().getName() + "\" encoutered." + Chars.NEW_LINE + "The problematic substitution was:" + Chars.NEW_LINE + leftSubstitution);
+        throw new Error("Unable to compute_ parallel substitution's surrogate: unhandled substitution of type \"" + leftSubstitution.getClass().getName() + "\" encoutered." + Chars.NEW_LINE + "The problematic substitution was:" + Chars.NEW_LINE + leftSubstitution);
     }
 
     @Override

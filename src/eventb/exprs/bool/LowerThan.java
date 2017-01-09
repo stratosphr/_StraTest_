@@ -27,6 +27,11 @@ public final class LowerThan extends ABoolExpr implements IBinaryOperation {
     }
 
     @Override
+    public LowerThan clone() {
+        return new LowerThan(getLeft().clone(), getRight().clone());
+    }
+
+    @Override
     public ABoolExpr accept(Primer visitor) {
         return visitor.visit(this);
     }

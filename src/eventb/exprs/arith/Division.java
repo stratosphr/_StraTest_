@@ -27,6 +27,11 @@ public final class Division extends AArithExpr implements INaryOperation {
     }
 
     @Override
+    public Division clone() {
+        return new Division(operands.stream().map(AArithExpr::clone).toArray(AArithExpr[]::new));
+    }
+
+    @Override
     public AArithExpr accept(Primer visitor) {
         return visitor.visit(this);
     }

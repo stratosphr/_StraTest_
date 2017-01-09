@@ -27,6 +27,11 @@ public final class Product extends AArithExpr implements INaryOperation {
     }
 
     @Override
+    public Product clone() {
+        return new Product(operands.stream().map(AArithExpr::clone).toArray(AArithExpr[]::new));
+    }
+
+    @Override
     public AArithExpr accept(Primer visitor) {
         return visitor.visit(this);
     }

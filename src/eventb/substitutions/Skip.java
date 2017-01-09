@@ -12,6 +12,11 @@ import eventb.visitors.EventBFormatter;
 public final class Skip extends ASubstitution {
 
     @Override
+    public ASubstitution clone() {
+        return new Skip();
+    }
+
+    @Override
     public String accept(EventBFormatter visitor) {
         return visitor.visit(this);
     }

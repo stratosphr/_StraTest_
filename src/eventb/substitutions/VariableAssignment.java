@@ -21,6 +21,11 @@ public final class VariableAssignment extends ASingleAssignment {
     }
 
     @Override
+    public VariableAssignment clone() {
+        return new VariableAssignment(getAssignable().clone(), getValue().clone());
+    }
+
+    @Override
     public ABoolExpr getPrd(Machine machine) {
         return getPrd_(machine, false);
     }

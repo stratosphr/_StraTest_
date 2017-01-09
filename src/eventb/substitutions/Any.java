@@ -31,6 +31,11 @@ public final class Any extends ASubstitution {
     }
 
     @Override
+    public Any clone() {
+        return new Any(getCondition().clone(), getSubstitution().clone(), getQuantifiedVariables().stream().map(QuantifiedVariable::clone).toArray(QuantifiedVariable[]::new));
+    }
+
+    @Override
     public ABoolExpr getPrd(Machine machine) {
         return new Exists(new And(getCondition(), getSubstitution().getPrd(machine)), getQuantifiedVariables().stream().toArray(QuantifiedVariable[]::new));
     }

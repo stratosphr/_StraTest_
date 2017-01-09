@@ -21,6 +21,11 @@ public final class AbstractState extends AState<ABoolExpr, Boolean> {
     }
 
     @Override
+    public AbstractState clone() {
+        return new AbstractState(getName(), getMapping());
+    }
+
+    @Override
     public String accept(EventBFormatter visitor) {
         return visitor.visit(this);
     }

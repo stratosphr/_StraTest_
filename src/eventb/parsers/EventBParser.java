@@ -4,6 +4,7 @@ import eventb.Event;
 import eventb.Machine;
 import eventb.exprs.arith.*;
 import eventb.exprs.bool.*;
+import eventb.exprs.sets.NamedSet;
 import eventb.parsers.metamodel.EBMAttributes;
 import eventb.parsers.metamodel.EBMEntities;
 import eventb.substitutions.*;
@@ -30,7 +31,7 @@ public final class EventBParser {
         XMLDocument document = XMLParser.parse(file, "MACHINE", new File("resources/eventb/ebm.dtd"), new ErrorHandler());
         XMLNode root = document.getRoot();
         String name = root.getAttributes().get(EBMAttributes.NAME);
-        LinkedHashSet<Object> sets = new LinkedHashSet<>();
+        LinkedHashSet<NamedSet> sets = new LinkedHashSet<>();
         LinkedHashSet<AAssignable> assignables = parseVariables(root.getFirstChildWithName(VARIABLES));
         Invariant invariant = parseInvariant(root.getFirstChildWithName(INVARIANT));
         ASubstitution initialisation = parseInitialisation(root.getFirstChildWithName(INITIALISATION));

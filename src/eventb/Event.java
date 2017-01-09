@@ -18,6 +18,11 @@ public final class Event extends AEventBObject {
     }
 
     @Override
+    public Event clone() {
+        return new Event(name, substitution.clone());
+    }
+
+    @Override
     public String accept(EventBFormatter visitor) {
         return visitor.visit(this);
     }

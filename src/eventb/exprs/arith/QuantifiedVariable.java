@@ -20,6 +20,11 @@ public final class QuantifiedVariable extends AArithExpr {
     }
 
     @Override
+    public QuantifiedVariable clone() {
+        return new QuantifiedVariable(getVariable().clone());
+    }
+
+    @Override
     public String accept(EventBFormatter visitor) {
         return visitor.visit(this);
     }

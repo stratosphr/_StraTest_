@@ -19,6 +19,11 @@ public final class IntVariable extends AAssignable {
     }
 
     @Override
+    public IntVariable clone() {
+        return new IntVariable(getName());
+    }
+
+    @Override
     public String accept(EventBFormatter visitor) {
         return visitor.visit(this);
     }

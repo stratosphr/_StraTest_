@@ -18,7 +18,11 @@ public final class Exists extends AQuantifier {
 
     public Exists(ABoolExpr expression, QuantifiedVariable... quantifiedVariables) {
         super(expression, quantifiedVariables);
+    }
 
+    @Override
+    public Exists clone() {
+        return new Exists(getExpression().clone(), getQuantifiedVariables().stream().map(QuantifiedVariable::clone).toArray(QuantifiedVariable[]::new));
     }
 
     @Override

@@ -26,6 +26,11 @@ public final class MultipleAssignment extends AAssignment {
     }
 
     @Override
+    public MultipleAssignment clone() {
+        return new MultipleAssignment(assignments.stream().map(ASingleAssignment::clone).toArray(AAssignment[]::new));
+    }
+
+    @Override
     public String accept(EventBFormatter visitor) {
         return visitor.visit(this);
     }

@@ -27,6 +27,11 @@ public final class GreaterOrEqual extends ABoolExpr implements IBinaryOperation 
     }
 
     @Override
+    public GreaterOrEqual clone() {
+        return new GreaterOrEqual(getLeft().clone(), getRight().clone());
+    }
+
+    @Override
     public ABoolExpr accept(Primer visitor) {
         return visitor.visit(this);
     }

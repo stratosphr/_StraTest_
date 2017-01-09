@@ -12,6 +12,9 @@ public abstract class AAssignable extends AArithExpr {
         this.name = name;
     }
 
+    @Override
+    public abstract AAssignable clone();
+
     public String getName() {
         return name;
     }

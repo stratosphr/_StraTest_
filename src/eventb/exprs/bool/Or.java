@@ -25,6 +25,11 @@ public final class Or extends ABoolExpr implements INaryOperation {
     }
 
     @Override
+    public Or clone() {
+        return new Or(operands.stream().map(ABoolExpr::clone).toArray(ABoolExpr[]::new));
+    }
+
+    @Override
     public String accept(EventBFormatter visitor) {
         return visitor.visit(this);
     }

@@ -27,6 +27,11 @@ public final class Sum extends AArithExpr implements INaryOperation {
     }
 
     @Override
+    public Sum clone() {
+        return new Sum(operands.stream().map(AArithExpr::clone).toArray(AArithExpr[]::new));
+    }
+
+    @Override
     public AArithExpr accept(Primer visitor) {
         return visitor.visit(this);
     }
