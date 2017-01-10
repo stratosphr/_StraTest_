@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<MACHINE name="creditCard">
+<MACHINE name="credit_card">
     <VARIABLES>
         <CVariable val="ATM_state"/>
         <CVariable val="CARD_state"/>

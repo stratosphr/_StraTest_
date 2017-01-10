@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<AbstractionPredicatesList>
+    <CAnd>
+        <CEquals>
+            <CVariable val="Mago"/>
+            <CNumber val="0"/>
+        </CEquals>
+    </CAnd>
+
+    <CAnd>
+        <CEquals>
+            <CVariable val="Statut"/>
+            <CNumber val="2"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Balance"/>
+            <CNumber val="0"/>
+        </CEquals>
+    </CAnd>
+
+    <CAnd>
+        <CEquals>
+            <CVariable val="Statut"/>
+            <CNumber val="0"/>
+        </CEquals>
+    </CAnd>
+</AbstractionPredicatesList>
+

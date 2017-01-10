@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AbstractionPredicatesList>
+
+    <CEquals>
+        <CVariable val="x"/>
+        <CNumber val="1"/>
+    </CEquals>
+
+    <CEquals>
+        <CVariable val="y"/>
+        <CNumber val="0"/>
+    </CEquals>
+
+</AbstractionPredicatesList>

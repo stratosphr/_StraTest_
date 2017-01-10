@@ -12,14 +12,12 @@ import utilities.sets.Tuple;
 import java.io.File;
 import java.util.*;
 
-import static algorithms.heuristics.EEUAComputerHeuristics.EXCLUSIVE;
-import static algorithms.heuristics.EEUAComputerHeuristics.EXHAUSTIVE;
-import static algorithms.heuristics.EEUAComputerHeuristics.OLD_EXCLUSIVE;
+import static algorithms.heuristics.EEUAComputerHeuristics.*;
 
 public class Main {
 
     public static void main(String[] args) {
-        Tuple<Machine, LinkedHashSet<Predicate>> example = get("threeBatteries", 3);
+        Tuple<Machine, LinkedHashSet<Predicate>> example = get("phone", 0);
         go(example.getFirst(), example.getSecond());
         System.exit(42);
         Map<Machine, List<LinkedHashSet<Predicate>>> examples = getExamples();
@@ -33,14 +31,18 @@ public class Main {
         ComputerResult<LinkedHashSet<AbstractState>> asResult = new AbstractStatesComputer(machine.getInvariant(), abstractionPredicates).compute();
         LinkedHashSet<AbstractState> abstractStates = asResult.getResult();
         ComputerResult<ApproximatedTransitionSystem> eua0Result = new EUAComputer(machine, abstractStates, OLD_EXCLUSIVE).compute();
-        ComputerResult<ApproximatedTransitionSystem> eua1Result = new EUAComputer(machine, abstractStates, EXCLUSIVE).compute();
-        ComputerResult<ApproximatedTransitionSystem> eua2Result = new EUAComputer(machine, abstractStates, EXHAUSTIVE).compute();
+        ComputerResult<ApproximatedTransitionSystem> eua1Result = new EUAComputer(machine, abstractStates, OLD_EXHAUSTIVE).compute();
+        ComputerResult<ApproximatedTransitionSystem> eua2Result = new EUAComputer(machine, abstractStates, EXCLUSIVE).compute();
+        ComputerResult<ApproximatedTransitionSystem> eua3Result = new EUAComputer(machine, abstractStates, EXHAUSTIVE).compute();
         ApproximatedTransitionSystem eua0 = eua0Result.getResult();
         ApproximatedTransitionSystem eua1 = eua1Result.getResult();
         ApproximatedTransitionSystem eua2 = eua2Result.getResult();
-        System.out.println(new ATSStatistics(eua0));
+        ApproximatedTransitionSystem eua3 = eua3Result.getResult();
         System.out.println(new ATSStatistics(eua1));
-        System.out.println(new ATSStatistics(eua2));
+        System.out.println(eua1Result.getComputationTime());
+        System.out.println(new ATSStatistics(eua3));
+        System.out.println(eua3Result.getComputationTime());
+        System.out.println(eua3.getConcreteTransitionSystem().getCorrespondingGraphvizGraph());
         /*System.out.println("---------------------------------------------------");
         /*ApproximatedTransitionSystem uua = new UUAComputer(machine, eua).compute_();
         DirectedGraphvizGraph uuaGraph = uua.getTriModalTransitionSystem().getCorrespondingGraphvizGraph();

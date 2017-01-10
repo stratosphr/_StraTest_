@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<MACHINE name="frontWiper">
+<MACHINE name="ESSUYAGE_AV">
   <VARIABLES>
     <CVariable val="dmd_commodo_user" />
     <CVariable val="dmd_commodo" />

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<MACHINE name="creditCard">
+<MACHINE name="credit_card">
     <VARIABLES>
         <CVariable val="ATM_state"/>
         <CVariable val="CARD_state"/>
@@ -89,7 +89,7 @@
                     <CNumber val="-1"/>
                 </CGreater>
                 <CGreater>
-                    <CNumber val="10000"/>
+                    <CNumber val="3"/>
                     <CVariable val="DB_balance"/>
                 </CGreater>
             </CAnd>
@@ -129,7 +129,7 @@
                     <CNumber val="-1"/>
                 </CGreater>
                 <CGreater>
-                    <CNumber val="10000"/>
+                    <CNumber val="3"/>
                     <CVariable val="DB_asked_withdrawal"/>
                 </CGreater>
             </CAnd>
@@ -179,7 +179,7 @@
                     <CNumber val="-1"/>
                 </CGreater>
                 <CGreater>
-                    <CNumber val="10000"/>
+                    <CNumber val="3"/>
                     <CVariable val="A_balance"/>
                 </CGreater>
             </CAnd>
@@ -189,7 +189,7 @@
                     <CNumber val="-1"/>
                 </CGreater>
                 <CGreater>
-                    <CNumber val="10000"/>
+                    <CNumber val="3"/>
                     <CVariable val="A_asked_withdrawal"/>
                 </CGreater>
             </CAnd>
@@ -199,7 +199,7 @@
                     <CNumber val="-1"/>
                 </CGreater>
                 <CGreater>
-                    <CNumber val="10000"/>
+                    <CNumber val="3"/>
                     <CVariable val="A_balance_after_operation"/>
                 </CGreater>
             </CAnd>
@@ -259,7 +259,7 @@
             </CAssignment>
             <CAssignment>
                 <CVariable val="DB_balance"/>
-                <CNumber val="7400"/>
+                <CNumber val="1"/>
             </CAssignment>
             <CAssignment>
                 <CVariable val="DB_count_id"/>
@@ -308,7 +308,7 @@
         </CMultipleAssignment>
     </INITIALISATION>
     <EVENTS>
-        <CGuardedEvent name="ATM_signal_connexion">
+        <CGuardedEvent name="1_ATM_signal_connexion">
             <CEquals>
                 <CVariable val="ATM_state"/>
                 <CNumber val="0"/>
@@ -318,7 +318,7 @@
                 <CNumber val="1"/>
             </CAssignment>
         </CGuardedEvent>
-        <CGuardedEvent name="ATM_operation_vide">
+        <CGuardedEvent name="2_ATM_operation_vide">
             <CEquals>
                 <CVariable val="ATM_state"/>
                 <CNumber val="1"/>
@@ -328,7 +328,7 @@
                 <CNumber val="2"/>
             </CAssignment>
         </CGuardedEvent>
-        <CGuardedEvent name="ATM_demande_id">
+        <CGuardedEvent name="3_ATM_demande_id">
             <CAnd>
                 <CEquals>
                     <CVariable val="ATM_state"/>
@@ -367,7 +367,7 @@
                 <CSkip/>
             </CIf>
         </CGuardedEvent>
-        <CGuardedEvent name="CARD_reponse_id">
+        <CGuardedEvent name="4_CARD_reponse_id">
             <CAnd>
                 <CEquals>
                     <CVariable val="ATM_state"/>
@@ -393,7 +393,7 @@
                 </CAssignment>
             </CMultipleAssignment>
         </CGuardedEvent>
-        <CGuardedEvent name="ATM_demande_pin_user">
+        <CGuardedEvent name="5_ATM_demande_pin_user">
             <CEquals>
                 <CVariable val="ATM_state"/>
                 <CNumber val="4"/>
@@ -403,7 +403,7 @@
                 <CNumber val="5"/>
             </CAssignment>
         </CGuardedEvent>
-        <CGuardedEvent name="ATM_recoit_pin_user">
+        <CGuardedEvent name="6_ATM_recoit_pin_user">
             <CEquals>
                 <CVariable val="ATM_state"/>
                 <CNumber val="5"/>
@@ -434,7 +434,7 @@
                 </CMultipleAssignment>
             </CAny>
         </CGuardedEvent>
-        <CGuardedEvent name="ATM_transfer_pin_user">
+        <CGuardedEvent name="7_ATM_transfer_pin_user">
             <CAnd>
                 <CEquals>
                     <CVariable val="ATM_state"/>
@@ -460,7 +460,7 @@
                 </CAssignment>
             </CMultipleAssignment>
         </CGuardedEvent>
-        <CGuardedEvent name="CARD_traite_pin">
+        <CGuardedEvent name="8_CARD_traite_pin">
             <CAnd>
                 <CEquals>
                     <CVariable val="ATM_state"/>
@@ -542,7 +542,7 @@
                 </CIf>
             </CIf>
         </CGuardedEvent>
-        <CGuardedEvent name="CARD_succes_pin">
+        <CGuardedEvent name="90_CARD_succes_pin">
             <CAnd>
                 <CEquals>
                     <CVariable val="ATM_state"/>
@@ -568,7 +568,7 @@
                 </CAssignment>
             </CMultipleAssignment>
         </CGuardedEvent>
-        <CGuardedEvent name="CARD_failed_pin">
+        <CGuardedEvent name="91_CARD_failed_pin">
             <CAnd>
                 <CEquals>
                     <CVariable val="ATM_state"/>
@@ -590,7 +590,7 @@
                 </CAssignment>
             </CMultipleAssignment>
         </CGuardedEvent>
-        <CGuardedEvent name="ATM_traite_reponse_pin">
+        <CGuardedEvent name="92_ATM_traite_reponse_pin">
             <CAnd>
                 <CEquals>
                     <CVariable val="ATM_state"/>
@@ -605,10 +605,10 @@
                 <CAnd>
                     <CGreater>
                         <CVariable val="DB_balance"/>
-                        <CNumber val="4999"/>
+                        <CNumber val="1"/>
                     </CGreater>
                     <CGreater>
-                        <CNumber val="10001"/>
+                        <CNumber val="3"/>
                         <CVariable val="DB_balance"/>
                     </CGreater>
                     <CEquals>
@@ -636,16 +636,18 @@
                 </CAssignment>
             </CIf>
         </CGuardedEvent>
-        <CGuardedEvent name="DB_check_id">
+        <CGuardedEvent name="93_DB_check_id">
             <CEquals>
                 <CVariable val="DB_state"/>
                 <CNumber val="1"/>
             </CEquals>
             <CIf>
-                <CEquals>
-                    <CVariable val="DB_card_id"/>
-                    <CVariable val="DB_count_id"/>
-                </CEquals>
+                <CAnd>
+                    <CEquals>
+                        <CVariable val="DB_card_id"/>
+                        <CVariable val="DB_count_id"/>
+                    </CEquals>
+                </CAnd>
                 <CAssignment>
                     <CVariable val="DB_state"/>
                     <CNumber val="2"/>
@@ -662,7 +664,7 @@
                 </CMultipleAssignment>
             </CIf>
         </CGuardedEvent>
-        <CGuardedEvent name="DB_operation_not_done">
+        <CGuardedEvent name="94_DB_operation_not_done">
             <CAnd>
                 <CEquals>
                     <CVariable val="DB_state"/>
@@ -694,7 +696,7 @@
                 </CAssignment>
             </CMultipleAssignment>
         </CGuardedEvent>
-        <CGuardedEvent name="DB_demande_retrait">
+        <CGuardedEvent name="95_DB_demande_retrait">
             <CAnd>
                 <CEquals>
                     <CVariable val="DB_state"/>
@@ -720,7 +722,7 @@
                 </CAssignment>
             </CMultipleAssignment>
         </CGuardedEvent>
-        <CGuardedEvent name="ATM_demande_retrait">
+        <CGuardedEvent name="96_ATM_demande_retrait">
             <CEquals>
                 <CVariable val="ATM_state"/>
                 <CNumber val="10"/>
@@ -730,7 +732,7 @@
                 <CNumber val="11"/>
             </CAssignment>
         </CGuardedEvent>
-        <CGuardedEvent name="ATM_obtient_montant">
+        <CGuardedEvent name="97_ATM_obtient_montant">
             <CEquals>
                 <CVariable val="ATM_state"/>
                 <CNumber val="11"/>
@@ -745,7 +747,7 @@
                         <CNumber val="-1"/>
                     </CGreater>
                     <CGreater>
-                        <CNumber val="10001"/>
+                        <CNumber val="3"/>
                         <CVariable val="xx"/>
                     </CGreater>
                 </CAnd>
@@ -761,7 +763,7 @@
                 </CMultipleAssignment>
             </CAny>
         </CGuardedEvent>
-        <CGuardedEvent name="ATM_traite_retrait">
+        <CGuardedEvent name="98_ATM_traite_retrait">
             <CAnd>
                 <CEquals>
                     <CVariable val="ATM_state"/>
@@ -824,7 +826,7 @@
                 </CMultipleAssignment>
             </CIf>
         </CGuardedEvent>
-        <CGuardedEvent name="DB_traitement_ok">
+        <CGuardedEvent name="99_DB_traitement_ok">
             <CAnd>
                 <CEquals>
                     <CVariable val="DB_state"/>

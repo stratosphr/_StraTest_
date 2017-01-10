@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AbstractionPredicatesList>
+    <CAnd>
+        <CEquals>
+            <CVariable val="alimentation"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="vitesse_vehicule"/>
+            <CNumber val="0"/>
+        </CEquals>
+    </CAnd>
+
+    <CAnd>
+        <CEquals>
+            <CVariable val="alimentation"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="etat_commodo"/>
+            <CNumber val="1"/>
+        </CEquals>
+    </CAnd>
+    <CAnd>
+        <CEquals>
+            <CVariable val="alimentation"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <COr>
+            <CEquals>
+                <CVariable val="etat_moteur_ess_av"/>
+                <CNumber val="9"/>
+            </CEquals>
+            <CEquals>
+                <CVariable val="etat_moteur_ess_av"/>
+                <CNumber val="10"/>
+            </CEquals>
+        </COr>
+    </CAnd>
+</AbstractionPredicatesList>

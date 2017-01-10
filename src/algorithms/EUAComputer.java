@@ -121,16 +121,16 @@ public final class EUAComputer extends AComputer<ApproximatedTransitionSystem> {
                         Model model = z3.getModel();
                         AbstractTransition abstractTransition = new AbstractTransition(q, e, q_);
                         getDelta().add(abstractTransition);
-                        registerMustMinus(abstractTransition);
-                        registerMustPlus(abstractTransition);
+                        //registerMustMinus(abstractTransition);
+                        //registerMustPlus(abstractTransition);
                         switch (heuristics) {
                             case OLD_EXCLUSIVE:
-                                if (!instantiateFromBlueToAny(abstractTransition)) {
+                                if (!instantiateFromKnownToAny(abstractTransition)) {
                                     instantiateFromWitnesses(abstractTransition, model);
                                 }
                                 break;
                             case OLD_EXHAUSTIVE:
-                                instantiateFromBlueToAny(abstractTransition);
+                                instantiateFromKnownToAny(abstractTransition);
                                 instantiateFromWitnesses(abstractTransition, model);
                                 break;
                             case EXCLUSIVE:
@@ -175,6 +175,23 @@ public final class EUAComputer extends AComputer<ApproximatedTransitionSystem> {
         if (z3.checkSAT() == UNSATISFIABLE) {
             DeltaPlus.add(abstractTransition);
             return true;
+        }
+        return false;
+    }
+
+    private boolean instantiateFromKnownToAny(AbstractTransition abstractTransition) {
+        LinkedHashSet<ConcreteState> KCS = getC().stream().filter(concreteState -> getAlpha().get(concreteState).equals(abstractTransition.getSource())).collect(Collectors.toCollection(LinkedHashSet::new));
+        if (!KCS.isEmpty()) {
+            z3.setCode(new And(getMachine().getInvariant(), getMachine().getInvariant().prime(), new Or(KCS.stream().toArray(ABoolExpr[]::new)), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), abstractTransition.getTarget().prime()));
+            if (z3.checkSAT() == SATISFIABLE) {
+                Model model = z3.getModel();
+                ConcreteState c = new ConcreteState("c_" + abstractTransition.getSource().getName(), model.getSource());
+                ConcreteState c_ = new ConcreteState("c_" + abstractTransition.getTarget().getName(), model.getTarget());
+                C.add(c_);
+                Alpha.put(c_, abstractTransition.getTarget());
+                DeltaC.add(new ConcreteTransition(c, abstractTransition.getEvent(), c_));
+                return true;
+            }
         }
         return false;
     }
