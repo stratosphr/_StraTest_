@@ -6,8 +6,8 @@ package utilities.sets;
  */
 public final class Tuple<First, Second> {
 
-    private final First first;
-    private final Second second;
+    private First first;
+    private Second second;
 
     public Tuple(First first, Second second) {
         this.first = first;
@@ -18,8 +18,16 @@ public final class Tuple<First, Second> {
         return first;
     }
 
+    public void setFirst(First first) {
+        this.first = first;
+    }
+
     public Second getSecond() {
         return second;
+    }
+
+    public void setSecond(Second second) {
+        this.second = second;
     }
 
     @Override

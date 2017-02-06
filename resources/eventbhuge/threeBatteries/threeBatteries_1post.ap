@@ -1,42 +1,206 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <AbstractionPredicatesList>
-    <COr>
+    <CEquals>
 
-        <CEquals>
+        <CVariable val="bat1"/>
 
-            <CVariable val="bat1"/>
+        <CNumber val="1"/>
 
-            <CNumber val="1"/>
+    </CEquals>
 
-        </CEquals>
+    <CEquals>
 
-        <CEquals>
+        <CVariable val="bat2"/>
 
-            <CVariable val="bat2"/>
+        <CNumber val="1"/>
 
-            <CNumber val="1"/>
+    </CEquals>
 
-        </CEquals>
+    <CEquals>
 
-        <CEquals>
+        <CVariable val="bat3"/>
 
-            <CVariable val="bat3"/>
+        <CNumber val="1"/>
 
-            <CNumber val="1"/>
+    </CEquals>
 
-        </CEquals>
+    <CEquals>
 
-    </COr>
+        <CVariable val="bat1"/>
 
-    <COr>
+        <CNumber val="0"/>
+
+    </CEquals>
+
+    <CEquals>
+
+        <CVariable val="bat2"/>
+
+        <CNumber val="0"/>
+
+    </CEquals>
+
+    <CAnd>
 
         <COr>
 
             <CEquals>
 
+                <CVariable val="batInUse"/>
+
                 <CVariable val="bat1"/>
 
-                <CNumber val="0"/>
+            </CEquals>
+
+            <CEquals>
+
+                <CVariable val="bat1"/>
+
+                <CNumber val="1"/>
+
+            </CEquals>
+
+        </COr>
+
+        <COr>
+
+            <CNot>
+
+                <CEquals>
+
+                    <CVariable val="batInUse"/>
+
+                    <CVariable val="bat1"/>
+
+                </CEquals>
+
+            </CNot>
+
+            <CAnd>
+
+                <CEquals>
+
+                    <CVariable val="bat1"/>
+
+                    <CNumber val="1"/>
+
+                </CEquals>
+
+                <CEquals>
+
+                    <CVariable val="batInUse"/>
+
+                    <CVariable val="bat2"/>
+
+                </CEquals>
+
+            </CAnd>
+
+        </COr>
+
+    </CAnd>
+
+    <CEquals>
+
+        <CVariable val="bat1"/>
+
+        <CNumber val="0"/>
+
+    </CEquals>
+
+    <CEquals>
+
+        <CVariable val="bat3"/>
+
+        <CNumber val="0"/>
+
+    </CEquals>
+
+    <CAnd>
+
+        <COr>
+
+            <CEquals>
+
+                <CVariable val="batInUse"/>
+
+                <CVariable val="bat1"/>
+
+            </CEquals>
+
+            <CEquals>
+
+                <CVariable val="bat1"/>
+
+                <CNumber val="1"/>
+
+            </CEquals>
+
+        </COr>
+
+        <COr>
+
+            <CNot>
+
+                <CEquals>
+
+                    <CVariable val="batInUse"/>
+
+                    <CVariable val="bat1"/>
+
+                </CEquals>
+
+            </CNot>
+
+            <CAnd>
+
+                <CEquals>
+
+                    <CVariable val="bat1"/>
+
+                    <CNumber val="1"/>
+
+                </CEquals>
+
+                <CEquals>
+
+                    <CVariable val="batInUse"/>
+
+                    <CVariable val="bat3"/>
+
+                </CEquals>
+
+            </CAnd>
+
+        </COr>
+
+    </CAnd>
+
+    <CEquals>
+
+        <CVariable val="bat2"/>
+
+        <CNumber val="0"/>
+
+    </CEquals>
+
+    <CEquals>
+
+        <CVariable val="bat3"/>
+
+        <CNumber val="0"/>
+
+    </CEquals>
+
+    <CAnd>
+
+        <COr>
+
+            <CEquals>
+
+                <CVariable val="batInUse"/>
+
+                <CVariable val="bat2"/>
 
             </CEquals>
 
@@ -44,231 +208,63 @@
 
                 <CVariable val="bat2"/>
 
-                <CNumber val="0"/>
+                <CNumber val="1"/>
 
             </CEquals>
-
-            <CAnd>
-
-                <COr>
-
-                    <CEquals>
-
-                        <CVariable val="batInUse"/>
-
-                        <CVariable val="bat1"/>
-
-                    </CEquals>
-
-                    <CEquals>
-
-                        <CVariable val="bat1"/>
-
-                        <CNumber val="1"/>
-
-                    </CEquals>
-
-                </COr>
-
-                <COr>
-
-                    <CNot>
-
-                        <CEquals>
-
-                            <CVariable val="batInUse"/>
-
-                            <CVariable val="bat1"/>
-
-                        </CEquals>
-
-                    </CNot>
-
-                    <CAnd>
-
-                        <CEquals>
-
-                            <CVariable val="bat1"/>
-
-                            <CNumber val="1"/>
-
-                        </CEquals>
-
-                        <CEquals>
-
-                            <CVariable val="batInUse"/>
-
-                            <CVariable val="bat2"/>
-
-                        </CEquals>
-
-                    </CAnd>
-
-                </COr>
-
-            </CAnd>
 
         </COr>
 
         <COr>
 
-            <CEquals>
+            <CNot>
 
-                <CVariable val="bat1"/>
+                <CEquals>
 
-                <CNumber val="0"/>
+                    <CVariable val="batInUse"/>
 
-            </CEquals>
+                    <CVariable val="bat2"/>
 
-            <CEquals>
+                </CEquals>
 
-                <CVariable val="bat3"/>
-
-                <CNumber val="0"/>
-
-            </CEquals>
+            </CNot>
 
             <CAnd>
 
-                <COr>
+                <CEquals>
 
-                    <CEquals>
+                    <CVariable val="bat2"/>
 
-                        <CVariable val="batInUse"/>
+                    <CNumber val="1"/>
 
-                        <CVariable val="bat1"/>
+                </CEquals>
 
-                    </CEquals>
+                <CEquals>
 
-                    <CEquals>
+                    <CVariable val="batInUse"/>
 
-                        <CVariable val="bat1"/>
+                    <CVariable val="bat3"/>
 
-                        <CNumber val="1"/>
-
-                    </CEquals>
-
-                </COr>
-
-                <COr>
-
-                    <CNot>
-
-                        <CEquals>
-
-                            <CVariable val="batInUse"/>
-
-                            <CVariable val="bat1"/>
-
-                        </CEquals>
-
-                    </CNot>
-
-                    <CAnd>
-
-                        <CEquals>
-
-                            <CVariable val="bat1"/>
-
-                            <CNumber val="1"/>
-
-                        </CEquals>
-
-                        <CEquals>
-
-                            <CVariable val="batInUse"/>
-
-                            <CVariable val="bat3"/>
-
-                        </CEquals>
-
-                    </CAnd>
-
-                </COr>
+                </CEquals>
 
             </CAnd>
 
         </COr>
 
-        <COr>
+    </CAnd>
 
-            <CEquals>
+    <CEquals>
+        <CVariable val="batInUse"/>
+        <CNumber val="1"/>
+    </CEquals>
 
-                <CVariable val="bat2"/>
+    <CEquals>
+        <CVariable val="batInUse"/>
+        <CNumber val="2"/>
+    </CEquals>
 
-                <CNumber val="0"/>
+    <CEquals>
+        <CVariable val="batInUse"/>
+        <CNumber val="3"/>
+    </CEquals>
 
-            </CEquals>
-
-            <CEquals>
-
-                <CVariable val="bat3"/>
-
-                <CNumber val="0"/>
-
-            </CEquals>
-
-            <CAnd>
-
-                <COr>
-
-                    <CEquals>
-
-                        <CVariable val="batInUse"/>
-
-                        <CVariable val="bat2"/>
-
-                    </CEquals>
-
-                    <CEquals>
-
-                        <CVariable val="bat2"/>
-
-                        <CNumber val="1"/>
-
-                    </CEquals>
-
-                </COr>
-
-                <COr>
-
-                    <CNot>
-
-                        <CEquals>
-
-                            <CVariable val="batInUse"/>
-
-                            <CVariable val="bat2"/>
-
-                        </CEquals>
-
-                    </CNot>
-
-                    <CAnd>
-
-                        <CEquals>
-
-                            <CVariable val="bat2"/>
-
-                            <CNumber val="1"/>
-
-                        </CEquals>
-
-                        <CEquals>
-
-                            <CVariable val="batInUse"/>
-
-                            <CVariable val="bat3"/>
-
-                        </CEquals>
-
-                    </CAnd>
-
-                </COr>
-
-            </CAnd>
-
-        </COr>
-
-    </COr>
 </AbstractionPredicatesList>

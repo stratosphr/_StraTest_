@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <AbstractionPredicatesList>
+
     <CAnd>
         <CEquals>
             <CVariable val="alimentation"/>
@@ -21,6 +22,7 @@
             <CNumber val="1"/>
         </CEquals>
     </CAnd>
+
     <CAnd>
         <CEquals>
             <CVariable val="alimentation"/>
@@ -37,4 +39,5 @@
             </CEquals>
         </COr>
     </CAnd>
+
 </AbstractionPredicatesList>

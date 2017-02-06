@@ -14,6 +14,31 @@
 
     <CEquals>
         <CVariable val="Etat"/>
+        <CNumber val="0"/>
+    </CEquals>
+
+    <CEquals>
+        <CVariable val="Etat"/>
+        <CNumber val="1"/>
+    </CEquals>
+
+    <CEquals>
+        <CVariable val="Etat"/>
+        <CNumber val="2"/>
+    </CEquals>
+
+    <CEquals>
+        <CVariable val="Etat"/>
+        <CNumber val="3"/>
+    </CEquals>
+
+    <CEquals>
+        <CVariable val="Etat"/>
+        <CNumber val="4"/>
+    </CEquals>
+
+    <CEquals>
+        <CVariable val="Etat"/>
         <CNumber val="5"/>
     </CEquals>
 

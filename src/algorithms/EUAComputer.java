@@ -18,13 +18,12 @@ import solvers.z3.Model;
 import solvers.z3.Z3;
 import utilities.sets.Tuple;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static algorithms.heuristics.EConcreteStateColor.BLUE;
 import static algorithms.heuristics.EConcreteStateColor.GREEN;
+import static algorithms.heuristics.EEUAComputerHeuristics.*;
 import static com.microsoft.z3.Status.SATISFIABLE;
 import static com.microsoft.z3.Status.UNSATISFIABLE;
 
@@ -109,13 +108,24 @@ public final class EUAComputer extends AComputer<ApproximatedTransitionSystem> {
     }
 
     private void step2() {
+        double i = 0;
         RQ.addAll(getQ0());
+        List<Event> events;
+        if (heuristics == NO_ORDERING_NO_COLORATION || heuristics == NO_ORDERING_COLORATION || heuristics == OLD_EXCLUSIVE || heuristics == OLD_EXHAUSTIVE) {
+            events = new ArrayList<>(getMachine().getEvents());
+            Collections.sort(events);
+            //events = eventsOrderingFunction.apply(getMachine().getEvents());
+        } else {
+            /*events = new ArrayList<>(getMachine().getEvents());
+            Collections.sort(events);*/
+            events = eventsOrderingFunction.apply(getMachine().getEvents());
+        }
         while (!RQ.isEmpty()) {
             AbstractState q = RQ.iterator().next();
             RQ.remove(q);
             Q.add(q);
-            for (AbstractState q_ : abstractStatesOrderingFunction.apply(new Tuple<>(q, getA()))) {
-                for (Event e : eventsOrderingFunction.apply(getMachine().getEvents())) {
+            for (AbstractState q_ : (heuristics == NO_ORDERING_NO_COLORATION || heuristics == NO_ORDERING_COLORATION || heuristics == OLD_EXCLUSIVE || heuristics == OLD_EXHAUSTIVE) ? getA() : abstractStatesOrderingFunction.apply(new Tuple<>(q, getA()))) {
+                for (Event e : events) {
                     z3.setCode(new And(getMachine().getInvariant(), getMachine().getInvariant().prime(), q, e.getSubstitution().getPrd(getMachine()), q_.prime()));
                     if (z3.checkSAT() == SATISFIABLE) {
                         Model model = z3.getModel();
@@ -151,14 +161,31 @@ public final class EUAComputer extends AComputer<ApproximatedTransitionSystem> {
                                 instantiateFromBlueToAny(abstractTransition);
                                 instantiateFromWitnesses(abstractTransition, model);
                                 break;
+                            case NO_ORDERING_NO_COLORATION:
+                            case ORDERING_NO_COLORATION:
+                                instantiateFromKnownToAny(abstractTransition);
+                                instantiateFromWitnesses(abstractTransition, model);
+                                break;
+                            case NO_ORDERING_COLORATION:
+                            case ORDERING_COLORATION:
+                                if (instantiateFromGreenToAny(abstractTransition)) {
+                                    instantiateFromGreenToBlue(abstractTransition);
+                                }
+                                instantiateFromWitnesses(abstractTransition, model);
+                                break;
+                            default:
+                                throw new Error("Heuristics \"" + heuristics.toString() + "\" is not yet handled by the EUA computer.");
                         }
                         if (!Q.contains(q_)) {
                             RQ.add(q_);
                         }
+                        //System.out.print((int) (100 * i / (getA().size() * getMachine().getEvents().size() * getA().size())) + " | ");
                     }
+                    ++i;
                 }
             }
         }
+        //System.out.println();
     }
 
     private boolean registerMustMinus(AbstractTransition abstractTransition) {
@@ -271,8 +298,18 @@ public final class EUAComputer extends AComputer<ApproximatedTransitionSystem> {
         C.addAll(Arrays.asList(c, c_));
         Alpha.put(c, abstractTransition.getSource());
         Alpha.put(c_, abstractTransition.getTarget());
-        Kappa.putIfAbsent(c, BLUE);
-        Kappa.putIfAbsent(c_, BLUE);
+        if (!Kappa.containsKey(c)) {
+            Kappa.put(c, BLUE);
+        }
+        if (!Kappa.containsKey(c_) || Kappa.get(c) == GREEN) {
+            Kappa.put(c_, Kappa.get(c));
+        }
+        /*if (Kappa.containsKey(c) && Kappa.get(c).equals(GREEN)) {
+            Kappa.put(c_, GREEN);
+        } else {
+            Kappa.putIfAbsent(c, BLUE);
+            Kappa.putIfAbsent(c_, BLUE);
+        }*/
         DeltaC.add(new ConcreteTransition(c, abstractTransition.getEvent(), c_));
     }
 

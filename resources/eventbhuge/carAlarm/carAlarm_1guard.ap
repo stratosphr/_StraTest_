@@ -28,26 +28,21 @@
         <CVariable val="A"/>
         <CNumber val="1"/>
     </CEquals>
-    <COr>
-        <CEquals>
-            <CVariable val="Ut"/>
-            <CNumber val="0"/>
-        </CEquals>
-        <CEquals>
-            <CVariable val="S"/>
-            <CNumber val="0"/>
-        </CEquals>
-    </COr>
-    <COr>
-        <CEquals>
-            <CVariable val="Ut"/>
-            <CNumber val="0"/>
-        </CEquals>
-        <CEquals>
-            <CVariable val="CA"/>
-            <CNumber val="0"/>
-        </CEquals>
-    </COr>
-
+    <CEquals>
+        <CVariable val="Ut"/>
+        <CNumber val="0"/>
+    </CEquals>
+    <CEquals>
+        <CVariable val="S"/>
+        <CNumber val="0"/>
+    </CEquals>
+    <CEquals>
+        <CVariable val="Ut"/>
+        <CNumber val="0"/>
+    </CEquals>
+    <CEquals>
+        <CVariable val="CA"/>
+        <CNumber val="0"/>
+    </CEquals>
 
 </AbstractionPredicatesList>

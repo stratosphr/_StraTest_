@@ -11,9 +11,12 @@ import eventb.graphs.ConcreteTransition;
 import utilities.AFormatter;
 import utilities.sets.Tuple;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static utilities.Chars.NEW_LINE;
 
@@ -34,11 +37,10 @@ public final class ATSStatistics extends AFormatter {
         abstractionStatistics.put("# initial abstract states", approximatedTransitionSystem.getTriModalTransitionSystem().getQ0().size());
         abstractionStatistics.put("# abstract states", approximatedTransitionSystem.getTriModalTransitionSystem().getQ().size());
         abstractionStatistics.put("# reachable abstract states", reachableAbstractPart.getFirst().size());
+        abstractionStatistics.put("% tau abstract states", 100.0 * reachableAbstractPart.getFirst().size() / approximatedTransitionSystem.getTriModalTransitionSystem().getQ().size());
         abstractionStatistics.put("# abstract transitions", approximatedTransitionSystem.getTriModalTransitionSystem().getDelta().size());
-        for (AbstractTransition abstractTransition : reachableAbstractPart.getSecond()) {
-            System.out.println(abstractTransition);
-        }
         abstractionStatistics.put("# reachable abstract transitions", reachableAbstractPart.getSecond().size());
+        abstractionStatistics.put("% tau abstract transitions", 100.0 * reachableAbstractPart.getSecond().size() / approximatedTransitionSystem.getTriModalTransitionSystem().getDelta().size());
         abstractionStatistics.put("# pure may transitions", approximatedTransitionSystem.getTriModalTransitionSystem().getDeltaPureMay().size());
         abstractionStatistics.put("# pure must- transitions", approximatedTransitionSystem.getTriModalTransitionSystem().getDeltaPureMinus().size());
         abstractionStatistics.put("# pure must+ transitions", approximatedTransitionSystem.getTriModalTransitionSystem().getDeltaPurePlus().size());
@@ -46,12 +48,21 @@ public final class ATSStatistics extends AFormatter {
         underApproximationStatistics.put("# initial concrete states", approximatedTransitionSystem.getConcreteTransitionSystem().getC0().size());
         underApproximationStatistics.put("# concrete states", approximatedTransitionSystem.getConcreteTransitionSystem().getC().size());
         underApproximationStatistics.put("# reachable concrete states", reachableConcretePart.getFirst().size());
+        underApproximationStatistics.put("% rho concrete states", 100.0 * reachableConcretePart.getFirst().size() / approximatedTransitionSystem.getConcreteTransitionSystem().getC().size());
         underApproximationStatistics.put("# blue concrete states", approximatedTransitionSystem.getConcreteTransitionSystem().getKappa().values().stream().filter(color -> color.equals(EConcreteStateColor.BLUE)).count());
         underApproximationStatistics.put("# green concrete states", approximatedTransitionSystem.getConcreteTransitionSystem().getKappa().values().stream().filter(color -> color.equals(EConcreteStateColor.GREEN)).count());
         underApproximationStatistics.put("# concrete transitions", approximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC().size());
         underApproximationStatistics.put("# reachable concrete transitions", reachableConcretePart.getSecond().size());
+        underApproximationStatistics.put("% rho concrete transitions", 1.0 * approximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC().size() / reachableAbstractPart.getSecond().size());
         statistics.put("Abstraction", abstractionStatistics);
         statistics.put("Under-Approximation", underApproximationStatistics);
+    }
+
+    public String getRowRepresentation(List<Integer> filterAndOrder) {
+        List<Object> values = Stream.concat(statistics.get("Abstraction").values().stream(), statistics.get("Under-Approximation").values().stream()).collect(Collectors.toList());
+        List<Object> filteredAndSortedValues = new ArrayList<>();
+        filterAndOrder.forEach(index -> filteredAndSortedValues.add(values.get(index)));
+        return filteredAndSortedValues.stream().map(Object::toString).collect(Collectors.joining(" "));
     }
 
     @Override

@@ -43,44 +43,32 @@
         </CEquals>
     </CAnd>
 
-    <CNot>
-        <CAnd>
-            <CNot>
-                <CEquals>
-                    <CVariable val="Etat"/>
-                    <CNumber val="2"/>
-                </CEquals>
-            </CNot>
-            <CEquals>
-                <CVariable val="NbEssai"/>
-                <CNumber val="2"/>
-            </CEquals>
-        </CAnd>
-    </CNot>
+    <CEquals>
+        <CVariable val="Etat"/>
+        <CNumber val="2"/>
+    </CEquals>
 
-    <CAnd>
+    <CNot>
         <CEquals>
-            <CVariable val="Etat"/>
-            <CNumber val="5"/>
+            <CVariable val="NbEssai"/>
+            <CNumber val="2"/>
         </CEquals>
-    </CAnd>
-
-    <CNot>
-        <CAnd>
-            <CNot>
-                <CEquals>
-                    <CVariable val="Etat"/>
-                    <CNumber val="2"/>
-                </CEquals>
-            </CNot>
-            <CNot>
-                <CEquals>
-                    <CVariable val="NbEssai"/>
-                    <CNumber val="2"/>
-                </CEquals>
-            </CNot>
-        </CAnd>
     </CNot>
+
+    <CEquals>
+        <CVariable val="Etat"/>
+        <CNumber val="5"/>
+    </CEquals>
+
+    <CEquals>
+        <CVariable val="Etat"/>
+        <CNumber val="2"/>
+    </CEquals>
+
+    <CEquals>
+        <CVariable val="NbEssai"/>
+        <CNumber val="2"/>
+    </CEquals>
 
     <CEquals>
         <CVariable val="NbEssai"/>

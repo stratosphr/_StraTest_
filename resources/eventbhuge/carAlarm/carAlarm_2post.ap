@@ -7,39 +7,37 @@
         <CNumber val="0"/>
 
     </CEquals>
-    <CAnd>
 
-        <CEquals>
+    <CEquals>
 
-            <CVariable val="S"/>
+        <CVariable val="S"/>
 
-            <CNumber val="1"/>
+        <CNumber val="1"/>
 
-        </CEquals>
+    </CEquals>
 
-        <CEquals>
+    <CEquals>
 
-            <CVariable val="F"/>
+        <CVariable val="F"/>
 
-            <CNumber val="0"/>
+        <CNumber val="0"/>
 
-        </CEquals>
+    </CEquals>
 
-        <CEquals>
+    <CEquals>
 
-            <CVariable val="T"/>
+        <CVariable val="T"/>
 
-            <CNumber val="1"/>
+        <CNumber val="1"/>
 
-        </CEquals>
+    </CEquals>
 
-        <CEquals>
+    <CEquals>
 
-            <CVariable val="D"/>
+        <CVariable val="D"/>
 
-            <CNumber val="0"/>
+        <CNumber val="0"/>
 
-        </CEquals>
+    </CEquals>
 
-    </CAnd>
 </AbstractionPredicatesList>

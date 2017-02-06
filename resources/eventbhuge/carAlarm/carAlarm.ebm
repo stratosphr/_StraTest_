@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<MACHINE name="CarAlarm">
+<MACHINE name="carAlarm">
     <VARIABLES>
         <CVariable val="A"/>
         <CVariable val="P"/>
