@@ -4,6 +4,7 @@ import com.microsoft.z3.Context;
 import com.microsoft.z3.Solver;
 import com.microsoft.z3.Status;
 import com.microsoft.z3.Z3Exception;
+import eventb.exprs.arith.AAssignable;
 import eventb.exprs.bool.ABoolExpr;
 import eventb.visitors.SMTLibFormatter;
 import utilities.Chars;
@@ -11,6 +12,7 @@ import utilities.LibraryLinker;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,6 +57,10 @@ public final class Z3 {
 
     public Model getModel() {
         return new Model(this, getSolver().getModel());
+    }
+
+    public Model getModel(LinkedHashSet<AAssignable> assignables) {
+        return new Model(this, getSolver().getModel(), assignables);
     }
 
     public ArrayList<String> getCode() {

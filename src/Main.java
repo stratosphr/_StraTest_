@@ -1,4 +1,5 @@
 import algorithms.EUAComputer;
+import algorithms.NewUUAComputer;
 import algorithms.heuristics.EEUAComputerHeuristics;
 import algorithms.outputs.ApproximatedTransitionSystem;
 import algorithms.outputs.ComputerResult;
@@ -13,14 +14,12 @@ import utilities.sets.Tuple;
 import java.io.File;
 import java.util.*;
 
-import static algorithms.heuristics.EEUAComputerHeuristics.ORDERING_COLORATION;
-
 public class Main {
 
     public static void main(String[] args) {
-        /*Tuple<Machine, LinkedHashSet<Predicate>> example = getHuge("threeBatteries", 0);
+        Tuple<Machine, LinkedHashSet<Predicate>> example = get("threeBatteries", 0);
         go(example.getFirst(), example.getSecond());
-        System.exit(42);*/
+        System.exit(42);
         Map<Machine, List<LinkedHashSet<Predicate>>> examples = getExamples();
         examples.forEach((machine, abstractionPredicateSets) -> abstractionPredicateSets.forEach(abstractionPredicateSet -> {
             System.out.println(machine.getName());
@@ -30,16 +29,22 @@ public class Main {
 
     private static void go(Machine machine, LinkedHashSet<Predicate> abstractionPredicates) {
         List<Integer> filterAndOrder = Arrays.asList(1, 2, 3, 4, 5, 6, 17, 19);
+        System.out.println("#Ev: " + machine.getEvents().size());
+        System.out.println("#AP: " + abstractionPredicates.size());
         ComputerResult<LinkedHashSet<AbstractState>> asResult = new AbstractStatesComputer(machine.getInvariant(), abstractionPredicates).compute();
         LinkedHashSet<AbstractState> abstractStates = asResult.getResult();
 
         // WARMING STEP *************** //
-        /*ComputerResult<ApproximatedTransitionSystem> euaResult = new EUAComputer(machine, abstractStates, NO_ORDERING_NO_COLORATION).compute();
-        ApproximatedTransitionSystem eua = euaResult.getResult();
-        System.out.println(new ATSStatistics(eua).getRowRepresentation(filterAndOrder) + " " + euaResult.getComputationTime());*/
+        /*ComputerResult<ApproximatedTransitionSystem> euaResult = new EUAComputer(machine, abstractStates, EEUAComputerHeuristics.ORDERING_COLORATION).compute();
+        ApproximatedTransitionSystem eua = euaResult.getResult();*/
+        //System.out.println(new ATSStatistics(eua).getRowRepresentation(filterAndOrder) + " " + euaResult.getComputationTime());
         // END OF WARMING STEP ******** //
 
-        ComputerResult<ApproximatedTransitionSystem> eua0Result = new EUAComputer(machine, abstractStates, EEUAComputerHeuristics.NO_ORDERING_NO_COLORATION).compute();
+        /*ComputerResult<ApproximatedTransitionSystem> eua0Result = new NewEUAComputer(machine, abstractStates).compute();
+        ApproximatedTransitionSystem eua0 = eua0Result.getResult();
+        System.out.println(new ATSStatistics(eua0).getRowRepresentation(filterAndOrder) + " " + eua0Result.getComputationTime());*/
+
+        /*ComputerResult<ApproximatedTransitionSystem> eua0Result = new EUAComputer(machine, abstractStates, EEUAComputerHeuristics.NO_ORDERING_NO_COLORATION).compute();
         ApproximatedTransitionSystem eua0 = eua0Result.getResult();
         System.out.println(new ATSStatistics(eua0).getRowRepresentation(filterAndOrder) + " " + eua0Result.getComputationTime());
 
@@ -49,11 +54,15 @@ public class Main {
 
         ComputerResult<ApproximatedTransitionSystem> eua2Result = new EUAComputer(machine, abstractStates, EEUAComputerHeuristics.NO_ORDERING_COLORATION).compute();
         ApproximatedTransitionSystem eua2 = eua2Result.getResult();
-        System.out.println(new ATSStatistics(eua2).getRowRepresentation(filterAndOrder) + " " + eua2Result.getComputationTime());
+        System.out.println(new ATSStatistics(eua2).getRowRepresentation(filterAndOrder) + " " + eua2Result.getComputationTime());*/
 
-        ComputerResult<ApproximatedTransitionSystem> eua3Result = new EUAComputer(machine, abstractStates, ORDERING_COLORATION).compute();
-        ApproximatedTransitionSystem eua3 = eua3Result.getResult();
-        System.out.println(new ATSStatistics(eua3).getRowRepresentation(filterAndOrder) + " " + eua3Result.getComputationTime());
+        ComputerResult<ApproximatedTransitionSystem> eua3Result = new EUAComputer(machine, abstractStates, EEUAComputerHeuristics.ORDERING_COLORATION).compute();
+        System.out.println(eua3Result.getResult().getTriModalTransitionSystem().getCorrespondingGraphvizGraph());
+        /*System.out.println(eua3Result.getResult().getConcreteTransitionSystem().getCorrespondingGraphvizGraph());*/
+        System.out.println(new ATSStatistics(eua3Result.getResult()).getRowRepresentation(filterAndOrder) + " " + eua3Result.getComputationTime());
+        ComputerResult<ApproximatedTransitionSystem> uua3Result = new NewUUAComputer(machine, eua3Result.getResult()).compute();
+        //System.out.println(uua3Result.getResult().getConcreteTransitionSystem().getCorrespondingGraphvizGraph());
+        System.out.println(new ATSStatistics(uua3Result.getResult()).getRowRepresentation(filterAndOrder) + " " + uua3Result.getComputationTime());
 
         /*ComputerResult<ApproximatedTransitionSystem> eua0Result = new EUAComputer(machine, abstractStates, NO_ORDERING_NO_COLORATION).compute();
         ApproximatedTransitionSystem eua0 = eua0Result.getResult();
@@ -94,6 +103,7 @@ public class Main {
         LinkedHashSet<Predicate> threeBatteries_1guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_1guard.ap"));
         LinkedHashSet<Predicate> threeBatteries_2guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_2guard.ap"));
         LinkedHashSet<Predicate> threeBatteries_1post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_1post.ap"));
+        LinkedHashSet<Predicate> threeBatteries_default2 = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_default2.ap"));
         Machine carAlarm = EventBParser.parseMachine(new File("resources/eventb/carAlarm/carAlarm.ebm"));
         LinkedHashSet<Predicate> carAlarm_1guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/carAlarm/carAlarm_1guard.ap"));
         LinkedHashSet<Predicate> carAlarm_2guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/carAlarm/carAlarm_2guard.ap"));
@@ -119,7 +129,7 @@ public class Main {
         LinkedHashSet<Predicate> phone_2post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/phone/phone_2post.ap"));
         Map<Machine, List<LinkedHashSet<Predicate>>> examples = new LinkedHashMap<>();
         examples.put(simple, Collections.singletonList(simple_1));
-        examples.put(threeBatteries, Arrays.asList(threeBatteries_default, threeBatteries_1guard, threeBatteries_2guard, threeBatteries_1post));
+        examples.put(threeBatteries, Arrays.asList(threeBatteries_default, threeBatteries_1guard, threeBatteries_2guard, threeBatteries_1post, threeBatteries_default2));
         examples.put(carAlarm, Arrays.asList(carAlarm_1guard, carAlarm_2guard, carAlarm_1post, carAlarm_2post));
         examples.put(coffeeMachine, Arrays.asList(coffeeMachine_1guard, coffeeMachine_2guard, coffeeMachine_1post, coffeeMachine_2post));
         examples.put(creditCard, Arrays.asList(creditCard_1guard, creditCard_2guard, creditCard_1post, creditCard_2post));
@@ -220,6 +230,7 @@ public class Main {
         LinkedHashSet<Predicate> threeBatteries_1guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_1guard.ap"));
         LinkedHashSet<Predicate> threeBatteries_2guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_2guard.ap"));
         LinkedHashSet<Predicate> threeBatteries_1post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_1post.ap"));
+        LinkedHashSet<Predicate> threeBatteries_default2 = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_default2.ap"));
         Machine carAlarm = EventBParser.parseMachine(new File("resources/eventb/carAlarm/carAlarm.ebm"));
         LinkedHashSet<Predicate> carAlarm_1guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/carAlarm/carAlarm_1guard.ap"));
         LinkedHashSet<Predicate> carAlarm_2guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/carAlarm/carAlarm_2guard.ap"));
@@ -245,7 +256,8 @@ public class Main {
         LinkedHashSet<Predicate> phone_2post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/phone/phone_2post.ap"));
         Map<Machine, List<LinkedHashSet<Predicate>>> examples = new LinkedHashMap<>();
         examples.put(simple, Collections.singletonList(simple_1));
-        examples.put(threeBatteries, Arrays.asList(threeBatteries_default, threeBatteries_1guard, threeBatteries_2guard, threeBatteries_1post));
+        System.out.println(threeBatteries_default2);
+        examples.put(threeBatteries, Arrays.asList(threeBatteries_default, threeBatteries_1guard, threeBatteries_2guard, threeBatteries_1post, threeBatteries_default2));
         examples.put(carAlarm, Arrays.asList(carAlarm_1guard, carAlarm_2guard, carAlarm_1post, carAlarm_2post));
         examples.put(coffeeMachine, Arrays.asList(coffeeMachine_1guard, coffeeMachine_2guard, coffeeMachine_1post, coffeeMachine_2post));
         examples.put(creditCard, Arrays.asList(creditCard_1guard, creditCard_2guard, creditCard_1post, creditCard_2post));

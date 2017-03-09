@@ -1,10 +1,12 @@
 package solvers.z3;
 
 import com.microsoft.z3.FuncDecl;
+import eventb.exprs.arith.AAssignable;
 import eventb.exprs.arith.Int;
 import eventb.exprs.arith.IntVariable;
 import eventb.visitors.Primer;
 
+import java.util.LinkedHashSet;
 import java.util.TreeMap;
 
 /**
@@ -37,6 +39,12 @@ public final class Model {
                 //throw new Error("The value \"" + stringValue + "\" returned by Z3 is not a valid integer.");
             }
         }
+    }
+
+    public Model(Z3 z3, com.microsoft.z3.Model model, LinkedHashSet<AAssignable> assignables) {
+        this(z3, model);
+        getSource().keySet().removeIf(intVariable -> !assignables.contains(intVariable));
+        getTarget().keySet().removeIf(intVariable -> !assignables.contains(intVariable));
     }
 
     public TreeMap<IntVariable, Int> getSource() {

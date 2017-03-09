@@ -30,20 +30,22 @@ public final class ConcreteTransitionSystem implements IGraphvizGraphable, IClon
 
     public ConcreteTransitionSystem(LinkedHashSet<ConcreteState> C0, LinkedHashSet<ConcreteState> C, LinkedHashMap<ConcreteState, AbstractState> Alpha, LinkedHashMap<ConcreteState, EConcreteStateColor> Kappa, LinkedHashSet<ConcreteTransition> DeltaC) {
         this.C0 = C0;
-        Iterator<ConcreteState> iterator = C.iterator();
-        int i = 0;
-        while (iterator.hasNext()) {
-            ConcreteState c = iterator.next();
-            c.setName(c.getName() + "_" + i);
-            for (ConcreteTransition concreteTransition : DeltaC) {
-                if (concreteTransition.getSource().equals(c)) {
-                    concreteTransition.getSource().setName(c.getName());
+        if (!this.C0.iterator().next().getName().matches("c_q.*_.*")) {
+            Iterator<ConcreteState> iterator = C.iterator();
+            int i = 0;
+            while (iterator.hasNext()) {
+                ConcreteState c = iterator.next();
+                c.setName(c.getName() + "_" + i);
+                for (ConcreteTransition concreteTransition : DeltaC) {
+                    if (concreteTransition.getSource().equals(c)) {
+                        concreteTransition.getSource().setName(c.getName());
+                    }
+                    if (concreteTransition.getTarget().equals(c)) {
+                        concreteTransition.getTarget().setName(c.getName());
+                    }
                 }
-                if (concreteTransition.getTarget().equals(c)) {
-                    concreteTransition.getTarget().setName(c.getName());
-                }
+                i++;
             }
-            i++;
         }
         this.C = C;
         this.Alpha = Alpha;

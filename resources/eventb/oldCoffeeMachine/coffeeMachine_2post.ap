@@ -3,14 +3,14 @@
 <AbstractionPredicatesList>
     <CAnd>
         <CEquals>
-            <CVariable val="Pot"/>
+            <CVariable val="Mago"/>
             <CNumber val="0"/>
         </CEquals>
     </CAnd>
 
     <CAnd>
         <CEquals>
-            <CVariable val="Status"/>
+            <CVariable val="Statut"/>
             <CNumber val="2"/>
         </CEquals>
         <CEquals>
@@ -21,7 +21,7 @@
 
     <CAnd>
         <CEquals>
-            <CVariable val="Status"/>
+            <CVariable val="Statut"/>
             <CNumber val="0"/>
         </CEquals>
     </CAnd>

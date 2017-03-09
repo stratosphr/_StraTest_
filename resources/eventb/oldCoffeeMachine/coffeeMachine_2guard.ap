@@ -2,28 +2,28 @@
 
 <AbstractionPredicatesList>
     <CEquals>
-        <CVariable val="Status"/>
+        <CVariable val="Statut"/>
         <CNumber val="0"/>
     </CEquals>
 
     <CAnd>
         <CEquals>
-            <CVariable val="CoffeeLeft"/>
+            <CVariable val="CofeeLeft"/>
             <CNumber val="0"/>
         </CEquals>
         <CEquals>
-            <CVariable val="Status"/>
+            <CVariable val="Statut"/>
             <CNumber val="1"/>
         </CEquals>
     </CAnd>
 
     <CAnd>
         <CEquals>
-            <CVariable val="Pot"/>
+            <CVariable val="Mago"/>
             <CNumber val="6120"/>
         </CEquals>
         <CEquals>
-            <CVariable val="Status"/>
+            <CVariable val="Statut"/>
             <CNumber val="1"/>
         </CEquals>
     </CAnd>

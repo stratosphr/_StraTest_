@@ -14,7 +14,7 @@ import eventb.graphs.ConcreteState;
 import eventb.graphs.ConcreteTransition;
 import solvers.z3.Model;
 import solvers.z3.Z3;
-import utilities.sets.Triple;
+import utilities.sets.Triplet;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,7 +32,7 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
     private final ApproximatedTransitionSystem improvedApproximatedTransitionSystem;
     private final LinkedHashMap<AbstractTransition, Boolean> MinusMarking;
     private final LinkedHashMap<AbstractTransition, Boolean> PlusMarking;
-    private final Stack<Triple<ABoolExpr, Event, AbstractState>> stack;
+    private final Stack<Triplet<ABoolExpr, Event, AbstractState>> stack;
     private final Z3 z3;
 
     public UUAComputer(Machine machine, ApproximatedTransitionSystem approximatedTransitionSystem) {
@@ -51,7 +51,7 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
         AbstractTransition abstractTransition;
         while (MinusMarking.values().contains(false)) {
             if ((abstractTransition = MinusMarking.keySet().stream().filter(abstractTransition1 -> !MinusMarking.get(abstractTransition1) && isMustMinusStructureEntryPoint(abstractTransition1)).findFirst().orElse(MinusMarking.keySet().stream().filter(abstractTransition1 -> !MinusMarking.get(abstractTransition1)).findFirst().orElse(null))) != null) {
-                stack.push(new Triple<>(abstractTransition.getTarget(), null, abstractTransition.getTarget()));
+                stack.push(new Triplet<>(abstractTransition.getTarget(), null, abstractTransition.getTarget()));
                 mustMinusConcretization(abstractTransition, stack);
                 concretizeInStack(stack);
             } else {
@@ -61,9 +61,9 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
         return getImprovedApproximatedTransitionSystem();
     }
 
-    private void mustMinusConcretization(AbstractTransition abstractTransition, Stack<Triple<ABoolExpr, Event, AbstractState>> stack) {
+    private void mustMinusConcretization(AbstractTransition abstractTransition, Stack<Triplet<ABoolExpr, Event, AbstractState>> stack) {
         ABoolExpr wp = new And(abstractTransition.getSource(), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), abstractTransition.getTarget().prime());
-        stack.push(new Triple<>(wp, abstractTransition.getEvent(), abstractTransition.getSource()));
+        stack.push(new Triplet<>(wp, abstractTransition.getEvent(), abstractTransition.getSource()));
         MinusMarking.put(abstractTransition, true);
         AbstractTransition incomingMinusTransition = MinusMarking.keySet().stream().filter(abstractTransition1 -> !MinusMarking.get(abstractTransition1) && abstractTransition1.getTarget().equals(abstractTransition.getSource())).findFirst().orElse(null);
         if (incomingMinusTransition != null) {
@@ -71,10 +71,10 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
         }
     }
 
-    private void concretizeInStack(Stack<Triple<ABoolExpr, Event, AbstractState>> stack) {
-        Triple<ABoolExpr, Event, AbstractState> source = stack.pop();
+    private void concretizeInStack(Stack<Triplet<ABoolExpr, Event, AbstractState>> stack) {
+        Triplet<ABoolExpr, Event, AbstractState> source = stack.pop();
         while (!stack.isEmpty()) {
-            Triple<ABoolExpr, Event, AbstractState> target = stack.pop();
+            Triplet<ABoolExpr, Event, AbstractState> target = stack.pop();
             if (!concretizeFromGreenState(source, target)) {
                 if (!concretizeFromBlueState(source, target)) {
                     concretizeFromAnyState(source, target);
@@ -84,7 +84,7 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
         }
     }
 
-    private boolean concretizeFromGreenState(Triple<ABoolExpr, Event, AbstractState> source, Triple<ABoolExpr, Event, AbstractState> target) {
+    private boolean concretizeFromGreenState(Triplet<ABoolExpr, Event, AbstractState> source, Triplet<ABoolExpr, Event, AbstractState> target) {
         LinkedHashSet<ConcreteState> GCS = approximatedTransitionSystem.getConcreteTransitionSystem().getC().stream().filter(concreteState -> approximatedTransitionSystem.getConcreteTransitionSystem().getKappa().get(concreteState).equals(GREEN)).collect(Collectors.toCollection(LinkedHashSet::new));
         if (!GCS.isEmpty()) {
             z3.setCode(new And(getMachine().getInvariant(), getMachine().getInvariant().prime(), getMachine().getInvariant().prime().prime(), source.getFirst(), new Or(GCS.stream().toArray(ABoolExpr[]::new)), source.getSecond().getSubstitution().getPrd(getMachine()), target.getFirst().prime()));
@@ -106,7 +106,7 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
         return false;
     }
 
-    private boolean concretizeFromBlueState(Triple<ABoolExpr, Event, AbstractState> source, Triple<ABoolExpr, Event, AbstractState> target) {
+    private boolean concretizeFromBlueState(Triplet<ABoolExpr, Event, AbstractState> source, Triplet<ABoolExpr, Event, AbstractState> target) {
         LinkedHashSet<ConcreteState> BCS = approximatedTransitionSystem.getConcreteTransitionSystem().getC().stream().filter(concreteState -> approximatedTransitionSystem.getConcreteTransitionSystem().getKappa().get(concreteState).equals(EConcreteStateColor.BLUE)).collect(Collectors.toCollection(LinkedHashSet::new));
         if (!BCS.isEmpty()) {
             z3.setCode(new And(getMachine().getInvariant(), getMachine().getInvariant().prime(), getMachine().getInvariant().prime().prime(), source.getFirst(), new Or(BCS.stream().toArray(ABoolExpr[]::new)), source.getSecond().getSubstitution().getPrd(getMachine()), target.getFirst().prime()));
@@ -121,7 +121,7 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
         return false;
     }
 
-    private void concretizeFromAnyState(Triple<ABoolExpr, Event, AbstractState> source, Triple<ABoolExpr, Event, AbstractState> target) {
+    private void concretizeFromAnyState(Triplet<ABoolExpr, Event, AbstractState> source, Triplet<ABoolExpr, Event, AbstractState> target) {
         z3.setCode(new And(getMachine().getInvariant(), getMachine().getInvariant().prime(), getMachine().getInvariant().prime().prime(), source.getFirst(), source.getSecond().getSubstitution().getPrd(getMachine()), target.getFirst().prime()));
         if (z3.checkSAT() == Status.SATISFIABLE) {
             Model model = z3.getModel();

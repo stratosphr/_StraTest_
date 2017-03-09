@@ -40,8 +40,8 @@ public final class AbstractStatesComputer extends AComputer<LinkedHashSet<Abstra
             for (int j = 0; j < binaryString.length(); j++) {
                 mapping.put(iterator.next(), binaryString.charAt(j) == '1');
             }
-            //AbstractState abstractState = new AbstractState("q" + i, mapping);
-            AbstractState abstractState = new AbstractState("q" + binaryString, mapping);
+            AbstractState abstractState = new AbstractState("q" + i, mapping);
+            //AbstractState abstractState = new AbstractState("q" + binaryString, mapping);
             z3.setCode(new And(getInvariant(), abstractState));
             if (z3.checkSAT() == SATISFIABLE) {
                 abstractStates.add(abstractState);

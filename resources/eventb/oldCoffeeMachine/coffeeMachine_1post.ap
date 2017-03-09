@@ -14,21 +14,21 @@
     <CAnd>
         <COr>
             <CGreater>
-                <CVariable val="CoffeeLeft"/>
+                <CVariable val="CofeeLeft"/>
                 <CNumber val="0"/>
             </CGreater>
             <CEquals>
-                <CVariable val="CoffeeLeft"/>
+                <CVariable val="CofeeLeft"/>
                 <CNumber val="0"/>
             </CEquals>
         </COr>
         <COr>
             <CGreater>
-                <CVariable val="Pot"/>
+                <CVariable val="Mago"/>
                 <CNumber val="60"/>
             </CGreater>
             <CEquals>
-                <CVariable val="Pot"/>
+                <CVariable val="Mago"/>
                 <CNumber val="60"/>
             </CEquals>
         </COr>

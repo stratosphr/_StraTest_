@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MACHINE name="coffeeMachine">
+    <VARIABLES>
+        <CVariable val="Mago"/>
+        <CVariable val="Balance"/>
+        <CVariable val="CofeeLeft"/>
+        <CVariable val="Statut"/>
+    </VARIABLES>
+    <INVARIANT>
+        <CAnd>
+            <CInDomain type="0">
+                <CVariable val="Mago"/>
+            </CInDomain>
+            <CInDomain type="0">
+                <CVariable val="Balance"/>
+            </CInDomain>
+            <CInDomain type="0">
+                <CVariable val="CofeeLeft"/>
+            </CInDomain>
+            <CInDomain type="0">
+                <CVariable val="Statut"/>
+            </CInDomain>
+            <CGreater>
+                <CNumber val="3"/>
+                <CVariable val="Statut"/>
+            </CGreater>
+        </CAnd>
+    </INVARIANT>
+    <INITIALISATION>
+        <CParallel>
+            <CAssignment>
+                <CVariable val="Statut"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Mago"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Balance"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="CofeeLeft"/>
+                <CNumber val="100"/>
+            </CAssignment>
+        </CParallel>
+    </INITIALISATION>
+    <EVENTS>
+        <CAnyEvent name="insert">
+            <VariablesList>
+                <CVariable val="x"/>
+            </VariablesList>
+            <CInDomain type="0">
+                <CVariable val="x"/>
+            </CInDomain>
+            <CAssignment>
+                <CVariable val="Balance"/>
+                <CPlus>
+                    <CVariable val="Balance"/>
+                    <CVariable val="x"/>
+                </CPlus>
+            </CAssignment>
+        </CAnyEvent>
+        <CGuardedEvent name="powerUp">
+            <CEquals>
+                <CVariable val="Statut"/>
+                <CNumber val="0"/>
+            </CEquals>
+            <CAssignment>
+                <CVariable val="Statut"/>
+                <CNumber val="1"/>
+            </CAssignment>
+        </CGuardedEvent>
+        <CGuardedEvent name="powerDown">
+            <CNot>
+                <CEquals>
+                    <CVariable val="Statut"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </CNot>
+            <CAssignment>
+                <CVariable val="Statut"/>
+                <CNumber val="0"/>
+            </CAssignment>
+        </CGuardedEvent>
+        <CGuardedEvent name="AutoOut">
+            <CAnd>
+                <COr>
+                    <CEquals>
+                        <CVariable val="CofeeLeft"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                    <CEquals>
+                        <CVariable val="Mago"/>
+                        <CNumber val="6120"/>
+                    </CEquals>
+                </COr>
+                <CEquals>
+                    <CVariable val="Statut"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </CAnd>
+            <CParallel>
+                <CAssignment>
+                    <CVariable val="Statut"/>
+                    <CNumber val="2"/>
+                </CAssignment>
+                <CAssignment>
+                    <CVariable val="Balance"/>
+                    <CNumber val="0"/>
+                </CAssignment>
+            </CParallel>
+        </CGuardedEvent>
+        <CGuardedEvent name="takeMago">
+            <CEquals>
+                <CVariable val="Statut"/>
+                <CNumber val="0"/>
+            </CEquals>
+            <CAssignment>
+                <CVariable val="Mago"/>
+                <CNumber val="0"/>
+            </CAssignment>
+        </CGuardedEvent>
+        <CAnyEvent name="addCofee">
+            <VariablesList>
+                <CVariable val="x"/>
+            </VariablesList>
+            <CGreater>
+                <CVariable val="x"/>
+                <CNumber val="0"/>
+            </CGreater>
+            <CGuarded>
+                <CEquals>
+                    <CVariable val="Statut"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CAssignment>
+                    <CVariable val="CofeeLeft"/>
+                    <CPlus>
+                        <CVariable val="CofeeLeft"/>
+                        <CVariable val="x"/>
+                    </CPlus>
+                </CAssignment>
+            </CGuarded>
+        </CAnyEvent>
+        <CGuardedEvent name="ServeCoffee">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Statut"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CGreater>
+                    <CVariable val="CofeeLeft"/>
+                    <CNumber val="0"/>
+                </CGreater>
+                <COr>
+                    <CGreater>
+                        <CVariable val="Balance"/>
+                        <CNumber val="60"/>
+                    </CGreater>
+                    <CEquals>
+                        <CVariable val="Balance"/>
+                        <CNumber val="60"/>
+                    </CEquals>
+                </COr>
+            </CAnd>
+            <CParallel>
+                <CAssignment>
+                    <CVariable val="CofeeLeft"/>
+                    <CMinus>
+                        <CVariable val="CofeeLeft"/>
+                        <CNumber val="1"/>
+                    </CMinus>
+                </CAssignment>
+                <CAssignment>
+                    <CVariable val="Mago"/>
+                    <CPlus>
+                        <CVariable val="Mago"/>
+                        <CNumber val="60"/>
+                    </CPlus>
+                </CAssignment>
+                <CAssignment>
+                    <CVariable val="Balance"/>
+                    <CMinus>
+                        <CVariable val="Balance"/>
+                        <CNumber val="60"/>
+                    </CMinus>
+                </CAssignment>
+            </CParallel>
+        </CGuardedEvent>
+        <CGuardedEvent name="backBalance">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Statut"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CGreater>
+                    <CVariable val="Balance"/>
+                    <CNumber val="0"/>
+                </CGreater>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="Balance"/>
+                <CNumber val="0"/>
+            </CAssignment>
+        </CGuardedEvent>
+    </EVENTS>
+</MACHINE>

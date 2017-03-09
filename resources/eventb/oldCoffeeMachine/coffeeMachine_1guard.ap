@@ -13,7 +13,7 @@
 
     <CAnd>
         <CEquals>
-            <CVariable val="Status"/>
+            <CVariable val="Statut"/>
             <CNumber val="1"/>
         </CEquals>
         <COr>
