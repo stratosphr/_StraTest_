@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <AbstractionPredicatesList>
+
     <CEquals>
         <CVariable val="Balance"/>
         <CNumber val="0"/>
@@ -12,16 +13,33 @@
     </CGreater>
 
     <CAnd>
+        <CEquals>
+            <CVariable val="AskCoffee"/>
+            <CNumber val="0"/>
+        </CEquals>
+
         <COr>
             <CGreater>
-                <CVariable val="CoffeeLeft"/>
+                <CVariable val="Balance"/>
                 <CNumber val="0"/>
             </CGreater>
             <CEquals>
-                <CVariable val="CoffeeLeft"/>
+                <CVariable val="Balance"/>
                 <CNumber val="0"/>
             </CEquals>
         </COr>
+
+        <CAnd>
+            <CGreater>
+                <CVariable val="Balance"/>
+                <CNumber val="0"/>
+            </CGreater>
+            <CEquals>
+                <CVariable val="AskChange"/>
+                <CNumber val="1"/>
+            </CEquals>
+        </CAnd>
+
         <COr>
             <CGreater>
                 <CVariable val="Pot"/>
@@ -32,13 +50,34 @@
                 <CNumber val="60"/>
             </CEquals>
         </COr>
+
+        <CAnd>
+            <COr>
+                <CGreater>
+                    <CPlus>
+                        <CVariable val="Pot"/>
+                        <CNumber val="60"/>
+                    </CPlus>
+                    <CVariable val="MAX_POT"/>
+                </CGreater>
+                <CEquals>
+                    <CVariable val="CoffeeLeft"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <CEquals>
+                <CVariable val="Status"/>
+                <CNumber val="2"/>
+            </CEquals>
+        </CAnd>
+
         <COr>
             <CGreater>
-                <CVariable val="Balance"/>
+                <CVariable val="CoffeeLeft"/>
                 <CNumber val="0"/>
             </CGreater>
             <CEquals>
-                <CVariable val="Balance"/>
+                <CVariable val="CoffeeLeft"/>
                 <CNumber val="0"/>
             </CEquals>
         </COr>

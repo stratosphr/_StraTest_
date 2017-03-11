@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <AbstractionPredicatesList>
-    <CEquals>
-        <CVariable val="Balance"/>
-        <CNumber val="0"/>
-    </CEquals>
-
-    <CGreater>
-        <CNumber val="60"/>
-        <CVariable val="Balance"/>
-    </CGreater>
 
     <CAnd>
         <CEquals>
@@ -26,6 +17,25 @@
                 <CNumber val="60"/>
             </CEquals>
         </COr>
+        <CEquals>
+            <CVariable val="AskCoffee"/>
+            <CNumber val="1"/>
+        </CEquals>
+        <CGreater>
+            <CVariable val="CoffeeLeft"/>
+            <CNumber val="0"/>
+        </CGreater>
     </CAnd>
+
+    <CEquals>
+        <CVariable val="Balance"/>
+        <CNumber val="0"/>
+    </CEquals>
+
+    <CGreater>
+        <CNumber val="60"/>
+        <CVariable val="Balance"/>
+    </CGreater>
+
 </AbstractionPredicatesList>
 

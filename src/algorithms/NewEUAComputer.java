@@ -128,7 +128,6 @@ public final class NewEUAComputer extends AComputer<ApproximatedTransitionSystem
                         Alpha.put(c_, q_);
                         Kappa.put(c_, GREEN);
                         RQ.add(q_);
-                        System.out.println(Q.size() + " - " + Delta.size());
                     }
                 }
             }
@@ -167,15 +166,11 @@ public final class NewEUAComputer extends AComputer<ApproximatedTransitionSystem
                         Alpha.put(c_, q_);
                         Kappa.put(c_, GREEN);
                         RQ.add(q_);
-                        System.out.println(C.size());
                     }
                 }
             }
         } while (added);
         Delta.addAll(DeltaTmp);
-        for (ConcreteTransition concreteTransition : DeltaC) {
-            System.out.println(concreteTransition);
-        }
     }
 
     private boolean registerMustMinus(AbstractTransition abstractTransition) {

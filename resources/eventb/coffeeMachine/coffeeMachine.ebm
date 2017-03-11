@@ -117,7 +117,7 @@
     </INITIALISATION>
     <EVENTS>
 
-        <CGuardedEvent name="insert100">
+        <CGuardedEvent name="insert10">
             <CAnd>
                 <CEquals>
                     <CVariable val="Status"/>
@@ -136,7 +136,7 @@
                         <CVariable val="MAX_BAL"/>
                         <CPlus>
                             <CVariable val="Balance"/>
-                            <CNumber val="100"/>
+                            <CNumber val="10"/>
                         </CPlus>
                     </CGreater>
                     <CEquals>
@@ -149,7 +149,44 @@
                 <CVariable val="Balance"/>
                 <CPlus>
                     <CVariable val="Balance"/>
-                    <CNumber val="100"/>
+                    <CNumber val="10"/>
+                </CPlus>
+            </CAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="insert20">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Status"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AskChange"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AskCoffee"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <COr>
+                    <CGreater>
+                        <CVariable val="MAX_BAL"/>
+                        <CPlus>
+                            <CVariable val="Balance"/>
+                            <CNumber val="20"/>
+                        </CPlus>
+                    </CGreater>
+                    <CEquals>
+                        <CVariable val="MAX_BAL"/>
+                        <CVariable val="Balance"/>
+                    </CEquals>
+                </COr>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="Balance"/>
+                <CPlus>
+                    <CVariable val="Balance"/>
+                    <CNumber val="20"/>
                 </CPlus>
             </CAssignment>
         </CGuardedEvent>
@@ -187,6 +224,80 @@
                 <CPlus>
                     <CVariable val="Balance"/>
                     <CNumber val="50"/>
+                </CPlus>
+            </CAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="insert100">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Status"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AskChange"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AskCoffee"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <COr>
+                    <CGreater>
+                        <CVariable val="MAX_BAL"/>
+                        <CPlus>
+                            <CVariable val="Balance"/>
+                            <CNumber val="100"/>
+                        </CPlus>
+                    </CGreater>
+                    <CEquals>
+                        <CVariable val="MAX_BAL"/>
+                        <CVariable val="Balance"/>
+                    </CEquals>
+                </COr>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="Balance"/>
+                <CPlus>
+                    <CVariable val="Balance"/>
+                    <CNumber val="100"/>
+                </CPlus>
+            </CAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="insert200">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Status"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AskChange"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AskCoffee"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <COr>
+                    <CGreater>
+                        <CVariable val="MAX_BAL"/>
+                        <CPlus>
+                            <CVariable val="Balance"/>
+                            <CNumber val="200"/>
+                        </CPlus>
+                    </CGreater>
+                    <CEquals>
+                        <CVariable val="MAX_BAL"/>
+                        <CVariable val="Balance"/>
+                    </CEquals>
+                </COr>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="Balance"/>
+                <CPlus>
+                    <CVariable val="Balance"/>
+                    <CNumber val="200"/>
                 </CPlus>
             </CAssignment>
         </CGuardedEvent>

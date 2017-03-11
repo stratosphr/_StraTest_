@@ -27,7 +27,7 @@ import static com.microsoft.z3.Status.SATISFIABLE;
  * Created by gvoiron on 22/12/16.
  * Time : 13:36
  */
-public final class NewUUAComputer extends AComputer<ApproximatedTransitionSystem> {
+public final class WorseUUAComputer extends AComputer<ApproximatedTransitionSystem> {
 
     private final Machine machine;
     private final ApproximatedTransitionSystem approximatedTransitionSystem;
@@ -37,7 +37,7 @@ public final class NewUUAComputer extends AComputer<ApproximatedTransitionSystem
     private final Stack<Triplet<ABoolExpr, Event, AbstractState>> stack;
     private final Z3 z3;
 
-    public NewUUAComputer(Machine machine, ApproximatedTransitionSystem approximatedTransitionSystem) {
+    public WorseUUAComputer(Machine machine, ApproximatedTransitionSystem approximatedTransitionSystem) {
         this.machine = machine;
         this.approximatedTransitionSystem = approximatedTransitionSystem;
         this.improvedApproximatedTransitionSystem = approximatedTransitionSystem.clone();

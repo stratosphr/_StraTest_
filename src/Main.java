@@ -1,5 +1,7 @@
+import algorithms.ChinesePostmanPathsComputer;
+import algorithms.ConnectedApproximatedTransitionSystemComputer;
 import algorithms.EUAComputer;
-import algorithms.NewUUAComputer;
+import algorithms.UUAComputer;
 import algorithms.heuristics.EEUAComputerHeuristics;
 import algorithms.outputs.ApproximatedTransitionSystem;
 import algorithms.outputs.ComputerResult;
@@ -8,6 +10,7 @@ import algorithms.utilities.AbstractStatesComputer;
 import eventb.Machine;
 import eventb.exprs.bool.Predicate;
 import eventb.graphs.AbstractState;
+import eventb.graphs.ConcreteTransition;
 import eventb.parsers.EventBParser;
 import utilities.sets.Tuple;
 
@@ -17,9 +20,9 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        Tuple<Machine, LinkedHashSet<Predicate>> example = get("threeBatteries", 0);
+        /*Tuple<Machine, LinkedHashSet<Predicate>> example = get("threeBatteries", 1);
         go(example.getFirst(), example.getSecond());
-        System.exit(42);
+        System.exit(42);*/
         Map<Machine, List<LinkedHashSet<Predicate>>> examples = getExamples();
         examples.forEach((machine, abstractionPredicateSets) -> abstractionPredicateSets.forEach(abstractionPredicateSet -> {
             System.out.println(machine.getName());
@@ -28,71 +31,32 @@ public class Main {
     }
 
     private static void go(Machine machine, LinkedHashSet<Predicate> abstractionPredicates) {
-        List<Integer> filterAndOrder = Arrays.asList(1, 2, 3, 4, 5, 6, 17, 19);
+        List<Integer> filterAndOrder = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 17, 19);
         System.out.println("#Ev: " + machine.getEvents().size());
         System.out.println("#AP: " + abstractionPredicates.size());
         ComputerResult<LinkedHashSet<AbstractState>> asResult = new AbstractStatesComputer(machine.getInvariant(), abstractionPredicates).compute();
         LinkedHashSet<AbstractState> abstractStates = asResult.getResult();
 
-        // WARMING STEP *************** //
-        /*ComputerResult<ApproximatedTransitionSystem> euaResult = new EUAComputer(machine, abstractStates, EEUAComputerHeuristics.ORDERING_COLORATION).compute();
-        ApproximatedTransitionSystem eua = euaResult.getResult();*/
-        //System.out.println(new ATSStatistics(eua).getRowRepresentation(filterAndOrder) + " " + euaResult.getComputationTime());
-        // END OF WARMING STEP ******** //
-
-        /*ComputerResult<ApproximatedTransitionSystem> eua0Result = new NewEUAComputer(machine, abstractStates).compute();
-        ApproximatedTransitionSystem eua0 = eua0Result.getResult();
-        System.out.println(new ATSStatistics(eua0).getRowRepresentation(filterAndOrder) + " " + eua0Result.getComputationTime());*/
-
-        /*ComputerResult<ApproximatedTransitionSystem> eua0Result = new EUAComputer(machine, abstractStates, EEUAComputerHeuristics.NO_ORDERING_NO_COLORATION).compute();
-        ApproximatedTransitionSystem eua0 = eua0Result.getResult();
-        System.out.println(new ATSStatistics(eua0).getRowRepresentation(filterAndOrder) + " " + eua0Result.getComputationTime());
-
-        ComputerResult<ApproximatedTransitionSystem> eua1Result = new EUAComputer(machine, abstractStates, EEUAComputerHeuristics.ORDERING_NO_COLORATION).compute();
-        ApproximatedTransitionSystem eua1 = eua1Result.getResult();
-        System.out.println(new ATSStatistics(eua1).getRowRepresentation(filterAndOrder) + " " + eua1Result.getComputationTime());
-
-        ComputerResult<ApproximatedTransitionSystem> eua2Result = new EUAComputer(machine, abstractStates, EEUAComputerHeuristics.NO_ORDERING_COLORATION).compute();
-        ApproximatedTransitionSystem eua2 = eua2Result.getResult();
-        System.out.println(new ATSStatistics(eua2).getRowRepresentation(filterAndOrder) + " " + eua2Result.getComputationTime());*/
-
-        ComputerResult<ApproximatedTransitionSystem> eua3Result = new EUAComputer(machine, abstractStates, EEUAComputerHeuristics.ORDERING_COLORATION).compute();
-        System.out.println(eua3Result.getResult().getTriModalTransitionSystem().getCorrespondingGraphvizGraph());
-        /*System.out.println(eua3Result.getResult().getConcreteTransitionSystem().getCorrespondingGraphvizGraph());*/
-        System.out.println(new ATSStatistics(eua3Result.getResult()).getRowRepresentation(filterAndOrder) + " " + eua3Result.getComputationTime());
-        ComputerResult<ApproximatedTransitionSystem> uua3Result = new NewUUAComputer(machine, eua3Result.getResult()).compute();
-        //System.out.println(uua3Result.getResult().getConcreteTransitionSystem().getCorrespondingGraphvizGraph());
-        System.out.println(new ATSStatistics(uua3Result.getResult()).getRowRepresentation(filterAndOrder) + " " + uua3Result.getComputationTime());
-
-        /*ComputerResult<ApproximatedTransitionSystem> eua0Result = new EUAComputer(machine, abstractStates, NO_ORDERING_NO_COLORATION).compute();
-        ApproximatedTransitionSystem eua0 = eua0Result.getResult();
-        System.out.println(new ATSStatistics(eua0).getRowRepresentation(filterAndOrder) + " " + eua0Result.getComputationTime());
-
-        ComputerResult<ApproximatedTransitionSystem> eua1Result = new EUAComputer(machine, abstractStates, tuple -> {
-            ArrayList<AbstractState> orderedAbstractStates = new ArrayList<>();
-            orderedAbstractStates.add(tuple.getFirst());
-            orderedAbstractStates.addAll(tuple.getSecond());
-            Collections.reverse(orderedAbstractStates);
-            return orderedAbstractStates;
-        }, events -> {
-            ArrayList<Event> events1 = new ArrayList<>(events);
-            Collections.sort(events1);
-            Collections.reverse(events1);
-            return events1;
-        }, ORDERING_NO_COLORATION).compute();
-        ApproximatedTransitionSystem eua1 = eua1Result.getResult();
-        System.out.println(new ATSStatistics(eua1).getRowRepresentation(filterAndOrder) + " " + eua1Result.getComputationTime());*/
-
-        /*ComputerResult<ApproximatedTransitionSystem> eua2Result = new EUAComputer(machine, abstractStates, ORDERING_COLORATION).compute();
-        ApproximatedTransitionSystem eua2 = eua2Result.getResult();
-        System.out.println(new ATSStatistics(eua2).getRowRepresentation(filterAndOrder) + " " + eua2Result.getComputationTime());*/
-
-        /*System.out.println("---------------------------------------------------");
-        /*ApproximatedTransitionSystem uua = new UUAComputer(machine, eua).compute_();
-        DirectedGraphvizGraph uuaGraph = uua.getTriModalTransitionSystem().getCorrespondingGraphvizGraph();
-        uua.getConcreteTransitionSystem().getDeltaC().forEach(System.out::println);
+        ComputerResult<ApproximatedTransitionSystem> eua = new EUAComputer(machine, abstractStates, EEUAComputerHeuristics.ORDERING_COLORATION).compute();
+        System.out.println(new ATSStatistics(eua.getResult()).getRowRepresentation(filterAndOrder) + " " + eua.getComputationTime());
+        ComputerResult<ApproximatedTransitionSystem> uua = new UUAComputer(machine, eua.getResult()).compute();
+        System.out.println(new ATSStatistics(uua.getResult()).getRowRepresentation(filterAndOrder) + " " + uua.getComputationTime());
+        ComputerResult<ApproximatedTransitionSystem> compute = new ConnectedApproximatedTransitionSystemComputer(uua.getResult()).compute();
+        /*System.out.println(uua.getResult().getConcreteTransitionSystem().getCorrespondingGraphvizGraph());
+        System.out.println(compute.getResult().getConcreteTransitionSystem().getCorrespondingGraphvizGraph());*/
+        ComputerResult<List<List<ConcreteTransition>>> chinesePostmanPathsComputer = new ChinesePostmanPathsComputer(compute.getResult().getConcreteTransitionSystem().getC0().iterator().next(), compute.getResult().getConcreteTransitionSystem().getC(), compute.getResult().getConcreteTransitionSystem().getDeltaC()).compute();
+        if (chinesePostmanPathsComputer.getResult().isEmpty()) {
+            throw new Error("No test generated.");
+        } else {
+            chinesePostmanPathsComputer.getResult().forEach(testCase -> {
+                if (testCase.isEmpty()) {
+                    throw new Error("Empty test case found.");
+                }
+            });
+        }
+        System.out.println("# Test cases: " + chinesePostmanPathsComputer.getResult().size());
+        chinesePostmanPathsComputer.getResult().forEach(path -> System.out.println("\t" + path.size()));
         System.out.println();
-        System.out.println();*/
     }
 
     private static Map<Machine, List<LinkedHashSet<Predicate>>> getExamples() {
@@ -129,7 +93,8 @@ public class Main {
         LinkedHashSet<Predicate> phone_2post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/phone/phone_2post.ap"));
         Map<Machine, List<LinkedHashSet<Predicate>>> examples = new LinkedHashMap<>();
         examples.put(simple, Collections.singletonList(simple_1));
-        examples.put(threeBatteries, Arrays.asList(threeBatteries_default, threeBatteries_1guard, threeBatteries_2guard, threeBatteries_1post, threeBatteries_default2));
+        //examples.put(threeBatteries, Arrays.asList(threeBatteries_default, threeBatteries_1guard, threeBatteries_2guard, threeBatteries_1post, threeBatteries_default2));
+        examples.put(threeBatteries, Arrays.asList(threeBatteries_default, threeBatteries_1guard, threeBatteries_2guard, threeBatteries_1post));
         examples.put(carAlarm, Arrays.asList(carAlarm_1guard, carAlarm_2guard, carAlarm_1post, carAlarm_2post));
         examples.put(coffeeMachine, Arrays.asList(coffeeMachine_1guard, coffeeMachine_2guard, coffeeMachine_1post, coffeeMachine_2post));
         examples.put(creditCard, Arrays.asList(creditCard_1guard, creditCard_2guard, creditCard_1post, creditCard_2post));

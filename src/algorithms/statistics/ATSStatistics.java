@@ -45,6 +45,14 @@ public final class ATSStatistics extends AFormatter {
         abstractionStatistics.put("# pure must- transitions", approximatedTransitionSystem.getTriModalTransitionSystem().getDeltaPureMinus().size());
         abstractionStatistics.put("# pure must+ transitions", approximatedTransitionSystem.getTriModalTransitionSystem().getDeltaPurePlus().size());
         abstractionStatistics.put("# must# transitions", approximatedTransitionSystem.getTriModalTransitionSystem().getDeltaSharp().size());
+        if ((Integer) abstractionStatistics.get("# abstract transitions") != (Integer) abstractionStatistics.get("# pure may transitions") + (Integer) abstractionStatistics.get("# pure must- transitions") + (Integer) abstractionStatistics.get("# pure must+ transitions") + (Integer) abstractionStatistics.get("# must# transitions")) {
+            System.err.println(abstractionStatistics.get("# abstract transitions"));
+            System.err.println(abstractionStatistics.get("# pure may transitions"));
+            System.err.println(abstractionStatistics.get("# pure must- transitions"));
+            System.err.println(abstractionStatistics.get("# pure must+ transitions"));
+            System.err.println(abstractionStatistics.get("# pure must# transitions"));
+            throw new Error("IMPOSSIBLE");
+        }
         underApproximationStatistics.put("# initial concrete states", approximatedTransitionSystem.getConcreteTransitionSystem().getC0().size());
         underApproximationStatistics.put("# concrete states", approximatedTransitionSystem.getConcreteTransitionSystem().getC().size());
         underApproximationStatistics.put("# reachable concrete states", reachableConcretePart.getFirst().size());
