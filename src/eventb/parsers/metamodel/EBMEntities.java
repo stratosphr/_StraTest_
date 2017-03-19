@@ -44,6 +44,8 @@ public final class EBMEntities {
 
     public static final String SUBTRACTION = "CMinus";
 
+    public static final String DIVISION = "CDivision";
+
     public static final String IN_DOMAIN = "CInDomain";
 
     public static final String NOT = "CNot";

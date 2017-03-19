@@ -42,49 +42,19 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
 
     public UUAComputer(Machine machine, ApproximatedTransitionSystem approximatedTransitionSystem) {
         this.machine = machine;
-        this.approximatedTransitionSystem = approximatedTransitionSystem;
+        this.approximatedTransitionSystem = approximatedTransitionSystem.clone();
         this.improvedApproximatedTransitionSystem = approximatedTransitionSystem.clone();
-        this.MinusMarking = new LinkedHashMap<>(improvedApproximatedTransitionSystem.getTriModalTransitionSystem().getDeltaMinus().stream().map(abstractTransition -> new AbstractMap.SimpleEntry<>(abstractTransition, false)).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
-        this.PlusMarking = new LinkedHashMap<>(improvedApproximatedTransitionSystem.getTriModalTransitionSystem().getDeltaPlus().stream().map(abstractTransition -> new AbstractMap.SimpleEntry<>(abstractTransition, false)).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
+        this.MinusMarking = new LinkedHashMap<>(improvedApproximatedTransitionSystem.get3MTS().getDeltaMinus().stream().map(abstractTransition -> new AbstractMap.SimpleEntry<>(abstractTransition, false)).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
+        this.PlusMarking = new LinkedHashMap<>(improvedApproximatedTransitionSystem.get3MTS().getDeltaPlus().stream().map(abstractTransition -> new AbstractMap.SimpleEntry<>(abstractTransition, false)).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
         this.stack = new Stack<>();
         this.z3 = new Z3();
     }
 
     @Override
     protected ApproximatedTransitionSystem compute_() {
-        LinkedHashSet<AbstractTransition> DeltaTMinus = new LinkedHashSet<>();
-        improvedApproximatedTransitionSystem.getTriModalTransitionSystem().getDeltaMinus().forEach(t -> {
-            if (!MinusMarking.get(t) && improvedApproximatedTransitionSystem.getTriModalTransitionSystem().getDeltaMinus().stream().noneMatch(abstractTransition -> abstractTransition.getSource().equals(t.getTarget()))) {
-                DeltaTMinus.add(t);
-            }
-        });
-        DeltaTMinus.forEach(this::mustMinusConcretization);
-        /*System.err.println("Here now");
-        System.exit(64);*/
-        improvedApproximatedTransitionSystem.getTriModalTransitionSystem().getDeltaMinus().forEach(t -> {
-            if (!MinusMarking.get(t)) {
-                mustMinusConcretization(t);
-                //System.err.println("");
-            }
-        });
         // Step 1: t has not been concretized yet and is an entry point for a must+ structure
         PlusMarking.forEach((t, marked) -> {
             if (!marked && isMustPlusStructureEntryPoint(t)) {
-                Optional<ConcreteState> optionalC = improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().keySet().stream().filter(concreteState -> improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().get(concreteState).equals(t.getSource()) && improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().get(concreteState) == GREEN).findFirst();
-                if (optionalC.isPresent()) {
-                    ConcreteState c = optionalC.get();
-                    mustPlusConcretization(t, c, machine);
-                } else {
-                    optionalC = improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().keySet().stream().filter(concreteState -> improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().get(concreteState).equals(t.getSource())).findFirst();
-                    if (optionalC.isPresent()) {
-                        ConcreteState c = optionalC.get();
-                        mustPlusConcretization(t, c, machine);
-                    }
-                }
-            }
-        });
-        PlusMarking.forEach((t, marked) -> {
-            if (!marked) {
                 Optional<ConcreteState> optionalC = improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().keySet().stream().filter(concreteState -> improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().get(concreteState).equals(t.getSource()) && improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().get(concreteState) == GREEN).findFirst();
                 if (optionalC.isPresent()) {
                     ConcreteState c = optionalC.get();
@@ -114,184 +84,163 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
                 }
             }
         });
-        /*approximatedTransitionSystem.getTriModalTransitionSystem().getDelta().forEach(abstractTransition -> {
-            System.out.println(abstractTransition);
-        });
-        System.out.println();
-        System.out.println(getImprovedApproximatedTransitionSystem().getConcreteTransitionSystem().getDeltaC().size());
-        getImprovedApproximatedTransitionSystem().getConcreteTransitionSystem().getDeltaC().forEach(concreteTransition -> {
-            AbstractTransition abstractTransition = new AbstractTransition(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().get(concreteTransition.getSource()), concreteTransition.getEvent(), improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().get(concreteTransition.getTarget()));
-            if (!getImprovedApproximatedTransitionSystem().getTriModalTransitionSystem().getDelta().contains(abstractTransition)) {
-                throw new Error("There is a new abstract transition: " + abstractTransition);
+        LinkedHashSet<AbstractTransition> DeltaTMinus = new LinkedHashSet<>();
+        for (AbstractTransition t : approximatedTransitionSystem.get3MTS().getDeltaMinus()) {
+            if (!MinusMarking.get(t) && approximatedTransitionSystem.get3MTS().getDeltaMinus().stream().noneMatch(abstractTransition -> abstractTransition.getSource().equals(t.getTarget()))) {
+                DeltaTMinus.add(t);
             }
-        });*/
+        }
+        DeltaTMinus.forEach(this::mustMinusConcretization);
+        for (AbstractTransition t : approximatedTransitionSystem.get3MTS().getDeltaMinus()) {
+            if (!MinusMarking.get(t)) {
+                mustMinusConcretization(t);
+            }
+        }
         return getImprovedApproximatedTransitionSystem();
     }
 
-    private void mustPlusConcretization(AbstractTransition t, ConcreteState c, Machine machine) {
-        Set<ConcreteTransition> TC = new LinkedHashSet<>();
-        ConcreteTransition tc;
-        improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().keySet().stream().filter(concreteState -> improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().get(concreteState).equals(t.getTarget())).forEach(concreteState -> TC.addAll(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC().stream().filter(concreteTransition -> concreteTransition.getSource().equals(c) && concreteTransition.getEvent().getName().equals(t.getEvent().getName()) && concreteTransition.getTarget().equals(concreteState)).collect(Collectors.toList())));
-        if (!TC.isEmpty()) {
-            tc = TC.stream().filter(concreteTransition -> improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().get(concreteTransition.getTarget()) == GREEN).findAny().orElse(TC.iterator().next());
-        } else {
-            z3.setCode(new And(
-                    machine.getInvariant().prime(),
-                    new Exists(
-                            new And(
-                                    machine.getInvariant(),
-                                    t.getEvent().getSubstitution().getPrd(machine),
-                                    c.getExpression()
-                            ),
-                            machine.getAssignables().stream().filter(assignable -> assignable instanceof IntVariable).map(assignable -> new QuantifiedVariable((IntVariable) assignable)).toArray(QuantifiedVariable[]::new)
-                    ),
-                    t.getTarget().prime()
-            ));
-            if (z3.checkSAT() == SATISFIABLE) {
-                Model model = z3.getModel();
-                ConcreteState c_ = new ConcreteState("c_" + t.getTarget().getName(), model.getTarget());
-                if (improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().add(c_)) {
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().put(c_, t.getTarget());
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().put(c_, GREEN);
-                }
-                tc = new ConcreteTransition(c, t.getEvent(), c_);
-                improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC().add(tc);
-            } else {
-                throw new Error("Impossible in mustPlusConcretization");
-            }
-        }
-        PlusMarking.put(t, true);
-        PlusMarking.forEach((t2, marked) -> {
-            if (!marked && t2.getSource().equals(t.getTarget())) {
-                mustPlusConcretization(t2, tc.getTarget(), machine);
-            }
-        });
-    }
-
     @SuppressWarnings("unchecked")
-    private void mustMinusConcretization(AbstractTransition t) {
-        //System.err.println(t);
+    private void mustMinusConcretization(AbstractTransition abstractTransition) {
+        Stack<Triplet<Event, ABoolExpr, AbstractState>> p = new Stack<>();
+        p.push(new Triplet<>(abstractTransition.getEvent(), abstractTransition.getTarget(), abstractTransition.getTarget()));
+        Stack<Tuple<LinkedHashSet<AbstractTransition>, Stack<Triplet<Event, ABoolExpr, AbstractState>>>> pb = new Stack<>();
+        LinkedHashSet<AbstractTransition> DeltaTMinus = new LinkedHashSet<>(Collections.singletonList(abstractTransition));
+        AbstractTransition t = abstractTransition.clone();
+        MinusMarking.put(t, true);
         AbstractState q = t.getSource();
         Event e = t.getEvent();
         AbstractState q_ = t.getTarget();
-        Stack<Triplet<Event, ABoolExpr, AbstractState>> p = new Stack<>();
-        Stack<Tuple<LinkedHashSet<AbstractTransition>, Stack<Triplet<Event, ABoolExpr, AbstractState>>>> pb = new Stack<>();
-        p.push(new Triplet<>(e, q_, q_));
-        LinkedHashSet<AbstractTransition> DeltaTMinus = new LinkedHashSet<>();
-        DeltaTMinus.add(t);
         ABoolExpr wp_q_ = new And(machine.getInvariant(), q_);
-        MinusMarking.put(t, true);
         while (!DeltaTMinus.isEmpty()) {
             while (!DeltaTMinus.isEmpty()) {
                 wp_q_ = new And(
                         machine.getInvariant(),
-                        machine.getInvariant().prime(),
                         q,
                         e.getSubstitution().getPrd(machine),
                         wp_q_.prime()
                 );
-                DeltaTMinus.clear();
-                for (AbstractTransition abstractTransition : improvedApproximatedTransitionSystem.getTriModalTransitionSystem().getDeltaMinus()) {
-                    if (abstractTransition.getTarget().equals(q) && !MinusMarking.get(abstractTransition)) {
-                        DeltaTMinus.add(abstractTransition);
+                DeltaTMinus = new LinkedHashSet<>();
+                for (AbstractTransition _t : MinusMarking.keySet()) {
+                    if (!MinusMarking.get(_t) && _t.getTarget().equals(q)) {
+                        DeltaTMinus.add(_t);
                     }
                 }
                 if (!DeltaTMinus.isEmpty()) {
-                    t = DeltaTMinus.iterator().next();
-                    //System.err.println(t);
+                    t = DeltaTMinus.iterator().next().clone();
                     q = t.getSource();
                     e = t.getEvent();
                     q_ = t.getTarget();
                     MinusMarking.put(t, true);
-                    if (DeltaTMinus.size() > 1) {
-                        LinkedHashSet<AbstractTransition> tmpDeltaTMinus = new LinkedHashSet<>(DeltaTMinus);
-                        tmpDeltaTMinus.remove(t);
-                        Stack<Triplet<Event, ABoolExpr, AbstractState>> tmpP = (Stack<Triplet<Event, ABoolExpr, AbstractState>>) p.clone();
-                        pb.push(new Tuple<>(tmpDeltaTMinus, tmpP));
+                    LinkedHashSet<AbstractTransition> tmpDeltaTMinus = new LinkedHashSet<>(DeltaTMinus);
+                    tmpDeltaTMinus.remove(t);
+                    if (!tmpDeltaTMinus.isEmpty()) {
+                        pb.push(new Tuple<>(tmpDeltaTMinus, (Stack<Triplet<Event, ABoolExpr, AbstractState>>) p.clone()));
                     }
                     p.push(new Triplet<>(e, wp_q_, q_));
+
                 }
             }
-            ConcreteState c = null;
             boolean gp = false;
+            ConcreteState c;
+            if ((c = findConcreteInstance(q, GREEN, wp_q_)) == null) {
+                if ((c = findConcreteInstance(q, BLUE, wp_q_)) == null) {
+                    if ((c = findConcreteInstance(q, wp_q_)) != null) {
+                        z3.setCode(new And(machine.getInvariant(), machine.getInvariant().prime(), machine.getInitialisation().getPrd(machine), c.prime()));
+                        if (z3.checkSAT() == SATISFIABLE) {
+                            improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC0().add(c);
+                            improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().put(c, GREEN);
+                            gp = true;
+                        } else {
+                            improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().putIfAbsent(c, BLUE);
+                        }
+                    } else {
+                        throw new Error("Impossible case occurred: no concrete instance found.");
+                    }
+                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().putIfAbsent(c, BLUE);
+                }
+                improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().putIfAbsent(c, BLUE);
+            } else {
+                gp = true;
+            }
+            improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().add(c);
+            improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().put(c, q);
             while (!p.isEmpty()) {
                 if (!gp) {
                     if ((c = findConcreteInstance(q, GREEN, wp_q_)) == null) {
                         if ((c = findConcreteInstance(q, BLUE, wp_q_)) == null) {
-                            c = findConcreteInstance(q, wp_q_);
-                            z3.setCode(new And(
-                                    machine.getInvariant(),
-                                    machine.getInvariant().prime(),
-                                    c,
-                                    machine.getInitialisation().getPrd(getMachine())
-                            ));
-                            if (z3.checkSAT() == SATISFIABLE) {
-                                improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().put(c, GREEN);
-                                gp = true;
+                            if ((c = findConcreteInstance(q, wp_q_)) != null) {
+                                z3.setCode(new And(machine.getInvariant(), machine.getInvariant().prime(), machine.getInitialisation().getPrd(machine), c.prime()));
+                                if (z3.checkSAT() == SATISFIABLE) {
+                                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC0().add(c);
+                                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().put(c, GREEN);
+                                    gp = true;
+                                } else {
+                                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().putIfAbsent(c, BLUE);
+                                }
                             } else {
-                                improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().put(c, BLUE);
+                                throw new Error("Impossible case occurred: no concrete instance found.");
                             }
-                            improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().add(c);
-                            improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().put(c, q);
+                            improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().putIfAbsent(c, BLUE);
                         }
+                        improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().putIfAbsent(c, BLUE);
                     } else {
                         gp = true;
                     }
-                }
-                if (c == null) {
-                    throw new Error("Impossible case occurred: c is null.");
+                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().add(c);
+                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().put(c, q);
                 }
                 Triplet<Event, ABoolExpr, AbstractState> triplet = p.pop();
-                e = triplet.getFirst();
-                wp_q_ = triplet.getSecond();
-                q_ = triplet.getThird();
+                e = triplet.getFirst().clone();
+                wp_q_ = triplet.getSecond().clone();
+                q_ = triplet.getThird().clone();
                 z3.setCode(new And(
                         machine.getInvariant(),
-                        machine.getInvariant().prime(),
                         c,
                         e.getSubstitution().getPrd(machine),
                         wp_q_.prime()
                 ));
                 if (z3.checkSAT() == SATISFIABLE) {
                     Model model = z3.getModel(machine.getAssignables());
-                    ConcreteState c_ = new ConcreteState("c_" + q_.getName() + "_y", model.getTarget());
-                    int c_Index = new ArrayList<>(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC()).indexOf(c_);
-                    c_.setName("c_" + q_.getName() + "_" + ((c_Index == -1) ? improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().size() : c_Index));
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().add(c_);
+                    ConcreteState c_;
+                    int c_Index = new ArrayList<>(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC()).indexOf(new ConcreteState("c_" + q_.getName(), model.getTarget()));
+                    if (c_Index != -1) {
+                        c_ = new ConcreteState("c_" + q_.getName() + "_" + c_Index, model.getTarget());
+                    } else {
+                        c_ = new ConcreteState("c_" + q_.getName() + "_" + improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().size(), model.getTarget());
+                    }
+                    if (!improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().containsKey(c_) || improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().get(c_) != GREEN) {
+                        improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().put(c_, improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().containsKey(c) ? improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().get(c) : BLUE);
+                    }
                     improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().put(c_, q_);
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().put(c_, improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().get(c));
                     improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC().add(new ConcreteTransition(c, e, c_));
+                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().add(c_);
                     c = c_;
                     q = q_;
                 } else {
-                    throw new Error("Impossible case occurred.");
+                    throw new Error("Impossible case occurred: no concrete transition from c found.");
                 }
             }
             if (!pb.isEmpty()) {
                 Tuple<LinkedHashSet<AbstractTransition>, Stack<Triplet<Event, ABoolExpr, AbstractState>>> tuple = pb.pop();
-                DeltaTMinus = tuple.getFirst();
-                p = tuple.getSecond();
+                DeltaTMinus = new LinkedHashSet<>(tuple.getFirst());
+                p = (Stack<Triplet<Event, ABoolExpr, AbstractState>>) tuple.getSecond().clone();
                 t = DeltaTMinus.iterator().next();
-                //System.err.println("");
-                //System.err.println(t);
                 q = t.getSource();
                 e = t.getEvent();
                 q_ = t.getTarget();
                 MinusMarking.put(t, true);
-                if (DeltaTMinus.size() > 1) {
-                    LinkedHashSet<AbstractTransition> tmpDeltaTMinus = new LinkedHashSet<>(DeltaTMinus);
-                    tmpDeltaTMinus.remove(t);
-                    Stack<Triplet<Event, ABoolExpr, AbstractState>> tmpP = (Stack<Triplet<Event, ABoolExpr, AbstractState>>) p.clone();
-                    pb.push(new Tuple<>(tmpDeltaTMinus, tmpP));
+                LinkedHashSet<AbstractTransition> tmpDeltaTMinus = new LinkedHashSet<>(DeltaTMinus);
+                tmpDeltaTMinus.remove(t);
+                if (!tmpDeltaTMinus.isEmpty()) {
+                    pb.push(new Tuple<>(tmpDeltaTMinus, (Stack<Triplet<Event, ABoolExpr, AbstractState>>) p.clone()));
                 }
-                DeltaTMinus.clear();
-                DeltaTMinus.add(t);
+                DeltaTMinus = new LinkedHashSet<>(Collections.singletonList(t));
                 wp_q_ = new And(
                         machine.getInvariant(),
                         machine.getInvariant().prime(),
                         q_,
                         p.peek().getFirst().getSubstitution().getPrd(machine),
-                        wp_q_.prime()
+                        p.peek().getSecond().prime()
                 );
                 p.push(new Triplet<>(e, wp_q_, q_));
             }
@@ -309,11 +258,7 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
             ));
             if (z3.checkSAT() == SATISFIABLE) {
                 Model model = z3.getModel();
-                ConcreteState c = new ConcreteState("c_" + q.getName() + "_" + new ArrayList<>(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC()).indexOf(new ConcreteState("c_" + q.getName(), model.getSource())), model.getSource());
-                improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().add(c);
-                improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().put(c, q);
-                improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().put(c, BLUE);
-                return c;
+                return new ConcreteState("c_" + q.getName() + "_" + new ArrayList<>(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC()).indexOf(new ConcreteState("c_" + q.getName(), model.getSource())), model.getSource());
             }
         }
         return null;
@@ -338,8 +283,50 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
         }
     }
 
+    private void mustPlusConcretization(AbstractTransition t, ConcreteState c, Machine machine) {
+        Set<ConcreteTransition> TC = new LinkedHashSet<>();
+        ConcreteTransition tc;
+        improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().keySet().stream().filter(concreteState -> improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().get(concreteState).equals(t.getTarget())).forEach(concreteState -> TC.addAll(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC().stream().filter(concreteTransition -> concreteTransition.getSource().equals(c) && concreteTransition.getEvent().getName().equals(t.getEvent().getName()) && concreteTransition.getTarget().equals(concreteState)).collect(Collectors.toList())));
+        if (!TC.isEmpty()) {
+            tc = TC.stream().filter(concreteTransition -> improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().get(concreteTransition.getTarget()) == GREEN).findAny().orElse(TC.iterator().next());
+        } else {
+            z3.setCode(new And(
+                    machine.getInvariant().prime(),
+                    new Exists(
+                            new And(
+                                    machine.getInvariant(),
+                                    t.getEvent().getSubstitution().getPrd(machine),
+                                    c.getExpression()
+                            ),
+                            machine.getAssignables().stream().filter(assignable -> assignable instanceof IntVariable).map(assignable -> new QuantifiedVariable((IntVariable) assignable)).toArray(QuantifiedVariable[]::new)
+                    ),
+                    t.getTarget().prime()
+            ));
+            if (z3.checkSAT() == SATISFIABLE) {
+                Model model = z3.getModel();
+                ConcreteState c_ = new ConcreteState("c_" + t.getTarget().getName(), model.getTarget());
+                int c_Index = new ArrayList<>(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC()).indexOf(c_);
+                c_.setName("c_" + t.getTarget().getName() + "_" + ((c_Index == -1) ? improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().size() : c_Index));
+                if (improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().add(c_)) {
+                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().put(c_, t.getTarget());
+                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().put(c_, GREEN);
+                }
+                tc = new ConcreteTransition(c, t.getEvent(), c_);
+                improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC().add(tc);
+            } else {
+                throw new Error("Impossible in mustPlusConcretization");
+            }
+        }
+        PlusMarking.put(t, true);
+        PlusMarking.forEach((t2, marked) -> {
+            if (!marked && t2.getSource().equals(t.getTarget())) {
+                mustPlusConcretization(t2, tc.getTarget(), machine);
+            }
+        });
+    }
+
     private boolean isMustPlusStructureEntryPoint(AbstractTransition t) {
-        return improvedApproximatedTransitionSystem.getTriModalTransitionSystem().getDeltaPlus().stream().noneMatch(abstractTransition -> t.getSource().equals(abstractTransition.getTarget()));
+        return improvedApproximatedTransitionSystem.get3MTS().getDeltaPlus().stream().noneMatch(abstractTransition -> t.getSource().equals(abstractTransition.getTarget()));
     }
 
     public ApproximatedTransitionSystem getImprovedApproximatedTransitionSystem() {

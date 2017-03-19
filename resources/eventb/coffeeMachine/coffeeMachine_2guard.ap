@@ -2,6 +2,71 @@
 
 <AbstractionPredicatesList>
 
+    <!--<CAnd>
+        <CEquals>
+            <CVariable val="Status"/>
+            <CNumber val="1"/>
+        </CEquals>
+        <COr>
+            <CGreater>
+                <CVariable val="Balance"/>
+                <CNumber val="50"/>
+            </CGreater>
+            <CEquals>
+                <CVariable val="Balance"/>
+                <CNumber val="50"/>
+            </CEquals>
+        </COr>
+        <CEquals>
+            <CVariable val="AskCoffee"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="AskChange"/>
+            <CNumber val="0"/>
+        </CEquals>
+    </CAnd>
+
+    <CAnd>
+        <CEquals>
+            <CVariable val="Status"/>
+            <CNumber val="1"/>
+        </CEquals>
+        <COr>
+            <CGreater>
+                <CVariable val="Balance"/>
+                <CNumber val="50"/>
+            </CGreater>
+            <CEquals>
+                <CVariable val="Balance"/>
+                <CNumber val="50"/>
+            </CEquals>
+        </COr>
+        <CEquals>
+            <CVariable val="AskCoffee"/>
+            <CNumber val="1"/>
+        </CEquals>
+        <CGreater>
+            <CVariable val="CoffeeLeft"/>
+            <CNumber val="0"/>
+        </CGreater>
+    </CAnd>
+
+    <CAnd>
+        <CEquals>
+            <CVariable val="Status"/>
+            <CNumber val="1"/>
+        </CEquals>
+        <CGreater>
+            <CVariable val="Balance"/>
+            <CNumber val="0"/>
+        </CGreater>
+        <CEquals>
+            <CVariable val="AskChange"/>
+            <CNumber val="1"/>
+        </CEquals>
+    </CAnd>-->
+
     <CAnd>
         <CEquals>
             <CVariable val="Status"/>
@@ -9,7 +74,10 @@
         </CEquals>
         <CGreater>
             <CVariable val="Pot"/>
-            <CNumber val="300"/>
+            <CDivision>
+                <CVariable val="MAX_POT"/>
+                <CNumber val="2"/>
+            </CDivision>
         </CGreater>
     </CAnd>
 
@@ -20,35 +88,36 @@
         </CEquals>
         <CGreater>
             <CVariable val="Pot"/>
-            <CNumber val="200"/>
+            <CDivision>
+                <CVariable val="MAX_POT"/>
+                <CNumber val="2"/>
+            </CDivision>
         </CGreater>
     </CAnd>
 
-    <CAnd>
+    <COr>
+        <CAnd>
+            <CEquals>
+                <CVariable val="Status"/>
+                <CNumber val="1"/>
+            </CEquals>
+            <CEquals>
+                <CVariable val="AskChange"/>
+                <CNumber val="0"/>
+            </CEquals>
+            <CEquals>
+                <CVariable val="AskCoffee"/>
+                <CNumber val="0"/>
+            </CEquals>
+            <CEquals>
+                <CVariable val="Balance"/>
+                <CNumber val="0"/>
+            </CEquals>
+        </CAnd>
         <CEquals>
             <CVariable val="Status"/>
-            <CNumber val="0"/>
+            <CNumber val="2"/>
         </CEquals>
-        <CGreater>
-            <CVariable val="CoffeeLeft"/>
-            <CNumber val="0"/>
-        </CGreater>
-        <CGreater>
-            <CVariable val="Pot"/>
-            <CNumber val="0"/>
-        </CGreater>
-        <COr>
-            <CGreater>
-                <CNumber val="420"/>
-                <CVariable val="Pot"/>
-            </CGreater>
-            <CEquals>
-                <CNumber val="420"/>
-                <CVariable val="Pot"/>
-            </CEquals>
-        </COr>
-    </CAnd>
+    </COr>
 
 </AbstractionPredicatesList>
-
-

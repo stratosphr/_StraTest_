@@ -28,7 +28,7 @@ import static eventb.parsers.metamodel.EventBRegex.IDENTIFIER;
 public final class EventBParser {
 
     public static Machine parseMachine(File file) {
-        XMLDocument document = XMLParser.parse(file, "MACHINE", new File("resources/eventb/ebm.dtd"), new ErrorHandler());
+        XMLDocument document = XMLParser.parse(file, "MACHINE", new File("resources/eventb/ebm.dtd"), new ErrorHandler(file));
         XMLNode root = document.getRoot();
         String name = root.getAttributes().get(EBMAttributes.NAME);
         LinkedHashSet<NamedSet> sets = new LinkedHashSet<>();
@@ -179,6 +179,8 @@ public final class EventBParser {
                 return parseSum(node);
             case EBMEntities.SUBTRACTION:
                 return parseSubtraction(node);
+            case EBMEntities.DIVISION:
+                return parseDivision(node);
             default:
                 throw new Error("Unable to parse node \"" + node.getName() + "\": this node is not handled yet by the parser.");
         }
@@ -229,6 +231,10 @@ public final class EventBParser {
 
     private static AArithExpr parseSubtraction(XMLNode node) {
         return new Subtraction(node.getChildren().stream().map(EventBParser::parseArithExpr).toArray(AArithExpr[]::new));
+    }
+
+    private static AArithExpr parseDivision(XMLNode node) {
+        return new Division(node.getChildren().stream().map(EventBParser::parseArithExpr).toArray(AArithExpr[]::new));
     }
 
     private static ABoolExpr parseInDomain(XMLNode node) {

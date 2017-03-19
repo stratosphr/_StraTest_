@@ -1,62 +1,33 @@
 <MACHINE name="simple">
 
     <VARIABLES>
-        <CVariable val="x"/>
-        <CVariable val="y"/>
+        <CVariable val="a"/>
     </VARIABLES>
 
     <INVARIANT>
-        <CAnd>
-            <CGreater>
-                <CVariable val="x"/>
-                <CNumber val="-1"/>
-            </CGreater>
-            <CGreater>
-                <CNumber val="2"/>
-                <CVariable val="x"/>
-            </CGreater>
-        </CAnd>
+        <CGreater>
+            <CVariable val="a"/>
+            <CNumber val="-1"/>
+        </CGreater>
     </INVARIANT>
 
     <INITIALISATION>
         <CAssignment>
-            <CVariable val="x"/>
+            <CVariable val="a"/>
             <CNumber val="0"/>
         </CAssignment>
     </INITIALISATION>
 
     <EVENTS>
-
-        <CAnyEvent name="e01">
-            <VariablesList>
-                <CVariable val="a"/>
-            </VariablesList>
-            <CAnd>
-                <CEquals>
-                    <CVariable val="x"/>
-                    <CNumber val="0"/>
-                </CEquals>
-                <COr>
-                    <CEquals>
-                        <CVariable val="a"/>
-                        <CNumber val="1"/>
-                    </CEquals>
-                    <CEquals>
-                        <CVariable val="a"/>
-                        <CNumber val="0"/>
-                    </CEquals>
-                </COr>
-            </CAnd>
+        <CNonGuardedEvent name="ev1">
             <CAssignment>
-                <CVariable val="x"/>
+                <CVariable val="a"/>
                 <CPlus>
-                    <CVariable val="x"/>
-                    <CNumber val="1"/>
                     <CVariable val="a"/>
+                    <CNumber val="1"/>
                 </CPlus>
             </CAssignment>
-        </CAnyEvent>
-
+        </CNonGuardedEvent>
     </EVENTS>
 
 </MACHINE>

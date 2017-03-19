@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <AbstractionPredicatesList>
 
-    <CEquals>
-        <CVariable val="x"/>
-        <CNumber val="0"/>
-    </CEquals>
+    <CGreater>
+        <CNumber val="2"/>
+        <CVariable val="a"/>
+    </CGreater>
 
 </AbstractionPredicatesList>

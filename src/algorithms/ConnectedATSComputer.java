@@ -15,12 +15,12 @@ import java.util.*;
  * Created by gvoiron on 10/03/17.
  * Time : 15:13
  */
-public class ConnectedApproximatedTransitionSystemComputer extends AComputer<ApproximatedTransitionSystem> {
+public class ConnectedATSComputer extends AComputer<ApproximatedTransitionSystem> {
 
     private final ApproximatedTransitionSystem approximatedTransitionSystem;
     private final ApproximatedTransitionSystem connectedApproximatedTransitionSystem;
 
-    public ConnectedApproximatedTransitionSystemComputer(ApproximatedTransitionSystem approximatedTransitionSystem) {
+    public ConnectedATSComputer(ApproximatedTransitionSystem approximatedTransitionSystem) {
         this.approximatedTransitionSystem = approximatedTransitionSystem;
         this.connectedApproximatedTransitionSystem = approximatedTransitionSystem.clone();
     }

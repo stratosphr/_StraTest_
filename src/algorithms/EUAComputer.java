@@ -97,12 +97,15 @@ public final class EUAComputer extends AComputer<ApproximatedTransitionSystem> {
         for (AbstractState q : getA()) {
             z3.setCode(new And(getMachine().getInvariant(), getMachine().getInvariant().prime(), getMachine().getInitialisation().getPrd(getMachine()), q.prime()));
             if (z3.checkSAT() == SATISFIABLE) {
-                ConcreteState c = new ConcreteState("c_" + q.getName(), z3.getModel().getTarget());
+                ConcreteState c = new ConcreteState("c_" + q.getName(), z3.getModel(machine.getAssignables()).getTarget());
                 Q0.add(q);
                 C0.add(c);
                 Alpha.put(c, q);
                 Kappa.put(c, GREEN);
             }
+        }
+        if (C0.isEmpty()) {
+            throw new Error("No initial concrete state found.");
         }
         C.addAll(C0);
     }

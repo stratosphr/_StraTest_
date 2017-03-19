@@ -132,7 +132,7 @@ public final class NewEUAComputer extends AComputer<ApproximatedTransitionSystem
                 }
             }
         } while (added);
-        LinkedHashSet<AbstractTransition> DeltaTmp = new LinkedHashSet<>();
+        /*LinkedHashSet<AbstractTransition> DeltaTmp = new LinkedHashSet<>();
         do {
             added = false;
             RQ.addAll(Q);
@@ -170,7 +170,29 @@ public final class NewEUAComputer extends AComputer<ApproximatedTransitionSystem
                 }
             }
         } while (added);
-        Delta.addAll(DeltaTmp);
+        Delta.addAll(DeltaTmp);*/
+        Q.clear();
+        RQ.clear();
+        RQ.addAll(getQ0());
+        while (!RQ.isEmpty()) {
+            AbstractState q = RQ.iterator().next();
+            RQ.remove(q);
+            Q.add(q);
+            for (AbstractState q_ : getA()) {
+                for (Event e : machine.getEvents()) {
+                    z3.setCode(new And(machine.getInvariant(), machine.getInvariant().prime(), q, e.getSubstitution().getPrd(machine), q_.prime()));
+                    if (z3.checkSAT() == SATISFIABLE) {
+                        AbstractTransition abstractTransition = new AbstractTransition(q, e, q_);
+                        getDelta().add(abstractTransition);
+                        registerMustMinus(abstractTransition);
+                        registerMustPlus(abstractTransition);
+                        if (!Q.contains(q_)) {
+                            RQ.add(q_);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private boolean registerMustMinus(AbstractTransition abstractTransition) {

@@ -1,5 +1,3 @@
-import algorithms.ChinesePostmanPathsComputer;
-import algorithms.ConnectedApproximatedTransitionSystemComputer;
 import algorithms.EUAComputer;
 import algorithms.UUAComputer;
 import algorithms.heuristics.EEUAComputerHeuristics;
@@ -10,7 +8,6 @@ import algorithms.utilities.AbstractStatesComputer;
 import eventb.Machine;
 import eventb.exprs.bool.Predicate;
 import eventb.graphs.AbstractState;
-import eventb.graphs.ConcreteTransition;
 import eventb.parsers.EventBParser;
 import utilities.sets.Tuple;
 
@@ -20,46 +17,33 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        /*Tuple<Machine, LinkedHashSet<Predicate>> example = get("threeBatteries", 1);
+        /*Tuple<Machine, LinkedHashSet<Predicate>> example = get("coffeeMachine", 1);
         go(example.getFirst(), example.getSecond());
         System.exit(42);*/
-        Map<Machine, List<LinkedHashSet<Predicate>>> examples = getExamples();
-        examples.forEach((machine, abstractionPredicateSets) -> abstractionPredicateSets.forEach(abstractionPredicateSet -> {
-            System.out.println(machine.getName());
-            go(machine, abstractionPredicateSet);
+        List<Tuple<Machine, List<LinkedHashSet<Predicate>>>> examples = getExamples();
+        examples.forEach(tuple -> tuple.getSecond().forEach(abstractionPredicatesSet -> {
+            System.out.println(tuple.getFirst().getName());
+            go(tuple.getFirst(), abstractionPredicatesSet);
         }));
     }
 
     private static void go(Machine machine, LinkedHashSet<Predicate> abstractionPredicates) {
-        List<Integer> filterAndOrder = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 17, 19);
+        List<Integer> filterAndOrder = Arrays.asList(1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 13, 14, 18, 19, 21, 22, 24);
+        LinkedHashSet<AbstractState> abstractStates = new AbstractStatesComputer(machine.getInvariant(), abstractionPredicates).compute().getResult();
+        ComputerResult<ApproximatedTransitionSystem> eua = new EUAComputer(machine, abstractStates, EEUAComputerHeuristics.ORDERING_COLORATION).compute();
+        ComputerResult<ApproximatedTransitionSystem> uua = new UUAComputer(machine, eua.getResult()).compute();
+
         System.out.println("#Ev: " + machine.getEvents().size());
         System.out.println("#AP: " + abstractionPredicates.size());
-        ComputerResult<LinkedHashSet<AbstractState>> asResult = new AbstractStatesComputer(machine.getInvariant(), abstractionPredicates).compute();
-        LinkedHashSet<AbstractState> abstractStates = asResult.getResult();
-
-        ComputerResult<ApproximatedTransitionSystem> eua = new EUAComputer(machine, abstractStates, EEUAComputerHeuristics.ORDERING_COLORATION).compute();
+        /*System.out.println(new ATSStatistics(eua.getResult()).getRowRepresentation(filterAndOrder) + " " + eua.getComputationTime());
+        System.out.println(new ATSStatistics(uua.getResult()).getRowRepresentation(filterAndOrder) + " " + uua.getComputationTime());*/
         System.out.println(new ATSStatistics(eua.getResult()).getRowRepresentation(filterAndOrder) + " " + eua.getComputationTime());
-        ComputerResult<ApproximatedTransitionSystem> uua = new UUAComputer(machine, eua.getResult()).compute();
         System.out.println(new ATSStatistics(uua.getResult()).getRowRepresentation(filterAndOrder) + " " + uua.getComputationTime());
-        ComputerResult<ApproximatedTransitionSystem> compute = new ConnectedApproximatedTransitionSystemComputer(uua.getResult()).compute();
-        /*System.out.println(uua.getResult().getConcreteTransitionSystem().getCorrespondingGraphvizGraph());
-        System.out.println(compute.getResult().getConcreteTransitionSystem().getCorrespondingGraphvizGraph());*/
-        ComputerResult<List<List<ConcreteTransition>>> chinesePostmanPathsComputer = new ChinesePostmanPathsComputer(compute.getResult().getConcreteTransitionSystem().getC0().iterator().next(), compute.getResult().getConcreteTransitionSystem().getC(), compute.getResult().getConcreteTransitionSystem().getDeltaC()).compute();
-        if (chinesePostmanPathsComputer.getResult().isEmpty()) {
-            throw new Error("No test generated.");
-        } else {
-            chinesePostmanPathsComputer.getResult().forEach(testCase -> {
-                if (testCase.isEmpty()) {
-                    throw new Error("Empty test case found.");
-                }
-            });
-        }
-        System.out.println("# Test cases: " + chinesePostmanPathsComputer.getResult().size());
-        chinesePostmanPathsComputer.getResult().forEach(path -> System.out.println("\t" + path.size()));
-        System.out.println();
+        /*System.out.println(eua.getResult().getConcreteTransitionSystem().getDeltaC());
+        System.out.println(uua.getResult().getConcreteTransitionSystem().getDeltaC());*/
     }
 
-    private static Map<Machine, List<LinkedHashSet<Predicate>>> getExamples() {
+    private static List<Tuple<Machine, List<LinkedHashSet<Predicate>>>> getExamples() {
         Machine simple = EventBParser.parseMachine(new File("resources/eventb/simple/simple.ebm"));
         LinkedHashSet<Predicate> simple_1 = EventBParser.parseAbstractionPredicates(new File("resources/eventb/simple/simple_1.ap"));
         Machine threeBatteries = EventBParser.parseMachine(new File("resources/eventb/threeBatteries/threeBatteries.ebm"));
@@ -91,15 +75,15 @@ public class Main {
         LinkedHashSet<Predicate> phone_2guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/phone/phone_2guard.ap"));
         LinkedHashSet<Predicate> phone_1post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/phone/phone_1post.ap"));
         LinkedHashSet<Predicate> phone_2post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/phone/phone_2post.ap"));
-        Map<Machine, List<LinkedHashSet<Predicate>>> examples = new LinkedHashMap<>();
-        examples.put(simple, Collections.singletonList(simple_1));
-        //examples.put(threeBatteries, Arrays.asList(threeBatteries_default, threeBatteries_1guard, threeBatteries_2guard, threeBatteries_1post, threeBatteries_default2));
-        examples.put(threeBatteries, Arrays.asList(threeBatteries_default, threeBatteries_1guard, threeBatteries_2guard, threeBatteries_1post));
-        examples.put(carAlarm, Arrays.asList(carAlarm_1guard, carAlarm_2guard, carAlarm_1post, carAlarm_2post));
-        examples.put(coffeeMachine, Arrays.asList(coffeeMachine_1guard, coffeeMachine_2guard, coffeeMachine_1post, coffeeMachine_2post));
-        examples.put(creditCard, Arrays.asList(creditCard_1guard, creditCard_2guard, creditCard_1post, creditCard_2post));
-        examples.put(frontWiper, Arrays.asList(frontWiper_1guard, frontWiper_2guard));
-        examples.put(phone, Arrays.asList(phone_1guard, phone_2guard, phone_1post, phone_2post));
+        List<Tuple<Machine, List<LinkedHashSet<Predicate>>>> examples = new ArrayList<>();
+        examples.add(new Tuple<>(simple, Collections.singletonList(simple_1)));
+        examples.add(new Tuple<>(threeBatteries, Arrays.asList(threeBatteries_default, threeBatteries_1guard, threeBatteries_2guard, threeBatteries_1post, threeBatteries_default2)));
+        //examples.put(threeBatteries, Arrays.asList(threeBatteries_default, threeBatteries_1guard, threeBatteries_2guard, threeBatteries_1post)));
+        examples.add(new Tuple<>(carAlarm, Arrays.asList(carAlarm_1guard, carAlarm_2guard, carAlarm_1post, carAlarm_2post)));
+        examples.add(new Tuple<>(coffeeMachine, Arrays.asList(coffeeMachine_1guard, coffeeMachine_2guard, coffeeMachine_1post, coffeeMachine_2post)));
+        examples.add(new Tuple<>(creditCard, Arrays.asList(creditCard_1guard, creditCard_2guard, creditCard_1post, creditCard_2post)));
+        examples.add(new Tuple<>(frontWiper, Arrays.asList(frontWiper_1guard, frontWiper_2guard)));
+        examples.add(new Tuple<>(phone, Arrays.asList(phone_1guard, phone_2guard, phone_1post, phone_2post)));
         return examples;
     }
 
@@ -221,7 +205,6 @@ public class Main {
         LinkedHashSet<Predicate> phone_2post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/phone/phone_2post.ap"));
         Map<Machine, List<LinkedHashSet<Predicate>>> examples = new LinkedHashMap<>();
         examples.put(simple, Collections.singletonList(simple_1));
-        System.out.println(threeBatteries_default2);
         examples.put(threeBatteries, Arrays.asList(threeBatteries_default, threeBatteries_1guard, threeBatteries_2guard, threeBatteries_1post, threeBatteries_default2));
         examples.put(carAlarm, Arrays.asList(carAlarm_1guard, carAlarm_2guard, carAlarm_1post, carAlarm_2post));
         examples.put(coffeeMachine, Arrays.asList(coffeeMachine_1guard, coffeeMachine_2guard, coffeeMachine_1post, coffeeMachine_2post));
