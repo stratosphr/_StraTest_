@@ -4,11 +4,8 @@ import algorithms.heuristics.EConcreteStateColor;
 import algorithms.outputs.ApproximatedTransitionSystem;
 import eventb.Event;
 import eventb.Machine;
-import eventb.exprs.arith.IntVariable;
-import eventb.exprs.arith.QuantifiedVariable;
 import eventb.exprs.bool.ABoolExpr;
 import eventb.exprs.bool.And;
-import eventb.exprs.bool.Exists;
 import eventb.exprs.bool.Or;
 import eventb.graphs.AbstractState;
 import eventb.graphs.AbstractTransition;
@@ -34,7 +31,7 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
 
     private final Machine machine;
     private final ApproximatedTransitionSystem approximatedTransitionSystem;
-    private final ApproximatedTransitionSystem improvedApproximatedTransitionSystem;
+    private final ApproximatedTransitionSystem improvedATS;
     private final LinkedHashMap<AbstractTransition, Boolean> MinusMarking;
     private final LinkedHashMap<AbstractTransition, Boolean> PlusMarking;
     private final Stack<Triplet<ABoolExpr, Event, AbstractState>> stack;
@@ -43,9 +40,9 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
     public UUAComputer(Machine machine, ApproximatedTransitionSystem approximatedTransitionSystem) {
         this.machine = machine;
         this.approximatedTransitionSystem = approximatedTransitionSystem.clone();
-        this.improvedApproximatedTransitionSystem = approximatedTransitionSystem.clone();
-        this.MinusMarking = new LinkedHashMap<>(improvedApproximatedTransitionSystem.get3MTS().getDeltaMinus().stream().map(abstractTransition -> new AbstractMap.SimpleEntry<>(abstractTransition, false)).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
-        this.PlusMarking = new LinkedHashMap<>(improvedApproximatedTransitionSystem.get3MTS().getDeltaPlus().stream().map(abstractTransition -> new AbstractMap.SimpleEntry<>(abstractTransition, false)).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
+        this.improvedATS = approximatedTransitionSystem.clone();
+        this.MinusMarking = new LinkedHashMap<>(improvedATS.get3MTS().getDeltaMinus().stream().map(abstractTransition -> new AbstractMap.SimpleEntry<>(abstractTransition, false)).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
+        this.PlusMarking = new LinkedHashMap<>(improvedATS.get3MTS().getDeltaPlus().stream().map(abstractTransition -> new AbstractMap.SimpleEntry<>(abstractTransition, false)).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
         this.stack = new Stack<>();
         this.z3 = new Z3();
     }
@@ -55,12 +52,12 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
         // Step 1: t has not been concretized yet and is an entry point for a must+ structure
         PlusMarking.forEach((t, marked) -> {
             if (!marked && isMustPlusStructureEntryPoint(t)) {
-                Optional<ConcreteState> optionalC = improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().keySet().stream().filter(concreteState -> improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().get(concreteState).equals(t.getSource()) && improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().get(concreteState) == GREEN).findFirst();
+                Optional<ConcreteState> optionalC = improvedATS.getCTS().getAlpha().keySet().stream().filter(concreteState -> improvedATS.getCTS().getAlpha().get(concreteState).equals(t.getSource()) && improvedATS.getCTS().getKappa().get(concreteState) == GREEN).findFirst();
                 if (optionalC.isPresent()) {
                     ConcreteState c = optionalC.get();
                     mustPlusConcretization(t, c, machine);
                 } else {
-                    optionalC = improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().keySet().stream().filter(concreteState -> improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().get(concreteState).equals(t.getSource())).findFirst();
+                    optionalC = improvedATS.getCTS().getAlpha().keySet().stream().filter(concreteState -> improvedATS.getCTS().getAlpha().get(concreteState).equals(t.getSource())).findFirst();
                     if (optionalC.isPresent()) {
                         ConcreteState c = optionalC.get();
                         mustPlusConcretization(t, c, machine);
@@ -71,12 +68,12 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
         // Step 3: concretisation of the must+ structures with no entry point
         PlusMarking.forEach((t, marked) -> {
             if (!marked) {
-                Optional<ConcreteState> optionalC = improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().keySet().stream().filter(concreteState -> improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().get(concreteState).equals(t.getSource()) && improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().get(concreteState) == GREEN).findFirst();
+                Optional<ConcreteState> optionalC = improvedATS.getCTS().getAlpha().keySet().stream().filter(concreteState -> improvedATS.getCTS().getAlpha().get(concreteState).equals(t.getSource()) && improvedATS.getCTS().getKappa().get(concreteState) == GREEN).findFirst();
                 if (optionalC.isPresent()) {
                     ConcreteState c = optionalC.get();
                     mustPlusConcretization(t, c, machine);
                 } else {
-                    optionalC = improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().keySet().stream().filter(concreteState -> improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().get(concreteState).equals(t.getSource())).findFirst();
+                    optionalC = improvedATS.getCTS().getAlpha().keySet().stream().filter(concreteState -> improvedATS.getCTS().getAlpha().get(concreteState).equals(t.getSource())).findFirst();
                     if (optionalC.isPresent()) {
                         ConcreteState c = optionalC.get();
                         mustPlusConcretization(t, c, machine);
@@ -96,7 +93,7 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
                 mustMinusConcretization(t);
             }
         }
-        return getImprovedApproximatedTransitionSystem();
+        return getImprovedATS();
     }
 
     @SuppressWarnings("unchecked")
@@ -147,23 +144,23 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
                     if ((c = findConcreteInstance(q, wp_q_)) != null) {
                         z3.setCode(new And(machine.getInvariant(), machine.getInvariant().prime(), machine.getInitialisation().getPrd(machine), c.prime()));
                         if (z3.checkSAT() == SATISFIABLE) {
-                            improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC0().add(c);
-                            improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().put(c, GREEN);
+                            improvedATS.getCTS().getC0().add(c);
+                            improvedATS.getCTS().getKappa().put(c, GREEN);
                             gp = true;
                         } else {
-                            improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().putIfAbsent(c, BLUE);
+                            improvedATS.getCTS().getKappa().putIfAbsent(c, BLUE);
                         }
                     } else {
                         throw new Error("Impossible case occurred: no concrete instance found.");
                     }
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().putIfAbsent(c, BLUE);
+                    improvedATS.getCTS().getKappa().putIfAbsent(c, BLUE);
                 }
-                improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().putIfAbsent(c, BLUE);
+                improvedATS.getCTS().getKappa().putIfAbsent(c, BLUE);
             } else {
                 gp = true;
             }
-            improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().add(c);
-            improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().put(c, q);
+            improvedATS.getCTS().getC().add(c);
+            improvedATS.getCTS().getAlpha().put(c, q);
             while (!p.isEmpty()) {
                 if (!gp) {
                     if ((c = findConcreteInstance(q, GREEN, wp_q_)) == null) {
@@ -171,23 +168,23 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
                             if ((c = findConcreteInstance(q, wp_q_)) != null) {
                                 z3.setCode(new And(machine.getInvariant(), machine.getInvariant().prime(), machine.getInitialisation().getPrd(machine), c.prime()));
                                 if (z3.checkSAT() == SATISFIABLE) {
-                                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC0().add(c);
-                                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().put(c, GREEN);
+                                    improvedATS.getCTS().getC0().add(c);
+                                    improvedATS.getCTS().getKappa().put(c, GREEN);
                                     gp = true;
                                 } else {
-                                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().putIfAbsent(c, BLUE);
+                                    improvedATS.getCTS().getKappa().putIfAbsent(c, BLUE);
                                 }
                             } else {
                                 throw new Error("Impossible case occurred: no concrete instance found.");
                             }
-                            improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().putIfAbsent(c, BLUE);
+                            improvedATS.getCTS().getKappa().putIfAbsent(c, BLUE);
                         }
-                        improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().putIfAbsent(c, BLUE);
+                        improvedATS.getCTS().getKappa().putIfAbsent(c, BLUE);
                     } else {
                         gp = true;
                     }
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().add(c);
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().put(c, q);
+                    improvedATS.getCTS().getC().add(c);
+                    improvedATS.getCTS().getAlpha().put(c, q);
                 }
                 Triplet<Event, ABoolExpr, AbstractState> triplet = p.pop();
                 e = triplet.getFirst().clone();
@@ -202,18 +199,18 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
                 if (z3.checkSAT() == SATISFIABLE) {
                     Model model = z3.getModel(machine.getAssignables());
                     ConcreteState c_;
-                    int c_Index = new ArrayList<>(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC()).indexOf(new ConcreteState("c_" + q_.getName(), model.getTarget()));
+                    int c_Index = new ArrayList<>(improvedATS.getCTS().getC()).indexOf(new ConcreteState("c_" + q_.getName(), model.getTarget()));
                     if (c_Index != -1) {
                         c_ = new ConcreteState("c_" + q_.getName() + "_" + c_Index, model.getTarget());
                     } else {
-                        c_ = new ConcreteState("c_" + q_.getName() + "_" + improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().size(), model.getTarget());
+                        c_ = new ConcreteState("c_" + q_.getName() + "_" + improvedATS.getCTS().getC().size(), model.getTarget());
                     }
-                    if (!improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().containsKey(c_) || improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().get(c_) != GREEN) {
-                        improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().put(c_, improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().containsKey(c) ? improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().get(c) : BLUE);
+                    if (!improvedATS.getCTS().getKappa().containsKey(c_) || improvedATS.getCTS().getKappa().get(c_) != GREEN) {
+                        improvedATS.getCTS().getKappa().put(c_, improvedATS.getCTS().getKappa().containsKey(c) ? improvedATS.getCTS().getKappa().get(c) : BLUE);
                     }
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().put(c_, q_);
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC().add(new ConcreteTransition(c, e, c_));
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().add(c_);
+                    improvedATS.getCTS().getAlpha().put(c_, q_);
+                    improvedATS.getCTS().getDeltaC().add(new ConcreteTransition(c, e, c_));
+                    improvedATS.getCTS().getC().add(c_);
                     c = c_;
                     q = q_;
                 } else {
@@ -248,7 +245,7 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
     }
 
     private ConcreteState findConcreteInstance(AbstractState q, EConcreteStateColor color, ABoolExpr set) {
-        LinkedHashSet<ConcreteState> FCS = improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().keySet().stream().filter(c -> improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().get(c).equals(q) && improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().get(c) == color).collect(Collectors.toCollection(LinkedHashSet::new));
+        LinkedHashSet<ConcreteState> FCS = improvedATS.getCTS().getAlpha().keySet().stream().filter(c -> improvedATS.getCTS().getAlpha().get(c).equals(q) && improvedATS.getCTS().getKappa().get(c) == color).collect(Collectors.toCollection(LinkedHashSet::new));
         if (!FCS.isEmpty()) {
             z3.setCode(new And(
                     machine.getInvariant(),
@@ -258,7 +255,7 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
             ));
             if (z3.checkSAT() == SATISFIABLE) {
                 Model model = z3.getModel();
-                return new ConcreteState("c_" + q.getName() + "_" + new ArrayList<>(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC()).indexOf(new ConcreteState("c_" + q.getName(), model.getSource())), model.getSource());
+                return new ConcreteState("c_" + q.getName() + "_" + new ArrayList<>(improvedATS.getCTS().getC()).indexOf(new ConcreteState("c_" + q.getName(), model.getSource())), model.getSource());
             }
         }
         return null;
@@ -272,11 +269,11 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
         ));
         if (z3.checkSAT() == SATISFIABLE) {
             Model model = z3.getModel();
-            int cIndex = new ArrayList<>(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC()).indexOf(new ConcreteState("c_" + q.getName(), model.getSource()));
+            int cIndex = new ArrayList<>(improvedATS.getCTS().getC()).indexOf(new ConcreteState("c_" + q.getName(), model.getSource()));
             if (cIndex != -1) {
-                return new ArrayList<>(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC()).get(cIndex);
+                return new ArrayList<>(improvedATS.getCTS().getC()).get(cIndex);
             } else {
-                return new ConcreteState("c_" + q.getName() + "_" + improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().size(), model.getSource());
+                return new ConcreteState("c_" + q.getName() + "_" + improvedATS.getCTS().getC().size(), model.getSource());
             }
         } else {
             throw new Error("Impossible case occurred: unable to find concrete instance.");
@@ -284,11 +281,41 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
     }
 
     private void mustPlusConcretization(AbstractTransition t, ConcreteState c, Machine machine) {
+        LinkedHashSet<ConcreteState> BCS = improvedATS.getCTS().getKappa().keySet().stream().filter(concreteState -> improvedATS.getCTS().getAlpha().get(concreteState).equals(t.getTarget()) && improvedATS.getCTS().getKappa().get(concreteState) == BLUE).collect(Collectors.toCollection(LinkedHashSet::new));
+        if (!BCS.isEmpty()) {
+            z3.setCode(new And(machine.getInvariant(), machine.getInvariant().prime(), c, t.getEvent().getSubstitution().getPrd(machine), new Or(BCS.stream().toArray(ConcreteState[]::new)).prime()));
+        }
+        if (BCS.isEmpty() || z3.checkSAT() != SATISFIABLE) {
+            z3.setCode(new And(machine.getInvariant(), machine.getInvariant().prime(), c, t.getEvent().getSubstitution().getPrd(machine), t.getTarget().prime()));
+            if (z3.checkSAT() != SATISFIABLE) {
+                throw new Error("Impossible case occurred during must+ concretization: unable to find a concrete instance of a must+ transition. (" + z3.checkSAT() + ")");
+            }
+        }
+        Model model = z3.getModel();
+        ConcreteState c_ = new ConcreteState("c_" + t.getTarget().getName(), model.getTarget());
+        int c_Index = new ArrayList<>(improvedATS.getCTS().getC()).indexOf(c_);
+        c_.setName("c_" + t.getTarget().getName() + "_" + ((c_Index == -1) ? improvedATS.getCTS().getC().size() : c_Index));
+        ConcreteTransition concreteTransition = new ConcreteTransition(c, t.getEvent(), c_);
+        improvedATS.getCTS().getC().add(c_);
+        improvedATS.getCTS().getAlpha().put(c_, t.getTarget());
+        if (!improvedATS.getCTS().getKappa().containsKey(c_) || improvedATS.getCTS().getKappa().get(c_) != GREEN) {
+            improvedATS.getCTS().getKappa().put(c_, improvedATS.getCTS().getKappa().get(c));
+        }
+        improvedATS.getCTS().getDeltaC().add(concreteTransition);
+        PlusMarking.put(t, true);
+        PlusMarking.forEach((t2, marked) -> {
+            if (!marked && t2.getSource().equals(t.getTarget())) {
+                mustPlusConcretization(t2, concreteTransition.getTarget(), machine);
+            }
+        });
+    }
+
+    /*private void mustPlusConcretization(AbstractTransition t, ConcreteState c, Machine machine) {
         Set<ConcreteTransition> TC = new LinkedHashSet<>();
         ConcreteTransition tc;
-        improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().keySet().stream().filter(concreteState -> improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().get(concreteState).equals(t.getTarget())).forEach(concreteState -> TC.addAll(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC().stream().filter(concreteTransition -> concreteTransition.getSource().equals(c) && concreteTransition.getEvent().getName().equals(t.getEvent().getName()) && concreteTransition.getTarget().equals(concreteState)).collect(Collectors.toList())));
+        improvedATS.getCTS().getAlpha().keySet().stream().filter(concreteState -> improvedATS.getCTS().getAlpha().get(concreteState).equals(t.getTarget())).forEach(concreteState -> TC.addAll(improvedATS.getCTS().getDeltaC().stream().filter(concreteTransition -> concreteTransition.getSource().equals(c) && concreteTransition.getEvent().getName().equals(t.getEvent().getName()) && concreteTransition.getTarget().equals(concreteState)).collect(Collectors.toList())));
         if (!TC.isEmpty()) {
-            tc = TC.stream().filter(concreteTransition -> improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().get(concreteTransition.getTarget()) == GREEN).findAny().orElse(TC.iterator().next());
+            tc = TC.stream().filter(concreteTransition -> improvedATS.getCTS().getKappa().get(concreteTransition.getTarget()) == GREEN).findAny().orElse(TC.iterator().next());
         } else {
             z3.setCode(new And(
                     machine.getInvariant().prime(),
@@ -305,14 +332,14 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
             if (z3.checkSAT() == SATISFIABLE) {
                 Model model = z3.getModel();
                 ConcreteState c_ = new ConcreteState("c_" + t.getTarget().getName(), model.getTarget());
-                int c_Index = new ArrayList<>(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC()).indexOf(c_);
-                c_.setName("c_" + t.getTarget().getName() + "_" + ((c_Index == -1) ? improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().size() : c_Index));
-                if (improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().add(c_)) {
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().put(c_, t.getTarget());
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().put(c_, GREEN);
+                int c_Index = new ArrayList<>(improvedATS.getCTS().getC()).indexOf(c_);
+                c_.setName("c_" + t.getTarget().getName() + "_" + ((c_Index == -1) ? improvedATS.getCTS().getC().size() : c_Index));
+                if (improvedATS.getCTS().getC().add(c_)) {
+                    improvedATS.getCTS().getAlpha().put(c_, t.getTarget());
+                    improvedATS.getCTS().getKappa().put(c_, GREEN);
                 }
                 tc = new ConcreteTransition(c, t.getEvent(), c_);
-                improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC().add(tc);
+                improvedATS.getCTS().getDeltaC().add(tc);
             } else {
                 throw new Error("Impossible in mustPlusConcretization");
             }
@@ -323,14 +350,14 @@ public final class UUAComputer extends AComputer<ApproximatedTransitionSystem> {
                 mustPlusConcretization(t2, tc.getTarget(), machine);
             }
         });
-    }
+    }*/
 
     private boolean isMustPlusStructureEntryPoint(AbstractTransition t) {
-        return improvedApproximatedTransitionSystem.get3MTS().getDeltaPlus().stream().noneMatch(abstractTransition -> t.getSource().equals(abstractTransition.getTarget()));
+        return improvedATS.get3MTS().getDeltaPlus().stream().noneMatch(abstractTransition -> t.getSource().equals(abstractTransition.getTarget()));
     }
 
-    public ApproximatedTransitionSystem getImprovedApproximatedTransitionSystem() {
-        return improvedApproximatedTransitionSystem;
+    public ApproximatedTransitionSystem getImprovedATS() {
+        return improvedATS;
     }
 
     private Machine getMachine() {

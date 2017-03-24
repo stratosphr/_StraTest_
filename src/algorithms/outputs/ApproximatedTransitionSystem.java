@@ -20,7 +20,7 @@ public final class ApproximatedTransitionSystem implements ICloneable<Approximat
 
     @Override
     public ApproximatedTransitionSystem clone() {
-        return new ApproximatedTransitionSystem(getEventSystem().clone(), get3MTS().clone(), getConcreteTransitionSystem().clone());
+        return new ApproximatedTransitionSystem(getEventSystem().clone(), get3MTS().clone(), getCTS().clone());
     }
 
     public EventSystem getEventSystem() {
@@ -31,7 +31,7 @@ public final class ApproximatedTransitionSystem implements ICloneable<Approximat
         return triModalTransitionSystem;
     }
 
-    public ConcreteTransitionSystem getConcreteTransitionSystem() {
+    public ConcreteTransitionSystem getCTS() {
         return concreteTransitionSystem;
     }
 

@@ -28,9 +28,9 @@ public class ConnectedATSComputer extends AComputer<ApproximatedTransitionSystem
     @Override
     protected ApproximatedTransitionSystem compute_() {
         LinkedHashSet<ConcreteState> toBeConnected = new LinkedHashSet<>();
-        Tuple<LinkedHashSet<ConcreteState>, LinkedHashSet<ConcreteTransition>> reachablePart = new ReachableConcretePartComputer(approximatedTransitionSystem.getConcreteTransitionSystem().getC0(), approximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC()).compute().getResult();
+        Tuple<LinkedHashSet<ConcreteState>, LinkedHashSet<ConcreteTransition>> reachablePart = new ReachableConcretePartComputer(approximatedTransitionSystem.getCTS().getC0(), approximatedTransitionSystem.getCTS().getDeltaC()).compute().getResult();
         Map<ConcreteState, Tuple<LinkedHashSet<ConcreteState>, LinkedHashSet<ConcreteTransition>>> subReachableParts = new LinkedHashMap<>();
-        reachablePart.getFirst().forEach(concreteState -> subReachableParts.put(concreteState, new ReachableConcretePartComputer(new LinkedHashSet<>(Collections.singleton(concreteState)), approximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC()).compute().getResult()));
+        reachablePart.getFirst().forEach(concreteState -> subReachableParts.put(concreteState, new ReachableConcretePartComputer(new LinkedHashSet<>(Collections.singleton(concreteState)), approximatedTransitionSystem.getCTS().getDeltaC()).compute().getResult()));
         subReachableParts.keySet().forEach(concreteState -> {
             if (subReachableParts.get(concreteState).getFirst().size() == 1 || subReachableParts.get(concreteState).getSecond().stream().noneMatch(concreteTransition -> concreteTransition.getSource().equals(concreteState) && !concreteTransition.getTarget().equals(concreteState))) {
                 toBeConnected.add(concreteState);
@@ -44,15 +44,15 @@ public class ConnectedATSComputer extends AComputer<ApproximatedTransitionSystem
         ConcreteState fictive = new ConcreteState("_fictive_", new TreeMap<>());
         Event reset = new Event("_reset_", new Skip());
         Event beta = new Event("_beta_", new Skip());
-        toBeConnected.forEach(concreteState -> connectedApproximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC().add(new ConcreteTransition(concreteState, reset, fictive)));
-        connectedApproximatedTransitionSystem.getConcreteTransitionSystem().getC0().forEach(concreteState -> connectedApproximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC().add(new ConcreteTransition(fictive, beta, concreteState)));
-        connectedApproximatedTransitionSystem.getConcreteTransitionSystem().getC0().clear();
-        connectedApproximatedTransitionSystem.getConcreteTransitionSystem().getC0().add(fictive);
-        connectedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().clear();
-        ComputerResult<Tuple<LinkedHashSet<ConcreteState>, LinkedHashSet<ConcreteTransition>>> compute = new ReachableConcretePartComputer(connectedApproximatedTransitionSystem.getConcreteTransitionSystem().getC0(), connectedApproximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC()).compute();
-        connectedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().addAll(compute.getResult().getFirst());
-        connectedApproximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC().clear();
-        connectedApproximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC().addAll(compute.getResult().getSecond());
+        toBeConnected.forEach(concreteState -> connectedApproximatedTransitionSystem.getCTS().getDeltaC().add(new ConcreteTransition(concreteState, reset, fictive)));
+        connectedApproximatedTransitionSystem.getCTS().getC0().forEach(concreteState -> connectedApproximatedTransitionSystem.getCTS().getDeltaC().add(new ConcreteTransition(fictive, beta, concreteState)));
+        connectedApproximatedTransitionSystem.getCTS().getC0().clear();
+        connectedApproximatedTransitionSystem.getCTS().getC0().add(fictive);
+        connectedApproximatedTransitionSystem.getCTS().getC().clear();
+        ComputerResult<Tuple<LinkedHashSet<ConcreteState>, LinkedHashSet<ConcreteTransition>>> compute = new ReachableConcretePartComputer(connectedApproximatedTransitionSystem.getCTS().getC0(), connectedApproximatedTransitionSystem.getCTS().getDeltaC()).compute();
+        connectedApproximatedTransitionSystem.getCTS().getC().addAll(compute.getResult().getFirst());
+        connectedApproximatedTransitionSystem.getCTS().getDeltaC().clear();
+        connectedApproximatedTransitionSystem.getCTS().getDeltaC().addAll(compute.getResult().getSecond());
         return connectedApproximatedTransitionSystem;
     }
 

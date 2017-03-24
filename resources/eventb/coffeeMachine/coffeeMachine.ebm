@@ -13,6 +13,32 @@
     </VARIABLES>
     <INVARIANT>
         <CAnd>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Balance"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                </CNot>
+                <CAnd>
+                    <CEquals>
+                        <CVariable val="AskCoffee"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                    <CEquals>
+                        <CVariable val="AskCoffee"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                </CAnd>
+            </COr>
+            <CGreater>
+                <CVariable val="Status"/>
+                <CNumber val="-1"/>
+            </CGreater>
+            <CGreater>
+                <CNumber val="3"/>
+                <CVariable val="Status"/>
+            </CGreater>
             <CEquals>
                 <CVariable val="MAX_POT"/>
                 <CNumber val="200"/>
@@ -25,10 +51,16 @@
                 <CVariable val="MAX_COFFEE"/>
                 <CNumber val="20"/>
             </CEquals>
-            <CGreater>
-                <CVariable val="Pot"/>
-                <CNumber val="-1"/>
-            </CGreater>
+            <COr>
+                <CGreater>
+                    <CVariable val="Pot"/>
+                    <CNumber val="100"/>
+                </CGreater>
+                <CEquals>
+                    <CVariable val="Pot"/>
+                    <CNumber val="100"/>
+                </CEquals>
+            </COr>
             <COr>
                 <CGreater>
                     <CPlus>
@@ -149,10 +181,10 @@
                         <CVariable val="AskCoffee"/>
                         <CNumber val="0"/>
                     </CEquals>
-                    <CEquals>
+                    <CGreater>
                         <CVariable val="Balance"/>
                         <CNumber val="0"/>
-                    </CEquals>
+                    </CGreater>
                 </CAnd>
             </COr>
             <COr>
@@ -181,6 +213,7 @@
             </COr>
         </CAnd>
     </INVARIANT>
+
     <INITIALISATION>
         <CParallel>
             <CAssignment>
@@ -221,6 +254,7 @@
             </CAssignment>
         </CParallel>
     </INITIALISATION>
+
     <EVENTS>
 
         <CGuardedEvent name="insert50">
@@ -571,64 +605,37 @@
                         <CNumber val="50"/>
                     </CPlus>
                 </CAssignment>
-                <CNDChoice>
-                    <CIf>
-                        <COr>
-                            <CGreater>
-                                <CPlus>
-                                    <CVariable val="Pot"/>
-                                    <CNumber val="50"/>
-                                </CPlus>
-                                <CVariable val="MAX_POT"/>
-                            </CGreater>
-                            <CEquals>
-                                <CVariable val="CoffeeLeft"/>
-                                <CNumber val="1"/>
-                            </CEquals>
-                        </COr>
-                        <CAssignment>
-                            <CVariable val="Status"/>
-                            <CNumber val="2"/>
-                        </CAssignment>
-                    </CIf>
-                    <CIf>
-                        <CAnd>
-                            <CGreater>
-                                <CVariable val="MAX_POT"/>
-                                <CPlus>
-                                    <CVariable val="Pot"/>
-                                    <CNumber val="50"/>
-                                </CPlus>
-                            </CGreater>
-                            <CNot>
-                                <CEquals>
-                                    <CVariable val="CoffeeLeft"/>
-                                    <CNumber val="1"/>
-                                </CEquals>
-                            </CNot>
-                        </CAnd>
-                        <CSkip/>
-                    </CIf>
-                </CNDChoice>
-                <CNDChoice>
-                    <CIf>
+                <CIf>
+                    <COr>
                         <CGreater>
-                            <CVariable val="Balance"/>
-                            <CNumber val="50"/>
+                            <CPlus>
+                                <CVariable val="Pot"/>
+                                <CNumber val="50"/>
+                            </CPlus>
+                            <CVariable val="MAX_POT"/>
                         </CGreater>
-                        <CAssignment>
-                            <CVariable val="AskChange"/>
-                            <CNumber val="1"/>
-                        </CAssignment>
-                    </CIf>
-                    <CIf>
                         <CEquals>
-                            <CVariable val="Balance"/>
-                            <CNumber val="50"/>
+                            <CVariable val="CoffeeLeft"/>
+                            <CNumber val="1"/>
                         </CEquals>
-                        <CSkip/>
-                    </CIf>
-                </CNDChoice>
+                    </COr>
+                    <CAssignment>
+                        <CVariable val="Status"/>
+                        <CNumber val="2"/>
+                    </CAssignment>
+                    <CSkip/>
+                </CIf>
+                <CIf>
+                    <CGreater>
+                        <CVariable val="Balance"/>
+                        <CNumber val="50"/>
+                    </CGreater>
+                    <CAssignment>
+                        <CVariable val="AskChange"/>
+                        <CNumber val="1"/>
+                    </CAssignment>
+                    <CSkip/>
+                </CIf>
             </CParallel>
         </CGuardedEvent>
 

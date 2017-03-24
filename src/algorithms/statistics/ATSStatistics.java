@@ -7,10 +7,7 @@ import algorithms.outputs.ApproximatedTransitionSystem;
 import algorithms.outputs.ComputerResult;
 import algorithms.utilities.ReachableAbstractPartComputer;
 import algorithms.utilities.ReachableConcretePartComputer;
-import eventb.graphs.AbstractState;
-import eventb.graphs.AbstractTransition;
-import eventb.graphs.ConcreteState;
-import eventb.graphs.ConcreteTransition;
+import eventb.graphs.*;
 import utilities.AFormatter;
 import utilities.sets.Tuple;
 
@@ -40,10 +37,10 @@ public final class ATSStatistics extends AFormatter {
         LinkedHashMap<String, Object> abstractionStatistics = new LinkedHashMap<>();
         LinkedHashMap<String, Object> underApproximationStatistics = new LinkedHashMap<>();
         LinkedHashMap<String, Object> testsStatistics = new LinkedHashMap<>();
-        Tuple<LinkedHashSet<AbstractState>, LinkedHashSet<AbstractTransition>> reachableAbstractPart = new ReachableAbstractPartComputer(ats.getConcreteTransitionSystem().getC0(), ats.getConcreteTransitionSystem().getDeltaC(), ats.getConcreteTransitionSystem().getAlpha()).compute().getResult();
-        Tuple<LinkedHashSet<ConcreteState>, LinkedHashSet<ConcreteTransition>> reachableConcretePart = new ReachableConcretePartComputer(ats.getConcreteTransitionSystem().getC0(), ats.getConcreteTransitionSystem().getDeltaC()).compute().getResult();
+        Tuple<LinkedHashSet<AbstractState>, LinkedHashSet<AbstractTransition>> reachableAbstractPart = new ReachableAbstractPartComputer(ats.getCTS().getC0(), ats.getCTS().getDeltaC(), ats.getCTS().getAlpha()).compute().getResult();
+        Tuple<LinkedHashSet<ConcreteState>, LinkedHashSet<ConcreteTransition>> reachableConcretePart = new ReachableConcretePartComputer(ats.getCTS().getC0(), ats.getCTS().getDeltaC()).compute().getResult();
         ComputerResult<ApproximatedTransitionSystem> connectedATS = new ConnectedATSComputer(ats).compute();
-        ComputerResult<List<List<ConcreteTransition>>> tests = new ChinesePostmanPathsComputer(connectedATS.getResult().getConcreteTransitionSystem().getC0().iterator().next(), connectedATS.getResult().getConcreteTransitionSystem().getC(), connectedATS.getResult().getConcreteTransitionSystem().getDeltaC()).compute();
+        ComputerResult<List<List<ConcreteTransition>>> tests = new ChinesePostmanPathsComputer(connectedATS.getResult().getCTS().getC0().iterator().next(), connectedATS.getResult().getCTS().getC(), connectedATS.getResult().getCTS().getDeltaC()).compute();
         abstractionStatistics.put("# initial abstract states", ats.get3MTS().getQ0().size());
         abstractionStatistics.put("# abstract states", ats.get3MTS().getQ().size());
         abstractionStatistics.put("# reachable abstract states", reachableAbstractPart.getFirst().size());
@@ -52,8 +49,11 @@ public final class ATSStatistics extends AFormatter {
         abstractionStatistics.put("# reachable abstract transitions", reachableAbstractPart.getSecond().size());
         abstractionStatistics.put("# unreachable abstract transitions", ats.get3MTS().getDelta().size() - reachableAbstractPart.getSecond().size());
         abstractionStatistics.put("% tau abstract transitions", 100.0 * reachableAbstractPart.getSecond().size() / ats.get3MTS().getDelta().size());
+        abstractionStatistics.put("# may transitions", ats.get3MTS().getDelta().size());
         abstractionStatistics.put("# pure may transitions", ats.get3MTS().getDeltaPureMay().size());
+        abstractionStatistics.put("# must- transitions", ats.get3MTS().getDeltaMinus().size());
         abstractionStatistics.put("# pure must- transitions", ats.get3MTS().getDeltaPureMinus().size());
+        abstractionStatistics.put("# must+ transitions", ats.get3MTS().getDeltaPlus().size());
         abstractionStatistics.put("# pure must+ transitions", ats.get3MTS().getDeltaPurePlus().size());
         abstractionStatistics.put("# must# transitions", ats.get3MTS().getDeltaSharp().size());
         if ((Integer) abstractionStatistics.get("# abstract transitions") != (Integer) abstractionStatistics.get("# pure may transitions") + (Integer) abstractionStatistics.get("# pure must- transitions") + (Integer) abstractionStatistics.get("# pure must+ transitions") + (Integer) abstractionStatistics.get("# must# transitions")) {
@@ -64,18 +64,20 @@ public final class ATSStatistics extends AFormatter {
             System.err.println(abstractionStatistics.get("# pure must# transitions"));
             throw new Error("IMPOSSIBLE");
         }
-        underApproximationStatistics.put("# initial concrete states", ats.getConcreteTransitionSystem().getC0().size());
-        underApproximationStatistics.put("# concrete states", ats.getConcreteTransitionSystem().getC().size());
+        underApproximationStatistics.put("# initial concrete states", ats.getCTS().getC0().size());
+        underApproximationStatistics.put("# concrete states", ats.getCTS().getC().size());
         underApproximationStatistics.put("# reachable concrete states", reachableConcretePart.getFirst().size());
-        underApproximationStatistics.put("% rho concrete states", 100.0 * reachableConcretePart.getFirst().size() / ats.getConcreteTransitionSystem().getC().size());
-        underApproximationStatistics.put("# blue concrete states", ats.getConcreteTransitionSystem().getKappa().values().stream().filter(color -> color.equals(BLUE)).count());
-        underApproximationStatistics.put("# green concrete states", ats.getConcreteTransitionSystem().getKappa().values().stream().filter(color -> color.equals(EConcreteStateColor.GREEN)).count());
-        underApproximationStatistics.put("# concrete transitions", ats.getConcreteTransitionSystem().getDeltaC().size());
+        underApproximationStatistics.put("% rho concrete states", 100.0 * reachableConcretePart.getFirst().size() / ats.getCTS().getC().size());
+        underApproximationStatistics.put("# blue concrete states", ats.getCTS().getKappa().values().stream().filter(color -> color.equals(BLUE)).count());
+        underApproximationStatistics.put("# green concrete states", ats.getCTS().getKappa().values().stream().filter(color -> color.equals(EConcreteStateColor.GREEN)).count());
+        underApproximationStatistics.put("# concrete transitions", ats.getCTS().getDeltaC().size());
         underApproximationStatistics.put("# reachable concrete transitions", reachableConcretePart.getSecond().size());
-        underApproximationStatistics.put("# unreachable concrete transitions", ats.getConcreteTransitionSystem().getDeltaC().size() - reachableConcretePart.getSecond().size());
-        underApproximationStatistics.put("% rho concrete transitions", 1.0 * ats.getConcreteTransitionSystem().getDeltaC().size() / reachableAbstractPart.getSecond().size());
+        underApproximationStatistics.put("# unreachable concrete transitions", ats.getCTS().getDeltaC().size() - reachableConcretePart.getSecond().size());
+        underApproximationStatistics.put("rho concrete transitions", 1.0 * ats.getCTS().getDeltaC().size() / reachableAbstractPart.getSecond().size());
+        underApproximationStatistics.put("% covered events", 100.0 * reachableConcretePart.getSecond().stream().map(ATransition::getEvent).collect(Collectors.toCollection(LinkedHashSet::new)).size() / ats.getEventSystem().getEvDef().size());
         testsStatistics.put("# test cases", tests.getResult().size());
         testsStatistics.put("# tests lengths", tests.getResult().stream().map(List::size).collect(Collectors.toList()));
+        testsStatistics.put("# tests steps", tests.getResult().stream().mapToInt(List::size).sum());
         testsStatistics.put("~ tests lengths", tests.getResult().stream().mapToInt(List::size).average().orElse(0));
         statistics.put("Abstraction", abstractionStatistics);
         statistics.put("Under-Approximation", underApproximationStatistics);
@@ -89,7 +91,13 @@ public final class ATSStatistics extends AFormatter {
         otherSymbols.setDecimalSeparator('.');
         DecimalFormat df = new DecimalFormat("#.##", otherSymbols);
         df.setRoundingMode(RoundingMode.HALF_EVEN);
-        filterAndOrder.forEach(index -> filteredAndSortedValues.add(df.format(values.get(index))));
+        filterAndOrder.forEach(index -> {
+            try {
+                filteredAndSortedValues.add(df.format(values.get(index)));
+            } catch (IllegalArgumentException e) {
+                filteredAndSortedValues.add(values.get(index));
+            }
+        });
         return filteredAndSortedValues.stream().map(Object::toString).collect(Collectors.joining(" "));
     }
 

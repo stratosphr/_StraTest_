@@ -72,13 +72,6 @@
             <CVariable val="Status"/>
             <CNumber val="0"/>
         </CEquals>
-        <CGreater>
-            <CVariable val="Pot"/>
-            <CDivision>
-                <CVariable val="MAX_POT"/>
-                <CNumber val="2"/>
-            </CDivision>
-        </CGreater>
     </CAnd>
 
     <CAnd>
@@ -86,13 +79,6 @@
             <CVariable val="Status"/>
             <CNumber val="1"/>
         </CEquals>
-        <CGreater>
-            <CVariable val="Pot"/>
-            <CDivision>
-                <CVariable val="MAX_POT"/>
-                <CNumber val="2"/>
-            </CDivision>
-        </CGreater>
     </CAnd>
 
     <COr>

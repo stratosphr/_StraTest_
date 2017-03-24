@@ -1,10 +1,10 @@
 import algorithms.EUAComputer;
 import algorithms.UUAComputer;
-import algorithms.heuristics.EEUAComputerHeuristics;
 import algorithms.outputs.ApproximatedTransitionSystem;
 import algorithms.outputs.ComputerResult;
 import algorithms.statistics.ATSStatistics;
 import algorithms.utilities.AbstractStatesComputer;
+import eventb.AEventBObject;
 import eventb.Machine;
 import eventb.exprs.bool.Predicate;
 import eventb.graphs.AbstractState;
@@ -12,14 +12,23 @@ import eventb.parsers.EventBParser;
 import utilities.sets.Tuple;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static algorithms.heuristics.EEUAComputerHeuristics.ORDERING_COLORATION;
+import static java.util.regex.Pattern.quote;
+import static utilities.Chars.EQ_DEF;
+import static utilities.Chars.NEW_LINE;
 
 public class Main {
 
     public static void main(String[] args) {
-        /*Tuple<Machine, LinkedHashSet<Predicate>> example = get("coffeeMachine", 1);
+        Tuple<Machine, LinkedHashSet<Predicate>> example = get("coffeeMachine", 1);
         go(example.getFirst(), example.getSecond());
-        System.exit(42);*/
+        System.exit(42);
         List<Tuple<Machine, List<LinkedHashSet<Predicate>>>> examples = getExamples();
         examples.forEach(tuple -> tuple.getSecond().forEach(abstractionPredicatesSet -> {
             System.out.println(tuple.getFirst().getName());
@@ -28,19 +37,44 @@ public class Main {
     }
 
     private static void go(Machine machine, LinkedHashSet<Predicate> abstractionPredicates) {
-        List<Integer> filterAndOrder = Arrays.asList(1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 13, 14, 18, 19, 21, 22, 24);
+        List<Integer> filterAndOrder = Arrays.asList(1, 4, 9, 10, 12, 2, 3, 5, 7, 21, 22, 28);
         LinkedHashSet<AbstractState> abstractStates = new AbstractStatesComputer(machine.getInvariant(), abstractionPredicates).compute().getResult();
-        ComputerResult<ApproximatedTransitionSystem> eua = new EUAComputer(machine, abstractStates, EEUAComputerHeuristics.ORDERING_COLORATION).compute();
+        ComputerResult<ApproximatedTransitionSystem> eua = new EUAComputer(machine, abstractStates, ORDERING_COLORATION).compute();
         ComputerResult<ApproximatedTransitionSystem> uua = new UUAComputer(machine, eua.getResult()).compute();
 
         System.out.println("#Ev: " + machine.getEvents().size());
         System.out.println("#AP: " + abstractionPredicates.size());
-        /*System.out.println(new ATSStatistics(eua.getResult()).getRowRepresentation(filterAndOrder) + " " + eua.getComputationTime());
-        System.out.println(new ATSStatistics(uua.getResult()).getRowRepresentation(filterAndOrder) + " " + uua.getComputationTime());*/
+        System.out.println("AP: " + abstractionPredicates);
         System.out.println(new ATSStatistics(eua.getResult()).getRowRepresentation(filterAndOrder) + " " + eua.getComputationTime());
         System.out.println(new ATSStatistics(uua.getResult()).getRowRepresentation(filterAndOrder) + " " + uua.getComputationTime());
-        /*System.out.println(eua.getResult().getConcreteTransitionSystem().getDeltaC());
-        System.out.println(uua.getResult().getConcreteTransitionSystem().getDeltaC());*/
+        /*System.out.println(machine);
+        System.out.println(new ATSStatistics(eua.getResult()).getRowRepresentation(filterAndOrder) + " " + eua.getComputationTime());
+        System.out.println(new ATSStatistics(uua.getResult()).getRowRepresentation(filterAndOrder) + " " + uua.getComputationTime());
+        System.out.println(eua.getResult().get3MTS().getCorrespondingGraphvizGraph().toString().replaceAll(quote("("), "").replaceAll(" " + EQ_DEF + ".*", "\"];"));
+        System.out.println(eua.getResult().getCTS().getCorrespondingGraphvizGraph());
+        System.out.println(eua.getResult().getCTS().getCorrespondingGraphvizGraph().toString().replaceAll(quote("("), "").replaceAll(" " + EQ_DEF + ".*", "\"];"));
+        System.out.println(uua.getResult().getCTS().getCorrespondingGraphvizGraph());
+        System.out.println(uua.getResult().getCTS().getCorrespondingGraphvizGraph().toString().replaceAll(quote("("), "").replaceAll(" " + EQ_DEF + ".*", "\"];"));*/
+        File outputsDirectory = new File("resources/eventb/" + machine.getName() + "/outputs");
+        boolean outputDirectoryExists = outputsDirectory.exists() || outputsDirectory.mkdirs();
+        if (outputDirectoryExists) {
+            try {
+                Files.write(Paths.get(outputsDirectory + "/" + machine.getName() + ".mch"), machine.toString().getBytes());
+                Files.write(Paths.get(outputsDirectory + "/3MTS_full.dot"), eua.getResult().get3MTS().getCorrespondingGraphvizGraph().toString().getBytes());
+                Files.write(Paths.get(outputsDirectory + "/3MTS_small.dot"), eua.getResult().get3MTS().getCorrespondingGraphvizGraph().toString().replaceAll(quote("("), "").replaceAll(" " + EQ_DEF + ".*", "\"];").getBytes());
+                Files.write(Paths.get(outputsDirectory + "/EUA_full.dot"), eua.getResult().getCTS().getCorrespondingGraphvizGraph().toString().getBytes());
+                Files.write(Paths.get(outputsDirectory + "/EUA_small.dot"), eua.getResult().getCTS().getCorrespondingGraphvizGraph().toString().replaceAll(quote("("), "").replaceAll(" " + EQ_DEF + ".*", "\"];").getBytes());
+                Files.write(Paths.get(outputsDirectory + "/UUA_full.dot"), uua.getResult().getCTS().getCorrespondingGraphvizGraph().toString().getBytes());
+                Files.write(Paths.get(outputsDirectory + "/UUA_small.dot"), uua.getResult().getCTS().getCorrespondingGraphvizGraph().toString().replaceAll(quote("("), "").replaceAll(" " + EQ_DEF + ".*", "\"];").getBytes());
+                Files.write(Paths.get(outputsDirectory + "/EUA_statistics.txt"), new ATSStatistics(eua.getResult()).toString().getBytes());
+                Files.write(Paths.get(outputsDirectory + "/UUA_statistics.txt"), new ATSStatistics(uua.getResult()).toString().getBytes());
+                Files.write(Paths.get(outputsDirectory + "/abstractionPredicates.ap"), abstractionPredicates.stream().map(AEventBObject::toString).collect(Collectors.joining(NEW_LINE)).getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new Error("Unable to create output directory \"" + outputsDirectory + "\".");
+        }
     }
 
     private static List<Tuple<Machine, List<LinkedHashSet<Predicate>>>> getExamples() {

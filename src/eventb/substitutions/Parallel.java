@@ -51,12 +51,14 @@ public final class Parallel extends ASubstitution {
             } else {
                 return new Parallel(rightSubstitution, leftSubstitution).getSurrogate();
             }
+        } else if (leftSubstitution instanceof Select) {
+            return new Select(((Select) leftSubstitution).getCondition(), getSurrogate_(((Select) leftSubstitution).getSubstitution(), rightSubstitution));
         } else if (leftSubstitution instanceof IfThenElse) {
             return new IfThenElse(((IfThenElse) leftSubstitution).getCondition(), new Parallel(((IfThenElse) leftSubstitution).getThenPart(), rightSubstitution).getSurrogate(), new Parallel(((IfThenElse) leftSubstitution).getElsePart(), rightSubstitution).getSurrogate());
         } else if (leftSubstitution instanceof Choice) {
             return new Choice(((Choice) leftSubstitution).getSubstitutions().stream().map(substitution -> getSurrogate_(rightSubstitution, substitution)).toArray(ASubstitution[]::new));
         }
-        throw new Error("Unable to compute_ parallel substitution's surrogate: unhandled substitution of type \"" + leftSubstitution.getClass().getName() + "\" encoutered." + Chars.NEW_LINE + "The problematic substitution was:" + Chars.NEW_LINE + leftSubstitution);
+        throw new Error("Unable to compute parallel substitution's surrogate: unhandled substitution of type \"" + leftSubstitution.getClass().getName() + "\" encoutered." + Chars.NEW_LINE + "The problematic substitution was:" + Chars.NEW_LINE + leftSubstitution);
     }
 
     @Override

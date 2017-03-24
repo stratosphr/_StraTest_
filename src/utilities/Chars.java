@@ -26,4 +26,8 @@ public final class Chars {
 
     public static final String EXISTS = "∃";
 
+    public static final String SIGMA = "\uD835\uDEBA";
+
+    public static final String RHO = "\uD835\uDED2";
+
 }

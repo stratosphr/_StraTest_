@@ -113,8 +113,8 @@ public final class WorseUUAComputer extends AComputer<ApproximatedTransitionSyst
             if ((c = findConcreteInstance(q, GREEN, wp_q_)) == null) {
                 if ((c = findConcreteInstance(q, BLUE, wp_q_)) == null) {
                     c = findConcreteInstance(q, wp_q_);
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().put(c, q);
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().put(c, BLUE);
+                    improvedApproximatedTransitionSystem.getCTS().getAlpha().put(c, q);
+                    improvedApproximatedTransitionSystem.getCTS().getKappa().put(c, BLUE);
                 }
             }
             while (!p.isEmpty()) {
@@ -132,12 +132,12 @@ public final class WorseUUAComputer extends AComputer<ApproximatedTransitionSyst
                 if (z3.checkSAT() == SATISFIABLE) {
                     Model model = z3.getModel(machine.getAssignables());
                     ConcreteState c_ = new ConcreteState("c_" + q_.getName() + "_y", model.getTarget());
-                    int c_Index = new ArrayList<>(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC()).indexOf(c_);
-                    c_.setName("c_" + q_.getName() + "_" + ((c_Index == -1) ? improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().size() : c_Index));
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().add(c_);
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().put(c_, q_);
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().put(c_, improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().get(c));
-                    improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getDeltaC().add(new ConcreteTransition(c, e, c_));
+                    int c_Index = new ArrayList<>(improvedApproximatedTransitionSystem.getCTS().getC()).indexOf(c_);
+                    c_.setName("c_" + q_.getName() + "_" + ((c_Index == -1) ? improvedApproximatedTransitionSystem.getCTS().getC().size() : c_Index));
+                    improvedApproximatedTransitionSystem.getCTS().getC().add(c_);
+                    improvedApproximatedTransitionSystem.getCTS().getAlpha().put(c_, q_);
+                    improvedApproximatedTransitionSystem.getCTS().getKappa().put(c_, improvedApproximatedTransitionSystem.getCTS().getKappa().get(c));
+                    improvedApproximatedTransitionSystem.getCTS().getDeltaC().add(new ConcreteTransition(c, e, c_));
                     c = c_;
                     q = q_;
                 } else {
@@ -174,7 +174,7 @@ public final class WorseUUAComputer extends AComputer<ApproximatedTransitionSyst
     }
 
     private ConcreteState findConcreteInstance(AbstractState q, EConcreteStateColor color, ABoolExpr set) {
-        LinkedHashSet<ConcreteState> FCS = improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().keySet().stream().filter(c -> improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().get(c).equals(q) && improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().get(c) == color).collect(Collectors.toCollection(LinkedHashSet::new));
+        LinkedHashSet<ConcreteState> FCS = improvedApproximatedTransitionSystem.getCTS().getAlpha().keySet().stream().filter(c -> improvedApproximatedTransitionSystem.getCTS().getAlpha().get(c).equals(q) && improvedApproximatedTransitionSystem.getCTS().getKappa().get(c) == color).collect(Collectors.toCollection(LinkedHashSet::new));
         if (!FCS.isEmpty()) {
             z3.setCode(new And(
                     machine.getInvariant(),
@@ -184,10 +184,10 @@ public final class WorseUUAComputer extends AComputer<ApproximatedTransitionSyst
             ));
             if (z3.checkSAT() == SATISFIABLE) {
                 Model model = z3.getModel();
-                ConcreteState c = new ConcreteState("c_" + q.getName() + "_" + new ArrayList<>(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC()).indexOf(new ConcreteState("c_" + q.getName(), model.getSource())), model.getSource());
-                improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().add(c);
-                improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getAlpha().put(c, q);
-                improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getKappa().put(c, BLUE);
+                ConcreteState c = new ConcreteState("c_" + q.getName() + "_" + new ArrayList<>(improvedApproximatedTransitionSystem.getCTS().getC()).indexOf(new ConcreteState("c_" + q.getName(), model.getSource())), model.getSource());
+                improvedApproximatedTransitionSystem.getCTS().getC().add(c);
+                improvedApproximatedTransitionSystem.getCTS().getAlpha().put(c, q);
+                improvedApproximatedTransitionSystem.getCTS().getKappa().put(c, BLUE);
                 return c;
             }
         }
@@ -202,11 +202,11 @@ public final class WorseUUAComputer extends AComputer<ApproximatedTransitionSyst
         ));
         if (z3.checkSAT() == SATISFIABLE) {
             Model model = z3.getModel();
-            int cIndex = new ArrayList<>(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC()).indexOf(new ConcreteState("c_" + q.getName(), model.getSource()));
+            int cIndex = new ArrayList<>(improvedApproximatedTransitionSystem.getCTS().getC()).indexOf(new ConcreteState("c_" + q.getName(), model.getSource()));
             if (cIndex != -1) {
-                return new ArrayList<>(improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC()).get(cIndex);
+                return new ArrayList<>(improvedApproximatedTransitionSystem.getCTS().getC()).get(cIndex);
             } else {
-                return new ConcreteState("c_" + q.getName() + "_" + improvedApproximatedTransitionSystem.getConcreteTransitionSystem().getC().size(), model.getSource());
+                return new ConcreteState("c_" + q.getName() + "_" + improvedApproximatedTransitionSystem.getCTS().getC().size(), model.getSource());
             }
         } else {
             throw new Error("Impossible case occurred: unable to find concrete instance.");
