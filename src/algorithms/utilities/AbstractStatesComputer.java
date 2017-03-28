@@ -46,9 +46,9 @@ public final class AbstractStatesComputer extends AComputer<LinkedHashSet<Abstra
             if (z3.checkSAT() == SATISFIABLE) {
                 abstractStates.add(abstractState);
             }
-            System.out.print("ASC: " + 100.0 * i / Math.pow(2, getAbstractionPredicates().size()) + " | ");
+            //System.out.print("ASC: " + 100.0 * i / Math.pow(2, getAbstractionPredicates().size()) + " | ");
         }
-        System.out.println();
+        //System.out.println();
         return abstractStates;
     }
 

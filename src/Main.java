@@ -62,6 +62,7 @@ public class Main {
             Machine machine = EventBParser.parseMachine(ebmFile);
             LinkedHashSet<Predicate> abstractionPredicates = EventBParser.parseAbstractionPredicates(abstractionPredicatesFile);
             go(machine, abstractionPredicates);
+            System.out.println("Outputs for \"" + ebmFile + "\" have been written in resources/eventb/" + machine.getName() + "/outputs");
         } else {
             throw new Error(
                     "StraTest requires two arguments.\n" +
@@ -84,10 +85,6 @@ public class Main {
         LinkedHashSet<AbstractState> abstractStates = new AbstractStatesComputer(machine.getInvariant(), abstractionPredicates).compute().getResult();
         ComputerResult<ApproximatedTransitionSystem> eua = new EUAComputer(machine, abstractStates, ORDERING_COLORATION).compute();
         ComputerResult<ApproximatedTransitionSystem> uua = new UUAComputer(machine, eua.getResult()).compute();
-
-        System.out.println("#Ev: " + machine.getEvents().size());
-        System.out.println("#AP: " + abstractionPredicates.size());
-        System.out.println("AP: " + abstractionPredicates);
         /*System.out.println(new ATSStatistics(eua.getResult()).getRowRepresentation(filterAndOrder) + " " + eua.getComputationTime());
         System.out.println(new ATSStatistics(uua.getResult()).getRowRepresentation(filterAndOrder) + " " + uua.getComputationTime());*/
         /*System.out.println(machine);
