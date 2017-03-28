@@ -204,7 +204,7 @@
   </target>
 
   <target name="build.jar">
-      <jar destfile="${stratest.output.dir}/StraTest.jar">
+      <jar destfile="StraTest.jar">
           <fileset dir="${stratest.output.dir}"/>
           <fileset dir="resources"/>
           <manifest>
