@@ -1,3 +1,5 @@
+import algorithms.ChinesePostmanPathsComputer;
+import algorithms.ConnectedATSComputer;
 import algorithms.EUAComputer;
 import algorithms.UUAComputer;
 import algorithms.outputs.ApproximatedTransitionSystem;
@@ -7,12 +9,15 @@ import algorithms.utilities.AbstractStatesComputer;
 import eventb.AEventBObject;
 import eventb.Machine;
 import eventb.exprs.bool.Predicate;
+import eventb.graphs.ATransition;
 import eventb.graphs.AbstractState;
+import eventb.graphs.ConcreteTransition;
 import eventb.parsers.EventBParser;
 import utilities.sets.Tuple;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -26,14 +31,52 @@ import static utilities.Chars.NEW_LINE;
 public class Main {
 
     public static void main(String[] args) {
-        Tuple<Machine, LinkedHashSet<Predicate>> example = get("coffeeMachine", 1);
+        Main main = new Main();
+        if (args.length == 2) {
+            File ebmFile = new File(args[0]);
+            File abstractionPredicatesFile = new File(args[1]);
+            if (!ebmFile.exists()) {
+                InputStream link = main.getClass().getResourceAsStream(ebmFile.getAbsolutePath());
+                if (link != null) {
+                    try {
+                        Files.copy(link, ebmFile.getAbsoluteFile().toPath());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    throw new Error("Unable to find EBM file \"" + ebmFile.getAbsoluteFile() + "\".");
+                }
+            }
+            if (!abstractionPredicatesFile.exists()) {
+                InputStream link = main.getClass().getResourceAsStream(abstractionPredicatesFile.getAbsolutePath());
+                if (link != null) {
+                    try {
+                        Files.copy(link, abstractionPredicatesFile.getAbsoluteFile().toPath());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    throw new Error("Unable to find AP file \"" + abstractionPredicatesFile.getAbsoluteFile() + "\".");
+                }
+            }
+            Machine machine = EventBParser.parseMachine(ebmFile);
+            LinkedHashSet<Predicate> abstractionPredicates = EventBParser.parseAbstractionPredicates(abstractionPredicatesFile);
+            go(machine, abstractionPredicates);
+        } else {
+            throw new Error(
+                    "StraTest requires two arguments.\n" +
+                            "Usage: $> java -jar StraTest.jar [EBM file (.ebm)] [Abstraction Predicates File (.ap)]\n" +
+                            "Example: $> java -jar StraTest.jar resources/eventb/threeBatteries/threeBatteries.ebm resources/eventb/threeBatteries/threeBatteries_default.ap"
+            );
+        }
+        /*Tuple<Machine, LinkedHashSet<Predicate>> example = get("coffeeMachine", 1);
         go(example.getFirst(), example.getSecond());
         System.exit(42);
         List<Tuple<Machine, List<LinkedHashSet<Predicate>>>> examples = getExamples();
         examples.forEach(tuple -> tuple.getSecond().forEach(abstractionPredicatesSet -> {
             System.out.println(tuple.getFirst().getName());
             go(tuple.getFirst(), abstractionPredicatesSet);
-        }));
+        }));*/
     }
 
     private static void go(Machine machine, LinkedHashSet<Predicate> abstractionPredicates) {
@@ -45,8 +88,8 @@ public class Main {
         System.out.println("#Ev: " + machine.getEvents().size());
         System.out.println("#AP: " + abstractionPredicates.size());
         System.out.println("AP: " + abstractionPredicates);
-        System.out.println(new ATSStatistics(eua.getResult()).getRowRepresentation(filterAndOrder) + " " + eua.getComputationTime());
-        System.out.println(new ATSStatistics(uua.getResult()).getRowRepresentation(filterAndOrder) + " " + uua.getComputationTime());
+        /*System.out.println(new ATSStatistics(eua.getResult()).getRowRepresentation(filterAndOrder) + " " + eua.getComputationTime());
+        System.out.println(new ATSStatistics(uua.getResult()).getRowRepresentation(filterAndOrder) + " " + uua.getComputationTime());*/
         /*System.out.println(machine);
         System.out.println(new ATSStatistics(eua.getResult()).getRowRepresentation(filterAndOrder) + " " + eua.getComputationTime());
         System.out.println(new ATSStatistics(uua.getResult()).getRowRepresentation(filterAndOrder) + " " + uua.getComputationTime());
@@ -60,6 +103,14 @@ public class Main {
         if (outputDirectoryExists) {
             try {
                 Files.write(Paths.get(outputsDirectory + "/" + machine.getName() + ".mch"), machine.toString().getBytes());
+                Files.write(Paths.get(outputsDirectory + "/inputs_statistics.txt"), ("" +
+                        "# events: " + machine.getEvents().size() + "\n" +
+                        "# abstraction predicates: " + abstractionPredicates.size() + "\n" +
+                        "\n" +
+                        "Abstraction predicates: \n" +
+                        abstractionPredicates.stream().map(predicate -> "\t" + predicate).collect(Collectors.joining("\n")) + "\n" +
+                        "").getBytes()
+                );
                 Files.write(Paths.get(outputsDirectory + "/3MTS_full.dot"), eua.getResult().get3MTS().getCorrespondingGraphvizGraph().toString().getBytes());
                 Files.write(Paths.get(outputsDirectory + "/3MTS_small.dot"), eua.getResult().get3MTS().getCorrespondingGraphvizGraph().toString().replaceAll(quote("("), "").replaceAll(" " + EQ_DEF + ".*", "\"];").getBytes());
                 Files.write(Paths.get(outputsDirectory + "/EUA_full.dot"), eua.getResult().getCTS().getCorrespondingGraphvizGraph().toString().getBytes());
@@ -69,6 +120,12 @@ public class Main {
                 Files.write(Paths.get(outputsDirectory + "/EUA_statistics.txt"), new ATSStatistics(eua.getResult()).toString().getBytes());
                 Files.write(Paths.get(outputsDirectory + "/UUA_statistics.txt"), new ATSStatistics(uua.getResult()).toString().getBytes());
                 Files.write(Paths.get(outputsDirectory + "/abstractionPredicates.ap"), abstractionPredicates.stream().map(AEventBObject::toString).collect(Collectors.joining(NEW_LINE)).getBytes());
+                ApproximatedTransitionSystem connectedEUA = new ConnectedATSComputer(eua.getResult()).compute().getResult();
+                ComputerResult<List<List<ConcreteTransition>>> testsEUA = new ChinesePostmanPathsComputer(connectedEUA.getCTS().getC0().iterator().next(), connectedEUA.getCTS().getC(), connectedEUA.getCTS().getDeltaC()).compute();
+                Files.write(Paths.get(outputsDirectory + "/EUA_tests.txt"), testsEUA.getResult().stream().map(test -> test.stream().map(ATransition::toString).collect(Collectors.joining(NEW_LINE))).collect(Collectors.joining(NEW_LINE + NEW_LINE)).getBytes());
+                ApproximatedTransitionSystem connectedUUA = new ConnectedATSComputer(uua.getResult()).compute().getResult();
+                ComputerResult<List<List<ConcreteTransition>>> testsUUA = new ChinesePostmanPathsComputer(connectedUUA.getCTS().getC0().iterator().next(), connectedUUA.getCTS().getC(), connectedUUA.getCTS().getDeltaC()).compute();
+                Files.write(Paths.get(outputsDirectory + "/UUA_tests.txt"), testsUUA.getResult().stream().map(test -> test.stream().map(ATransition::toString).collect(Collectors.joining(NEW_LINE))).collect(Collectors.joining(NEW_LINE + NEW_LINE)).getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
             }
