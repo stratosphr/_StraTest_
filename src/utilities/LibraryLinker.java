@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
 public final class LibraryLinker {
 
     public static void loadDirectoryLibraries(File file) {
-        System.setProperty("java.library.path", System.getProperty("java.library.path") + ":" + file.getAbsolutePath());
+        System.setProperty("java.library.path", System.getProperty("java.library.path") + System.getProperty("path.separator") + file.getAbsolutePath());
         try {
             Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
             fieldSysPath.setAccessible(true);

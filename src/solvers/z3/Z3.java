@@ -12,9 +12,9 @@ import utilities.LibraryLinker;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static utilities.Chars.NEW_LINE;
 
@@ -37,7 +37,7 @@ public final class Z3 {
 
     public void setCode(ABoolExpr expression) {
         reset();
-        Stream.of(SMTLibFormatter.format(expression).split(NEW_LINE)).forEach(code::add);
+        code.addAll(Arrays.asList(SMTLibFormatter.format(expression).split(NEW_LINE)));
     }
 
     public Status checkSAT() {

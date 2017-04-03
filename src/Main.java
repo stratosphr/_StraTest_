@@ -17,7 +17,6 @@ import utilities.sets.Tuple;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -31,7 +30,7 @@ import static utilities.Chars.NEW_LINE;
 public class Main {
 
     public static void main(String[] args) {
-        Main main = new Main();
+        /*Main main = new Main();
         if (args.length == 2) {
             File ebmFile = new File(args[0]);
             File abstractionPredicatesFile = new File(args[1]);
@@ -69,15 +68,15 @@ public class Main {
                             "Usage: $> java -jar StraTest.jar [EBM file (.ebm)] [Abstraction Predicates File (.ap)]\n" +
                             "Example: $> java -jar StraTest.jar resources/eventb/threeBatteries/threeBatteries.ebm resources/eventb/threeBatteries/threeBatteries_default.ap"
             );
-        }
+        }*/
         /*Tuple<Machine, LinkedHashSet<Predicate>> example = get("coffeeMachine", 1);
         go(example.getFirst(), example.getSecond());
-        System.exit(42);
-        List<Tuple<Machine, List<LinkedHashSet<Predicate>>>> examples = getExamples();
+        System.exit(42);*/
+        List<Tuple<Machine, List<LinkedHashSet<Predicate>>>> examples = getExamplesTASE17();
         examples.forEach(tuple -> tuple.getSecond().forEach(abstractionPredicatesSet -> {
             System.out.println(tuple.getFirst().getName());
             go(tuple.getFirst(), abstractionPredicatesSet);
-        }));*/
+        }));
     }
 
     private static void go(Machine machine, LinkedHashSet<Predicate> abstractionPredicates) {
@@ -85,8 +84,8 @@ public class Main {
         LinkedHashSet<AbstractState> abstractStates = new AbstractStatesComputer(machine.getInvariant(), abstractionPredicates).compute().getResult();
         ComputerResult<ApproximatedTransitionSystem> eua = new EUAComputer(machine, abstractStates, ORDERING_COLORATION).compute();
         ComputerResult<ApproximatedTransitionSystem> uua = new UUAComputer(machine, eua.getResult()).compute();
-        /*System.out.println(new ATSStatistics(eua.getResult()).getRowRepresentation(filterAndOrder) + " " + eua.getComputationTime());
-        System.out.println(new ATSStatistics(uua.getResult()).getRowRepresentation(filterAndOrder) + " " + uua.getComputationTime());*/
+        System.out.println(new ATSStatistics(eua.getResult()).getRowRepresentation(filterAndOrder) + " " + eua.getComputationTime());
+        System.out.println(new ATSStatistics(uua.getResult()).getRowRepresentation(filterAndOrder) + " " + uua.getComputationTime());
         /*System.out.println(machine);
         System.out.println(new ATSStatistics(eua.getResult()).getRowRepresentation(filterAndOrder) + " " + eua.getComputationTime());
         System.out.println(new ATSStatistics(uua.getResult()).getRowRepresentation(filterAndOrder) + " " + uua.getComputationTime());
@@ -129,6 +128,37 @@ public class Main {
         } else {
             throw new Error("Unable to create output directory \"" + outputsDirectory + "\".");
         }
+    }
+
+    private static List<Tuple<Machine, List<LinkedHashSet<Predicate>>>> getExamplesTASE17() {
+        Machine threeBatteries = EventBParser.parseMachine(new File("resources/eventb/threeBatteries/threeBatteries.ebm"));
+        LinkedHashSet<Predicate> threeBatteries_default = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_default.ap"));
+        LinkedHashSet<Predicate> threeBatteries_1guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_1guard.ap"));
+        LinkedHashSet<Predicate> threeBatteries_2guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_2guard.ap"));
+        LinkedHashSet<Predicate> threeBatteries_1post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_1post.ap"));
+        LinkedHashSet<Predicate> threeBatteries_default2 = EventBParser.parseAbstractionPredicates(new File("resources/eventb/threeBatteries/threeBatteries_default2.ap"));
+        Machine carAlarm = EventBParser.parseMachine(new File("resources/eventb/carAlarm/carAlarm.ebm"));
+        LinkedHashSet<Predicate> carAlarm_1guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/carAlarm/carAlarm_1guard.ap"));
+        LinkedHashSet<Predicate> carAlarm_2guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/carAlarm/carAlarm_2guard.ap"));
+        LinkedHashSet<Predicate> carAlarm_1post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/carAlarm/carAlarm_1post.ap"));
+        LinkedHashSet<Predicate> carAlarm_2post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/carAlarm/carAlarm_2post.ap"));
+        Machine coffeeMachine = EventBParser.parseMachine(new File("resources/eventb/coffeeMachine/coffeeMachine.ebm"));
+        LinkedHashSet<Predicate> coffeeMachine_1guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/coffeeMachine/coffeeMachine_1guard.ap"));
+        LinkedHashSet<Predicate> coffeeMachine_2guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/coffeeMachine/coffeeMachine_2guard.ap"));
+        LinkedHashSet<Predicate> coffeeMachine_1post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/coffeeMachine/coffeeMachine_1post.ap"));
+        LinkedHashSet<Predicate> coffeeMachine_2post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/coffeeMachine/coffeeMachine_2post.ap"));
+        Machine phone = EventBParser.parseMachine(new File("resources/eventb/phone/phone.ebm"));
+        LinkedHashSet<Predicate> phone_1guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/phone/phone_1guard.ap"));
+        LinkedHashSet<Predicate> phone_2guard = EventBParser.parseAbstractionPredicates(new File("resources/eventb/phone/phone_2guard.ap"));
+        LinkedHashSet<Predicate> phone_1post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/phone/phone_1post.ap"));
+        LinkedHashSet<Predicate> phone_2post = EventBParser.parseAbstractionPredicates(new File("resources/eventb/phone/phone_2post.ap"));
+        List<Tuple<Machine, List<LinkedHashSet<Predicate>>>> examples = new ArrayList<>();
+        examples.add(new Tuple<>(threeBatteries, Arrays.asList(threeBatteries_default, threeBatteries_1guard, threeBatteries_2guard, threeBatteries_1post, threeBatteries_default2)));
+        //examples.put(threeBatteries, Arrays.asList(threeBatteries_default, threeBatteries_1guard, threeBatteries_2guard, threeBatteries_1post)));
+        examples.add(new Tuple<>(carAlarm, Arrays.asList(carAlarm_1guard, carAlarm_2guard, carAlarm_1post, carAlarm_2post)));
+        examples.add(new Tuple<>(coffeeMachine, Arrays.asList(coffeeMachine_1guard, coffeeMachine_2guard, coffeeMachine_1post, coffeeMachine_2post)));
+        examples.add(new Tuple<>(phone, Arrays.asList(phone_1guard, phone_2guard, phone_1post, phone_2post)));
+        return examples;
     }
 
     private static List<Tuple<Machine, List<LinkedHashSet<Predicate>>>> getExamples() {

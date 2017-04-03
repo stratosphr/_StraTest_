@@ -40,7 +40,8 @@ public final class ATSStatistics extends AFormatter {
         Tuple<LinkedHashSet<AbstractState>, LinkedHashSet<AbstractTransition>> reachableAbstractPart = new ReachableAbstractPartComputer(ats.getCTS().getC0(), ats.getCTS().getDeltaC(), ats.getCTS().getAlpha()).compute().getResult();
         Tuple<LinkedHashSet<ConcreteState>, LinkedHashSet<ConcreteTransition>> reachableConcretePart = new ReachableConcretePartComputer(ats.getCTS().getC0(), ats.getCTS().getDeltaC()).compute().getResult();
         ComputerResult<ApproximatedTransitionSystem> connectedATS = new ConnectedATSComputer(ats).compute();
-        ComputerResult<List<List<ConcreteTransition>>> tests = new ChinesePostmanPathsComputer(connectedATS.getResult().getCTS().getC0().iterator().next(), connectedATS.getResult().getCTS().getC(), connectedATS.getResult().getCTS().getDeltaC()).compute();
+        ComputerResult<List<List<ConcreteTransition>>> testsResult = new ChinesePostmanPathsComputer(connectedATS.getResult().getCTS().getC0().iterator().next(), connectedATS.getResult().getCTS().getC(), connectedATS.getResult().getCTS().getDeltaC()).compute();
+        List<List<ConcreteTransition>> tests = testsResult.getResult().stream().map(test -> test.stream().filter(step -> !step.getSource().getName().equals("_fictive_") && !step.getEvent().getName().equals("_beta_") && !step.getEvent().getName().equals("_reset_") && !step.getTarget().getName().equals("_fictive_")).collect(Collectors.toList())).collect(Collectors.toList());
         abstractionStatistics.put("# initial abstract states", ats.get3MTS().getQ0().size());
         abstractionStatistics.put("# abstract states", ats.get3MTS().getQ().size());
         abstractionStatistics.put("# reachable abstract states", reachableAbstractPart.getFirst().size());
@@ -75,10 +76,10 @@ public final class ATSStatistics extends AFormatter {
         underApproximationStatistics.put("# unreachable concrete transitions", ats.getCTS().getDeltaC().size() - reachableConcretePart.getSecond().size());
         underApproximationStatistics.put("rho concrete transitions", 1.0 * ats.getCTS().getDeltaC().size() / reachableAbstractPart.getSecond().size());
         underApproximationStatistics.put("% covered events", 100.0 * reachableConcretePart.getSecond().stream().map(ATransition::getEvent).collect(Collectors.toCollection(LinkedHashSet::new)).size() / ats.getEventSystem().getEvDef().size());
-        testsStatistics.put("# test cases", tests.getResult().size());
-        testsStatistics.put("# tests lengths", tests.getResult().stream().map(List::size).collect(Collectors.toList()));
-        testsStatistics.put("# tests steps", tests.getResult().stream().mapToInt(List::size).sum());
-        testsStatistics.put("~ tests lengths", tests.getResult().stream().mapToInt(List::size).average().orElse(0));
+        testsStatistics.put("# test cases", tests.size());
+        testsStatistics.put("# tests lengths", tests.stream().map(List::size).collect(Collectors.toList()));
+        testsStatistics.put("# tests steps", tests.stream().mapToInt(List::size).sum());
+        testsStatistics.put("~ tests lengths", tests.stream().mapToInt(List::size).average().orElse(0));
         statistics.put("Abstraction", abstractionStatistics);
         statistics.put("Under-Approximation", underApproximationStatistics);
         statistics.put("Tests", testsStatistics);
@@ -103,15 +104,15 @@ public final class ATSStatistics extends AFormatter {
 
     @Override
     public String toString() {
-        String formatted = "";
+        StringBuilder formatted = new StringBuilder();
         for (String title : statistics.keySet()) {
-            formatted += title + NEW_LINE;
+            formatted.append(title).append(NEW_LINE);
             indentRight();
-            formatted += statistics.get(title).keySet().stream().map(label -> indent() + label + ": " + statistics.get(title).get(label)).collect(Collectors.joining(NEW_LINE)) + NEW_LINE;
+            formatted.append(statistics.get(title).keySet().stream().map(label -> indent() + label + ": " + statistics.get(title).get(label)).collect(Collectors.joining(NEW_LINE))).append(NEW_LINE);
             indentLeft();
-            formatted += NEW_LINE;
+            formatted.append(NEW_LINE);
         }
-        return formatted;
+        return formatted.toString();
     }
 
 }
