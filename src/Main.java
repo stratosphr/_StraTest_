@@ -17,6 +17,7 @@ import utilities.sets.Tuple;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -30,7 +31,7 @@ import static utilities.Chars.NEW_LINE;
 public class Main {
 
     public static void main(String[] args) {
-        /*Main main = new Main();
+        Main main = new Main();
         if (args.length == 2) {
             File ebmFile = new File(args[0]);
             File abstractionPredicatesFile = new File(args[1]);
@@ -68,15 +69,15 @@ public class Main {
                             "Usage: $> java -jar StraTest.jar [EBM file (.ebm)] [Abstraction Predicates File (.ap)]\n" +
                             "Example: $> java -jar StraTest.jar resources/eventb/threeBatteries/threeBatteries.ebm resources/eventb/threeBatteries/threeBatteries_default.ap"
             );
-        }*/
+        }
         /*Tuple<Machine, LinkedHashSet<Predicate>> example = get("coffeeMachine", 1);
         go(example.getFirst(), example.getSecond());
         System.exit(42);*/
-        List<Tuple<Machine, List<LinkedHashSet<Predicate>>>> examples = getExamplesTASE17();
+        /*List<Tuple<Machine, List<LinkedHashSet<Predicate>>>> examples = getExamplesTASE17();
         examples.forEach(tuple -> tuple.getSecond().forEach(abstractionPredicatesSet -> {
             System.out.println(tuple.getFirst().getName());
             go(tuple.getFirst(), abstractionPredicatesSet);
-        }));
+        }));*/
     }
 
     private static void go(Machine machine, LinkedHashSet<Predicate> abstractionPredicates) {
