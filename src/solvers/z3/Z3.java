@@ -9,6 +9,7 @@ import eventb.exprs.bool.ABoolExpr;
 import eventb.visitors.SMTLibFormatter;
 import utilities.Chars;
 import utilities.LibraryLinker;
+import utilities.OS;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
 
 import static utilities.Chars.NEW_LINE;
+import static utilities.OS.EOperatingSystem.WINDOWS;
 
 /**
  * Created by gvoiron on 10/12/16.
@@ -30,6 +32,9 @@ public final class Z3 {
 
     public Z3() {
         LibraryLinker.loadDirectoryLibraries(new File("lib/z3"));
+        if (OS.getOperatingSystem() == WINDOWS) {
+            System.loadLibrary("libz3");
+        }
         this.context = new Context();
         this.solver = getContext().mkSolver();
         this.code = new ArrayList<>();

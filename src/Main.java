@@ -85,8 +85,8 @@ public class Main {
         LinkedHashSet<AbstractState> abstractStates = new AbstractStatesComputer(machine.getInvariant(), abstractionPredicates).compute().getResult();
         ComputerResult<ApproximatedTransitionSystem> eua = new EUAComputer(machine, abstractStates, ORDERING_COLORATION).compute();
         ComputerResult<ApproximatedTransitionSystem> uua = new UUAComputer(machine, eua.getResult()).compute();
-        System.out.println(new ATSStatistics(eua.getResult()).getRowRepresentation(filterAndOrder) + " " + eua.getComputationTime());
-        System.out.println(new ATSStatistics(uua.getResult()).getRowRepresentation(filterAndOrder) + " " + uua.getComputationTime());
+        //System.out.println(new ATSStatistics(eua.getResult()).getRowRepresentation(filterAndOrder) + " " + eua.getComputationTime());
+        //System.out.println(new ATSStatistics(uua.getResult()).getRowRepresentation(filterAndOrder) + " " + uua.getComputationTime());
         /*System.out.println(machine);
         System.out.println(new ATSStatistics(eua.getResult()).getRowRepresentation(filterAndOrder) + " " + eua.getComputationTime());
         System.out.println(new ATSStatistics(uua.getResult()).getRowRepresentation(filterAndOrder) + " " + uua.getComputationTime());
