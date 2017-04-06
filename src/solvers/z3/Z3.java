@@ -33,6 +33,22 @@ public final class Z3 {
     public Z3() {
         LibraryLinker.loadDirectoryLibraries(new File("lib/z3"));
         if (OS.getOperatingSystem() == WINDOWS) {
+            UnsatisfiedLinkError error = null;
+            try {
+                LibraryLinker.loadDirectoryLibraries(new File("lib/z3/win_x86"));
+                //System.loadLibrary("libz3");
+            } catch (UnsatisfiedLinkError ignored) {
+                error = ignored;
+            }
+            LibraryLinker.unloadDirectoryLibraries(new File("lib/z3/win_x86"));
+            try {
+                LibraryLinker.loadDirectoryLibraries(new File("lib/z3/win_x64"));
+            } catch (UnsatisfiedLinkError ignored) {
+                if (error != null) {
+                    error.printStackTrace();
+                }
+                ignored.printStackTrace();
+            }
             System.loadLibrary("libz3");
         }
         this.context = new Context();
