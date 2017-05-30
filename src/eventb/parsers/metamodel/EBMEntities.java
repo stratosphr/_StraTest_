@@ -58,4 +58,6 @@ public final class EBMEntities {
 
     public static final String GREATER_THAN = "CGreater";
 
+    public static final String PRODUCT = "CProduct";
+
 }

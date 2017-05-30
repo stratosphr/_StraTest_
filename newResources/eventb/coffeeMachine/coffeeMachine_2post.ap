@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<AbstractionPredicatesList>
+
+    <CEquals>
+        <CVariable val="Status"/>
+        <CNumber val="0"/>
+    </CEquals>
+
+    <CEquals>
+        <CVariable val="Status"/>
+        <CNumber val="2"/>
+    </CEquals>
+
+    <COr>
+        <CEquals>
+            <CVariable val="Pot"/>
+            <CNumber val="240"/>
+        </CEquals>
+
+        <CEquals>
+            <CVariable val="Pot"/>
+            <CNumber val="120"/>
+        </CEquals>
+    </COr>
+
+
+</AbstractionPredicatesList>
+

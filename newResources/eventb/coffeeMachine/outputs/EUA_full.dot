@@ -1,0 +1,60 @@
+digraph {
+
+	rankdir="LR";
+	node[shape="box", style="rounded, filled", color="lightblue2"];
+
+	c_q4_0[label="(c_q4_0 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 0) ∧ (CoffeeLeft = 10) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 0)))"];
+	c_q4_1[label="(c_q4_1 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 0) ∧ (CoffeeLeft = 20) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 0)))"];
+	c_q4_2[label="(c_q4_2 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 0) ∧ (CoffeeLeft = 11) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 0)))"];
+	c_q4_3[label="(c_q4_3 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 0) ∧ (CoffeeLeft = 0) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 150) ∧ (Status = 0)))"];
+	c_q4_4[label="(c_q4_4 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 0) ∧ (CoffeeLeft = 1) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 150) ∧ (Status = 0)))"];
+	c_q0_5[label="(c_q0_5 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 0) ∧ (CoffeeLeft = 11) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q4_6[label="(c_q4_6 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 100) ∧ (CoffeeLeft = 20) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 0)))"];
+	c_q0_7[label="(c_q0_7 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 0) ∧ (CoffeeLeft = 20) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q0_8[label="(c_q0_8 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 50) ∧ (CoffeeLeft = 11) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q0_9[label="(c_q0_9 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 150) ∧ (CoffeeLeft = 20) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q0_10[label="(c_q0_10 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 200) ∧ (CoffeeLeft = 20) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q0_11[label="(c_q0_11 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 150) ∧ (CoffeeLeft = 11) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q0_12[label="(c_q0_12 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 100) ∧ (CoffeeLeft = 20) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q0_13[label="(c_q0_13 ≝ ((AskChange = 0) ∧ (AskCoffee = 1) ∧ (Balance = 150) ∧ (CoffeeLeft = 11) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q0_14[label="(c_q0_14 ≝ ((AskChange = 0) ∧ (AskCoffee = 1) ∧ (Balance = 150) ∧ (CoffeeLeft = 20) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q0_15[label="(c_q0_15 ≝ ((AskChange = 1) ∧ (AskCoffee = 0) ∧ (Balance = 150) ∧ (CoffeeLeft = 11) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q0_16[label="(c_q0_16 ≝ ((AskChange = 1) ∧ (AskCoffee = 0) ∧ (Balance = 150) ∧ (CoffeeLeft = 20) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q0_17[label="(c_q0_17 ≝ ((AskChange = 1) ∧ (AskCoffee = 0) ∧ (Balance = 100) ∧ (CoffeeLeft = 10) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 150) ∧ (Status = 1)))"];
+	c_q0_18[label="(c_q0_18 ≝ ((AskChange = 0) ∧ (AskCoffee = 1) ∧ (Balance = 50) ∧ (CoffeeLeft = 20) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q0_19[label="(c_q0_19 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 0) ∧ (CoffeeLeft = 19) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 150) ∧ (Status = 1)))"];
+	c_q2_20[label="(c_q2_20 ≝ ((AskChange = 1) ∧ (AskCoffee = 0) ∧ (Balance = 150) ∧ (CoffeeLeft = 11) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 2)))"];
+	c_q2_21[label="(c_q2_21 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 150) ∧ (CoffeeLeft = 20) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 2)))"];
+	c_q0_22[label="(c_q0_22 ≝ ((AskChange = 0) ∧ (AskCoffee = 1) ∧ (Balance = 200) ∧ (CoffeeLeft = 1) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q2_23[label="(c_q2_23 ≝ ((AskChange = 1) ∧ (AskCoffee = 0) ∧ (Balance = 150) ∧ (CoffeeLeft = 0) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 150) ∧ (Status = 2)))"];
+	c_q4_24[label="(c_q4_24 ≝ ((AskChange = 1) ∧ (AskCoffee = 0) ∧ (Balance = 150) ∧ (CoffeeLeft = 11) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 0)))"];
+	c_q4_25[label="(c_q4_25 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 150) ∧ (CoffeeLeft = 20) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 0)))"];
+
+	c_q4_0 -> c_q4_0 [label="takePot"];
+	c_q4_1 -> c_q4_1 [label="takePot"];
+	c_q4_0 -> c_q4_2 [label="addCoffee"];
+	c_q4_2 -> c_q4_1 [label="addCoffee"];
+	c_q4_3 -> c_q4_4 [label="addCoffee"];
+	c_q4_2 -> c_q0_5 [label="powerUp"];
+	c_q4_6 -> c_q0_7 [label="powerUp"];
+	c_q0_5 -> c_q0_8 [label="insert50"];
+	c_q0_9 -> c_q0_10 [label="insert50"];
+	c_q0_8 -> c_q0_11 [label="insert100"];
+	c_q0_12 -> c_q0_10 [label="insert100"];
+	c_q0_11 -> c_q0_13 [label="coffeeReq"];
+	c_q0_9 -> c_q0_14 [label="coffeeReq"];
+	c_q0_11 -> c_q0_15 [label="changeReq"];
+	c_q0_9 -> c_q0_16 [label="changeReq"];
+	c_q0_13 -> c_q0_17 [label="serveCoffee"];
+	c_q0_18 -> c_q0_19 [label="serveCoffee"];
+	c_q0_15 -> c_q0_5 [label="changeBack"];
+	c_q0_16 -> c_q0_7 [label="changeBack"];
+	c_q0_15 -> c_q2_20 [label="autoOut"];
+	c_q0_9 -> c_q2_21 [label="autoOut"];
+	c_q0_22 -> c_q2_23 [label="serveCoffee"];
+	c_q0_5 -> c_q4_2 [label="powerDown"];
+	c_q0_7 -> c_q4_1 [label="powerDown"];
+	c_q2_20 -> c_q4_24 [label="powerDown"];
+	c_q2_21 -> c_q4_25 [label="powerDown"];
+
+}

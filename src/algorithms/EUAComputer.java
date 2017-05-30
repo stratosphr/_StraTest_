@@ -111,7 +111,6 @@ public final class EUAComputer extends AComputer<ApproximatedTransitionSystem> {
     }
 
     private void step2() {
-        double i = 0;
         RQ.addAll(getQ0());
         List<Event> events;
         if (heuristics == NO_ORDERING_NO_COLORATION || heuristics == NO_ORDERING_COLORATION || heuristics == OLD_EXCLUSIVE || heuristics == OLD_EXHAUSTIVE) {
@@ -123,6 +122,7 @@ public final class EUAComputer extends AComputer<ApproximatedTransitionSystem> {
             Collections.sort(events);*/
             events = eventsOrderingFunction.apply(getMachine().getEvents());
         }
+        //System.out.println(A.size() + " - " + events.size() + " - " + A.size());
         while (!RQ.isEmpty()) {
             AbstractState q = RQ.iterator().next();
             RQ.remove(q);
@@ -134,8 +134,8 @@ public final class EUAComputer extends AComputer<ApproximatedTransitionSystem> {
                         Model model = z3.getModel();
                         AbstractTransition abstractTransition = new AbstractTransition(q, e, q_);
                         getDelta().add(abstractTransition);
-                        registerMustMinus(abstractTransition);
-                        registerMustPlus(abstractTransition);
+                        //registerMustMinus(abstractTransition);
+                        //registerMustPlus(abstractTransition);
                         switch (heuristics) {
                             case OLD_EXCLUSIVE:
                                 if (!instantiateFromKnownToAny(abstractTransition)) {
@@ -184,7 +184,6 @@ public final class EUAComputer extends AComputer<ApproximatedTransitionSystem> {
                         }
                         //System.out.print((int) (100 * i / (getA().size() * getMachine().getEvents().size() * getA().size())) + " | ");
                     }
-                    ++i;
                 }
             }
         }
@@ -192,7 +191,7 @@ public final class EUAComputer extends AComputer<ApproximatedTransitionSystem> {
     }
 
     private boolean registerMustMinus(AbstractTransition abstractTransition) {
-        z3.setCode(new And(getMachine().getInvariant().prime(), new Not(new Exists(new And(getMachine().getInvariant(), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), abstractTransition.getSource()), getMachine().getQuantifiedVariables().stream().toArray(QuantifiedVariable[]::new))), abstractTransition.getTarget().getExpression().prime()));
+        z3.setCode(new And(getMachine().getInvariant().prime(), new Not(new Exists(new And(getMachine().getInvariant(), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), abstractTransition.getSource()), getMachine().getQuantifiedVariables().toArray(new QuantifiedVariable[0]))), abstractTransition.getTarget().getExpression().prime()));
         if (z3.checkSAT() == UNSATISFIABLE) {
             DeltaMinus.add(abstractTransition);
             return true;
@@ -212,7 +211,7 @@ public final class EUAComputer extends AComputer<ApproximatedTransitionSystem> {
     private boolean instantiateFromKnownToAny(AbstractTransition abstractTransition) {
         LinkedHashSet<ConcreteState> KCS = getC().stream().filter(concreteState -> getAlpha().get(concreteState).equals(abstractTransition.getSource())).collect(Collectors.toCollection(LinkedHashSet::new));
         if (!KCS.isEmpty()) {
-            z3.setCode(new And(getMachine().getInvariant(), getMachine().getInvariant().prime(), new Or(KCS.stream().toArray(ABoolExpr[]::new)), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), abstractTransition.getTarget().prime()));
+            z3.setCode(new And(getMachine().getInvariant(), getMachine().getInvariant().prime(), new Or(KCS.toArray(new ABoolExpr[0])), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), abstractTransition.getTarget().prime()));
             if (z3.checkSAT() == SATISFIABLE) {
                 Model model = z3.getModel();
                 ConcreteState c = new ConcreteState("c_" + abstractTransition.getSource().getName(), model.getSource());
@@ -230,7 +229,7 @@ public final class EUAComputer extends AComputer<ApproximatedTransitionSystem> {
         LinkedHashSet<ConcreteState> GCS = getC().stream().filter(concreteState -> getKappa().get(concreteState).equals(GREEN) && getAlpha().get(concreteState).equals(abstractTransition.getSource())).collect(Collectors.toCollection(LinkedHashSet::new));
         LinkedHashSet<ConcreteState> BCS = getC().stream().filter(concreteState -> getKappa().get(concreteState).equals(BLUE) && getAlpha().get(concreteState).equals(abstractTransition.getTarget())).collect(Collectors.toCollection(LinkedHashSet::new));
         if (!GCS.isEmpty() && !BCS.isEmpty()) {
-            z3.setCode(new And(getMachine().getInvariant(), getMachine().getInvariant().prime(), new Or(GCS.stream().toArray(ABoolExpr[]::new)), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), new Or(BCS.stream().toArray(ABoolExpr[]::new)).prime()));
+            z3.setCode(new And(getMachine().getInvariant(), getMachine().getInvariant().prime(), new Or(GCS.toArray(new ABoolExpr[0])), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), new Or(BCS.toArray(new ABoolExpr[0])).prime()));
             if (z3.checkSAT() == SATISFIABLE) {
                 Model model = z3.getModel();
                 ConcreteState c = new ConcreteState("c_" + abstractTransition.getSource().getName(), model.getSource());
@@ -246,7 +245,7 @@ public final class EUAComputer extends AComputer<ApproximatedTransitionSystem> {
     private boolean instantiateFromGreenToAny(AbstractTransition abstractTransition) {
         LinkedHashSet<ConcreteState> GCS = getC().stream().filter(concreteState -> getKappa().get(concreteState).equals(GREEN) && getAlpha().get(concreteState).equals(abstractTransition.getSource())).collect(Collectors.toCollection(LinkedHashSet::new));
         if (!GCS.isEmpty()) {
-            z3.setCode(new And(getMachine().getInvariant(), getMachine().getInvariant().prime(), new Or(GCS.stream().toArray(ABoolExpr[]::new)), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), abstractTransition.getTarget().prime()));
+            z3.setCode(new And(getMachine().getInvariant(), getMachine().getInvariant().prime(), new Or(GCS.toArray(new ABoolExpr[0])), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), abstractTransition.getTarget().prime()));
             if (z3.checkSAT() == SATISFIABLE) {
                 Model model = z3.getModel();
                 ConcreteState c = new ConcreteState("c_" + abstractTransition.getSource().getName(), model.getSource());
@@ -265,7 +264,7 @@ public final class EUAComputer extends AComputer<ApproximatedTransitionSystem> {
         LinkedHashSet<ConcreteState> sourceBCS = getC().stream().filter(concreteState -> getKappa().get(concreteState).equals(BLUE) && getAlpha().get(concreteState).equals(abstractTransition.getSource())).collect(Collectors.toCollection(LinkedHashSet::new));
         LinkedHashSet<ConcreteState> targetBCS = getC().stream().filter(concreteState -> getKappa().get(concreteState).equals(BLUE) && getAlpha().get(concreteState).equals(abstractTransition.getTarget())).collect(Collectors.toCollection(LinkedHashSet::new));
         if (!sourceBCS.isEmpty() && !targetBCS.isEmpty()) {
-            z3.setCode(new And(getMachine().getInvariant(), getMachine().getInvariant().prime(), new Or(sourceBCS.stream().toArray(ABoolExpr[]::new)), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), new Or(targetBCS.stream().toArray(ABoolExpr[]::new)).prime()));
+            z3.setCode(new And(getMachine().getInvariant(), getMachine().getInvariant().prime(), new Or(sourceBCS.toArray(new ABoolExpr[0])), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), new Or(targetBCS.toArray(new ABoolExpr[0])).prime()));
             if (z3.checkSAT() == SATISFIABLE) {
                 Model model = z3.getModel();
                 ConcreteState c = new ConcreteState("c_" + abstractTransition.getSource().getName(), model.getSource());
@@ -280,7 +279,7 @@ public final class EUAComputer extends AComputer<ApproximatedTransitionSystem> {
     private boolean instantiateFromBlueToAny(AbstractTransition abstractTransition) {
         LinkedHashSet<ConcreteState> BCS = getC().stream().filter(concreteState -> getKappa().get(concreteState).equals(BLUE) && getAlpha().get(concreteState).equals(abstractTransition.getSource())).collect(Collectors.toCollection(LinkedHashSet::new));
         if (!BCS.isEmpty()) {
-            z3.setCode(new And(getMachine().getInvariant(), getMachine().getInvariant().prime(), new Or(BCS.stream().toArray(ABoolExpr[]::new)), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), abstractTransition.getTarget().prime()));
+            z3.setCode(new And(getMachine().getInvariant(), getMachine().getInvariant().prime(), new Or(BCS.toArray(new ABoolExpr[0])), abstractTransition.getEvent().getSubstitution().getPrd(getMachine()), abstractTransition.getTarget().prime()));
             if (z3.checkSAT() == SATISFIABLE) {
                 Model model = z3.getModel();
                 ConcreteState c = new ConcreteState("c_" + abstractTransition.getSource().getName(), model.getSource());

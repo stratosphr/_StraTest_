@@ -1,10 +1,10 @@
 package algorithms.statistics;
 
-import algorithms.ChinesePostmanPathsComputer;
-import algorithms.ConnectedATSComputer;
 import algorithms.heuristics.EConcreteStateColor;
 import algorithms.outputs.ApproximatedTransitionSystem;
 import algorithms.outputs.ComputerResult;
+import algorithms.utilities.ChinesePostmanPathsComputer;
+import algorithms.utilities.ConnectedATSComputer;
 import algorithms.utilities.ReachableAbstractPartComputer;
 import algorithms.utilities.ReachableConcretePartComputer;
 import eventb.graphs.*;
@@ -39,6 +39,7 @@ public final class ATSStatistics extends AFormatter {
         LinkedHashMap<String, Object> testsStatistics = new LinkedHashMap<>();
         Tuple<LinkedHashSet<AbstractState>, LinkedHashSet<AbstractTransition>> reachableAbstractPart = new ReachableAbstractPartComputer(ats.getCTS().getC0(), ats.getCTS().getDeltaC(), ats.getCTS().getAlpha()).compute().getResult();
         Tuple<LinkedHashSet<ConcreteState>, LinkedHashSet<ConcreteTransition>> reachableConcretePart = new ReachableConcretePartComputer(ats.getCTS().getC0(), ats.getCTS().getDeltaC()).compute().getResult();
+        //ComputerResult<List<Tuple<List<AbstractState>, List<AbstractTransition>>>> simplePaths = new AbstractSimplePathsComputer(ats.get3MTS().getQ0(), ats.get3MTS().getQ(), ats.get3MTS().getDelta()).tmtsSimplePaths();
         ComputerResult<ApproximatedTransitionSystem> connectedATS = new ConnectedATSComputer(ats).compute();
         ComputerResult<List<List<ConcreteTransition>>> testsResult = new ChinesePostmanPathsComputer(connectedATS.getResult().getCTS().getC0().iterator().next(), connectedATS.getResult().getCTS().getC(), connectedATS.getResult().getCTS().getDeltaC()).compute();
         List<List<ConcreteTransition>> tests = testsResult.getResult().stream().map(test -> test.stream().filter(step -> !step.getSource().getName().equals("_fictive_") && !step.getEvent().getName().equals("_beta_") && !step.getEvent().getName().equals("_reset_") && !step.getTarget().getName().equals("_fictive_")).collect(Collectors.toList())).collect(Collectors.toList());
@@ -57,29 +58,60 @@ public final class ATSStatistics extends AFormatter {
         abstractionStatistics.put("# must+ transitions", ats.get3MTS().getDeltaPlus().size());
         abstractionStatistics.put("# pure must+ transitions", ats.get3MTS().getDeltaPurePlus().size());
         abstractionStatistics.put("# must# transitions", ats.get3MTS().getDeltaSharp().size());
-        if ((Integer) abstractionStatistics.get("# abstract transitions") != (Integer) abstractionStatistics.get("# pure may transitions") + (Integer) abstractionStatistics.get("# pure must- transitions") + (Integer) abstractionStatistics.get("# pure must+ transitions") + (Integer) abstractionStatistics.get("# must# transitions")) {
+        /*if ((Integer) abstractionStatistics.get("# abstract transitions") != (Integer) abstractionStatistics.get("# pure may transitions") + (Integer) abstractionStatistics.get("# pure must- transitions") + (Integer) abstractionStatistics.get("# pure must+ transitions") + (Integer) abstractionStatistics.get("# must# transitions")) {
             System.err.println(abstractionStatistics.get("# abstract transitions"));
             System.err.println(abstractionStatistics.get("# pure may transitions"));
             System.err.println(abstractionStatistics.get("# pure must- transitions"));
             System.err.println(abstractionStatistics.get("# pure must+ transitions"));
             System.err.println(abstractionStatistics.get("# pure must# transitions"));
             throw new Error("IMPOSSIBLE");
-        }
+        }*/
         underApproximationStatistics.put("# initial concrete states", ats.getCTS().getC0().size());
         underApproximationStatistics.put("# concrete states", ats.getCTS().getC().size());
         underApproximationStatistics.put("# reachable concrete states", reachableConcretePart.getFirst().size());
-        underApproximationStatistics.put("% rho concrete states", 100.0 * reachableConcretePart.getFirst().size() / ats.getCTS().getC().size());
+        underApproximationStatistics.put("% rho concrete states", ats.getCTS().getC().size() == 0 ? 0 : 100.0 * reachableConcretePart.getFirst().size() / ats.getCTS().getC().size());
         underApproximationStatistics.put("# blue concrete states", ats.getCTS().getKappa().values().stream().filter(color -> color.equals(BLUE)).count());
         underApproximationStatistics.put("# green concrete states", ats.getCTS().getKappa().values().stream().filter(color -> color.equals(EConcreteStateColor.GREEN)).count());
         underApproximationStatistics.put("# concrete transitions", ats.getCTS().getDeltaC().size());
         underApproximationStatistics.put("# reachable concrete transitions", reachableConcretePart.getSecond().size());
         underApproximationStatistics.put("# unreachable concrete transitions", ats.getCTS().getDeltaC().size() - reachableConcretePart.getSecond().size());
-        underApproximationStatistics.put("rho concrete transitions", 1.0 * ats.getCTS().getDeltaC().size() / reachableAbstractPart.getSecond().size());
-        underApproximationStatistics.put("% covered events", 100.0 * reachableConcretePart.getSecond().stream().map(ATransition::getEvent).collect(Collectors.toCollection(LinkedHashSet::new)).size() / ats.getEventSystem().getEvDef().size());
+        underApproximationStatistics.put("rho concrete transitions", reachableAbstractPart.getSecond().size() == 0 ? 0 : 1.0 * ats.getCTS().getDeltaC().size() / reachableAbstractPart.getSecond().size());
+        underApproximationStatistics.put("% covered events", ats.getEventSystem().getEvDef().size() == 0 ? 0 : 100.0 * reachableConcretePart.getSecond().stream().map(ATransition::getEvent).collect(Collectors.toCollection(LinkedHashSet::new)).size() / ats.getEventSystem().getEvDef().size());
         testsStatistics.put("# test cases", tests.size());
         testsStatistics.put("# tests lengths", tests.stream().map(List::size).collect(Collectors.toList()));
         testsStatistics.put("# tests steps", tests.stream().mapToInt(List::size).sum());
         testsStatistics.put("~ tests lengths", tests.stream().mapToInt(List::size).average().orElse(0));
+
+        /*Tuple<Set<AbstractState>, List<AbstractTransition>> tmts = new Tuple<>(ats.get3MTS().getQ(), new ArrayList<>(ats.get3MTS().getDelta()));
+        List<LinkedHashSet<AbstractTransition>> tmtsSimplePaths = new SimplePathsComputer<>(
+                tmts,
+                ats.get3MTS().getQ0().iterator().next()
+        ).compute().getResult();
+        System.out.println("Simple paths computation ended!");
+        int nbCoveredSimplePaths = 0;
+        for (List<ConcreteTransition> test : tests) {
+            LinkedHashSet<ConcreteState> concreteStates = new LinkedHashSet<>(Collections.singletonList(test.get(0).getSource()));
+            concreteStates.addAll(test.stream().map(ATransition::getTarget).collect(Collectors.toList()));
+            Tuple<Set<ConcreteState>, List<ConcreteTransition>> graph = new Tuple<>(concreteStates, test);
+            List<LinkedHashSet<ConcreteTransition>> result = new ConcreteSimplePathsComputer<>(
+                    graph,
+                    test.get(0).getSource()
+            ).compute().getResult();
+            for (LinkedHashSet<ConcreteTransition> concreteTransitions : result) {
+                Tuple<LinkedHashSet<AbstractState>, LinkedHashSet<AbstractTransition>> abstractPartCovered = new ReachableAbstractPartComputer(
+                        new LinkedHashSet<>(Collections.singletonList(test.get(0).getSource())),
+                        concreteTransitions,
+                        ats.getCTS().getAlpha()
+                ).compute().getResult();
+                for (LinkedHashSet<AbstractTransition> tmtsSimplePath : tmtsSimplePaths) {
+                    if (new ArrayList<>(tmtsSimplePath).equals(new ArrayList<>(abstractPartCovered.getSecond()))) {
+                        ++nbCoveredSimplePaths;
+                    }
+                }
+            }
+        }
+        //testsStatistics.put("% simple paths coverage", tmtsSimplePaths.size() == 0 ? 0 : 100.0 * nbCoveredSimplePaths / tmtsSimplePaths.size());*/
+
         statistics.put("Abstraction", abstractionStatistics);
         statistics.put("Under-Approximation", underApproximationStatistics);
         statistics.put("Tests", testsStatistics);

@@ -1,0 +1,29 @@
+digraph {
+
+	rankdir="LR";
+	node[shape="box", style="rounded, filled", color="lightblue2"];
+
+	c_q4_0[label="c_q4_0"];
+	c_q0_1[label="c_q0_1"];
+	c_q4_2[label="c_q4_2"];
+	c_q0_3[label="c_q0_3"];
+	c_q0_4[label="c_q0_4"];
+	c_q2_5[label="c_q2_5"];
+	c_q0_6[label="c_q0_6"];
+	c_q0_7[label="c_q0_7"];
+	c_q0_8[label="c_q0_8"];
+
+	c_q4_0 -> c_q0_1 [label="powerUp"];
+	c_q4_0 -> c_q4_0 [label="takePot"];
+	c_q4_0 -> c_q4_2 [label="addCoffee"];
+	c_q0_1 -> c_q0_3 [label="insert50"];
+	c_q0_3 -> c_q0_4 [label="insert100"];
+	c_q0_1 -> c_q4_0 [label="powerDown"];
+	c_q0_1 -> c_q2_5 [label="autoOut"];
+	c_q0_4 -> c_q0_6 [label="coffeeReq"];
+	c_q0_4 -> c_q0_7 [label="changeReq"];
+	c_q0_6 -> c_q0_8 [label="serveCoffee"];
+	c_q0_7 -> c_q0_1 [label="changeBack"];
+	c_q2_5 -> c_q4_0 [label="powerDown"];
+
+}

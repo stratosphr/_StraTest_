@@ -1,0 +1,29 @@
+digraph {
+
+	rankdir="LR";
+	node[shape="box", style="rounded, filled", color="lightblue2"];
+
+	c_q4_0[label="(c_q4_0 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 0) ∧ (CoffeeLeft = 10) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 0)))"];
+	c_q0_1[label="(c_q0_1 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 0) ∧ (CoffeeLeft = 10) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q4_2[label="(c_q4_2 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 0) ∧ (CoffeeLeft = 11) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 0)))"];
+	c_q0_3[label="(c_q0_3 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 50) ∧ (CoffeeLeft = 10) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q0_4[label="(c_q0_4 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 150) ∧ (CoffeeLeft = 10) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q2_5[label="(c_q2_5 ≝ ((AskChange = 0) ∧ (AskCoffee = 0) ∧ (Balance = 0) ∧ (CoffeeLeft = 10) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 2)))"];
+	c_q0_6[label="(c_q0_6 ≝ ((AskChange = 0) ∧ (AskCoffee = 1) ∧ (Balance = 150) ∧ (CoffeeLeft = 10) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q0_7[label="(c_q0_7 ≝ ((AskChange = 1) ∧ (AskCoffee = 0) ∧ (Balance = 150) ∧ (CoffeeLeft = 10) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 100) ∧ (Status = 1)))"];
+	c_q0_8[label="(c_q0_8 ≝ ((AskChange = 1) ∧ (AskCoffee = 0) ∧ (Balance = 100) ∧ (CoffeeLeft = 9) ∧ (MAX_BAL = 200) ∧ (MAX_COFFEE = 20) ∧ (MAX_POT = 200) ∧ (Pot = 150) ∧ (Status = 1)))"];
+
+	c_q4_0 -> c_q0_1 [label="powerUp"];
+	c_q4_0 -> c_q4_0 [label="takePot"];
+	c_q4_0 -> c_q4_2 [label="addCoffee"];
+	c_q0_1 -> c_q0_3 [label="insert50"];
+	c_q0_3 -> c_q0_4 [label="insert100"];
+	c_q0_1 -> c_q4_0 [label="powerDown"];
+	c_q0_1 -> c_q2_5 [label="autoOut"];
+	c_q0_4 -> c_q0_6 [label="coffeeReq"];
+	c_q0_4 -> c_q0_7 [label="changeReq"];
+	c_q0_6 -> c_q0_8 [label="serveCoffee"];
+	c_q0_7 -> c_q0_1 [label="changeBack"];
+	c_q2_5 -> c_q4_0 [label="powerDown"];
+
+}

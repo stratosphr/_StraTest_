@@ -1,15 +1,32 @@
 <component name="ProjectDictionaryState">
   <dictionary name="gvoiron">
     <words>
+      <w>alarme</w>
+      <w>arrivee</w>
       <w>bgcolor</w>
+      <w>branchings</w>
+      <w>changement</w>
       <w>concretize</w>
+      <w>deverrouiller</w>
       <w>donc</w>
+      <w>fermeture</w>
+      <w>feux</w>
       <w>graphable</w>
+      <w>mcxp</w>
+      <w>ouvertes</w>
+      <w>ouverture</w>
+      <w>ouvrir</w>
+      <w>portes</w>
+      <w>rames</w>
       <w>rankdir</w>
+      <w>refermees</w>
+      <w>serrures</w>
       <w>stra</w>
       <w>subgraph</w>
       <w>substates</w>
       <w>subtransitions</w>
+      <w>tmts</w>
+      <w>utilisateur</w>
     </words>
   </dictionary>
 </component>

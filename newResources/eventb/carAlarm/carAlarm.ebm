@@ -1,0 +1,1007 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MACHINE name="carAlarm">
+
+    <VARIABLES>
+        <CVariable val="Be"/> <!-- Bell -->
+        <CVariable val="AC"/> <!-- Alarm Controller -->
+        <CVariable val="Do"/> <!-- Door -->
+        <CVariable val="Lo"/> <!-- Lock -->
+        <CVariable val="Wa"/> <!-- Warnings -->
+        <CVariable val="Us"/> <!-- User -->
+        <CVariable val="Gl"/> <!-- Glasses -->
+        <CVariable val="CS"/> <!-- Children Security -->
+        <CVariable val="Li"/> <!-- Lights -->
+        <CVariable val="Mv"/> <!-- Moving -->
+        <CVariable val="Tr"/> <!-- Timer Triggered -->
+        <CVariable val="De"/> <!-- Delay -->
+    </VARIABLES>
+
+    <INVARIANT>
+        <CAnd>
+            <COr>
+                <CEquals>
+                    <CVariable val="Be"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Be"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="AC"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AC"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Wa"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Wa"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Do"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Do"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Lo"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Lo"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Us"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Us"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Gl"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Gl"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="CS"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="CS"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Li"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Li"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Mv"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mv"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <CAnd>
+                <CGreater>
+                    <CVariable val="De"/>
+                    <CNumber val="-1"/>
+                </CGreater>
+                <CGreater>
+                    <CNumber val="11"/>
+                    <CVariable val="De"/>
+                </CGreater>
+            </CAnd>
+            <!-- | | -->
+            <COr>
+                <CNot>
+                    <CAnd>
+                        <CEquals>
+                            <CVariable val="AC"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <CEquals>
+                            <CVariable val="Us"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                    </CAnd>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Do"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Be"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="AC"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="AC"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Be"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Wa"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Be"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Wa"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Be"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Lo"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <COr>
+                    <CEquals>
+                        <CVariable val="Do"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                    <CEquals>
+                        <CVariable val="Us"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                </COr>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Us"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Be"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Lo"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Gl"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Be"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Gl"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mv"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Do"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mv"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="AC"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mv"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Us"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mv"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CAnd>
+                    <CEquals>
+                        <CVariable val="De"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                    <CEquals>
+                        <CVariable val="Tr"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                </CAnd>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Li"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Lo"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Li"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="AC"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Li"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Tr"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Lo"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+        </CAnd>
+    </INVARIANT>
+
+    <INITIALISATION>
+
+        <CMultipleAssignment>
+            <CAssignment>
+                <CVariable val="Do"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Lo"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="AC"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Be"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Li"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Wa"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="De"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Tr"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Mv"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="CS"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Gl"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Us"/>
+                <CNumber val="1"/>
+            </CAssignment>
+        </CMultipleAssignment>
+
+    </INITIALISATION>
+
+    <EVENTS>
+
+        <CGuardedEvent name="Bell_Activation">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mv"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AC"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Do"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </CAnd>
+            <CMultipleAssignment>
+                <CAssignment>
+                    <CVariable val="Wa"/>
+                    <CNumber val="1"/>
+                </CAssignment>
+                <CAssignment>
+                    <CVariable val="Alarme"/>
+                    <CNumber val="1"/>
+                </CAssignment>
+            </CMultipleAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="Bell_Stop">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mv"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Be"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AC"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </CAnd>
+            <CMultipleAssignment>
+                <CAssignment>
+                    <CVariable val="Wa"/>
+                    <CNumber val="0"/>
+                </CAssignment>
+                <CAssignment>
+                    <CVariable val="Alarme"/>
+                    <CNumber val="0"/>
+                </CAssignment>
+            </CMultipleAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="Doors_Opening">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mv"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Do"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <COr>
+                    <CEquals>
+                        <CVariable val="Us"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                    <CAnd>
+                        <CEquals>
+                            <CVariable val="Us"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <CEquals>
+                            <CVariable val="Lo"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                        <CEquals>
+                            <CVariable val="AC"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                    </CAnd>
+                </COr>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="Do"/>
+                <CNumber val="1"/>
+            </CAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="Doors_Closing">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mv"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Do"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Us"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="Do"/>
+                <CNumber val="0"/>
+            </CAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="User_Authorized">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mv"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Us"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Be"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </CAnd>
+            <CMultipleAssignment>
+                <CAssignment>
+                    <CVariable val="Us"/>
+                    <CNumber val="1"/>
+                </CAssignment>
+                <CAssignment>
+                    <CVariable val="Be"/>
+                    <CNumber val="0"/>
+                </CAssignment>
+                <CAssignment>
+                    <CVariable val="Wa"/>
+                    <CNumber val="0"/>
+                </CAssignment>
+                <CAssignment>
+                    <CVariable val="AC"/>
+                    <CNumber val="0"/>
+                </CAssignment>
+                <CAssignment>
+                    <CVariable val="Lo"/>
+                    <CNumber val="0"/>
+                </CAssignment>
+            </CMultipleAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="User_Unauthorized">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mv"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Us"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Do"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AC"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Lo"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="Us"/>
+                <CNumber val="0"/>
+            </CAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="Alarm_Deactivation">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mv"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Us"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AC"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="AC"/>
+                <CNumber val="0"/>
+            </CAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="Alarm_Activation">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mv"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Lo"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Do"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AC"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CGreater>
+                    <CVariable val="De"/>
+                    <CNumber val="4"/>
+                </CGreater>
+                <CGreater>
+                    <CNumber val="11"/>
+                    <CVariable val="De"/>
+                </CGreater>
+            </CAnd>
+            <CMultipleAssignment>
+                <CAssignment>
+                    <CVariable val="AC"/>
+                    <CNumber val="1"/>
+                </CAssignment>
+                <CAssignment>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CAssignment>
+                <CAssignment>
+                    <CVariable val="De"/>
+                    <CNumber val="0"/>
+                </CAssignment>
+            </CMultipleAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="Doors_Locking">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mv"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Do"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Us"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Lo"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Gl"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AC"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </CAnd>
+            <CMultipleAssignment>
+                <CAssignment>
+                    <CVariable val="Lo"/>
+                    <CNumber val="1"/>
+                </CAssignment>
+                <CAssignment>
+                    <CVariable val="Li"/>
+                    <CNumber val="0"/>
+                </CAssignment>
+                <CAssignment>
+                    <CVariable val="Tr"/>
+                    <CNumber val="1"/>
+                </CAssignment>
+                <CAssignment>
+                    <CVariable val="De"/>
+                    <CNumber val="0"/>
+                </CAssignment>
+            </CMultipleAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="Doors_Unlocking">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Lo"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Do"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Us"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="Lo"/>
+                <CNumber val="0"/>
+            </CAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="Glasses_Opening">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Gl"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Lo"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="Gl"/>
+                <CNumber val="1"/>
+            </CAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="Glasses_Closing">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Gl"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Lo"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="Gl"/>
+                <CNumber val="0"/>
+            </CAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="Ch_Sec_Activation">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mv"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Lo"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="CS"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Do"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="CS"/>
+                <CNumber val="1"/>
+            </CAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="Ch_Sec_Deactivation">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mv"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Lo"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="CS"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Do"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="CS"/>
+                <CNumber val="0"/>
+            </CAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="Car_Moving">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mv"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Do"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Lo"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AC"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="Mv"/>
+                <CNumber val="1"/>
+            </CAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="Car_Stopping">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mv"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Do"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Lo"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AC"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="Mv"/>
+                <CNumber val="0"/>
+            </CAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="Light_Activation">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Li"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Lo"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AC"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="Li"/>
+                <CNumber val="1"/>
+            </CAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="Light_Deactivation">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Li"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Lo"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AC"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="Li"/>
+                <CNumber val="0"/>
+            </CAssignment>
+        </CGuardedEvent>
+
+        <CGuardedEvent name="Increment_Chronometer">
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Tr"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CGreater>
+                    <CNumber val="10"/>
+                    <CVariable val="De"/>
+                </CGreater>
+            </CAnd>
+            <CAssignment>
+                <CVariable val="De"/>
+                <CPlus>
+                    <CVariable val="De"/>
+                    <CNumber val="1"/>
+                </CPlus>
+            </CAssignment>
+        </CGuardedEvent>
+
+    </EVENTS>
+
+</MACHINE>

@@ -1,0 +1,7 @@
+# events: 11
+# abstraction predicates: 3
+
+Abstraction predicates: 
+	(p0 ≝ (Status = 0))
+	(p1 ≝ (Status = 2))
+	(p2 ≝ ((Pot = 240) ∨ (Pot = 120)))

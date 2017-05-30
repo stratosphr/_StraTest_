@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AbstractionPredicatesList>
+    <CEquals>
+        <CVariable val="S"/>
+        <CNumber val="0"/>
+    </CEquals>
+    <CAnd>
+        <CEquals>
+            <CVariable val="T"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="S"/>
+            <CNumber val="1"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="P"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Ut"/>
+            <CNumber val="1"/>
+        </CEquals>
+    </CAnd>
+    <CAnd>
+        <CEquals>
+            <CVariable val="T"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="S"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="P"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Ut"/>
+            <CNumber val="1"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Vi"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="M"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="CA"/>
+            <CNumber val="0"/>
+        </CEquals>
+    </CAnd>
+</AbstractionPredicatesList>

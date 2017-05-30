@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AbstractionPredicatesList>
+
+    <CEquals>
+        <CVariable val="Alarme"/>
+        <CNumber val="1"/>
+    </CEquals>
+
+    <CAnd>
+        <CEquals>
+            <CVariable val="Utilisateur"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Alarme"/>
+            <CNumber val="1"/>
+        </CEquals>
+    </CAnd>
+
+    <CAnd>
+        <CEquals>
+            <CVariable val="Utilisateur"/>
+            <CNumber val="1"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Portes"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Ctrl_Alarme"/>
+            <CNumber val="1"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Serrures"/>
+            <CNumber val="1"/>
+        </CEquals>
+    </CAnd>
+
+</AbstractionPredicatesList>

@@ -1,0 +1,36 @@
+Abstraction
+	# initial abstract states: 1
+	# abstract states: 3
+	# reachable abstract states: 3
+	% tau abstract states: 100.0
+	# abstract transitions: 13
+	# reachable abstract transitions: 12
+	# unreachable abstract transitions: 1
+	% tau abstract transitions: 92.3076923076923
+	# may transitions: 13
+	# pure may transitions: 10
+	# must- transitions: 2
+	# pure must- transitions: 0
+	# must+ transitions: 3
+	# pure must+ transitions: 1
+	# must# transitions: 2
+
+Under-Approximation
+	# initial concrete states: 1
+	# concrete states: 26
+	# reachable concrete states: 11
+	% rho concrete states: 42.30769230769231
+	# blue concrete states: 15
+	# green concrete states: 11
+	# concrete transitions: 26
+	# reachable concrete transitions: 14
+	# unreachable concrete transitions: 12
+	rho concrete transitions: 2.1666666666666665
+	% covered events: 100.0
+
+Tests
+	# test cases: 3
+	# tests lengths: [10, 7, 6]
+	# tests steps: 23
+	~ tests lengths: 7.666666666666667
+

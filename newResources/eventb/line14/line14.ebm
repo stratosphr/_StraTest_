@@ -1,0 +1,2586 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MACHINE name="line14">
+    <VARIABLES>
+        <CVariable val="NS"/>
+        <CVariable val="NR"/>
+        <CVariable val="Pos1"/>
+        <CVariable val="Pos2"/>
+        <CVariable val="Pos3"/>
+        <CVariable val="Pos4"/>
+        <CVariable val="Pos5"/>
+        <CVariable val="Dir1"/>
+        <CVariable val="Dir2"/>
+        <CVariable val="Dir3"/>
+        <CVariable val="Dir4"/>
+        <CVariable val="Dir5"/>
+        <CVariable val="Portes1"/>
+        <CVariable val="Portes2"/>
+        <CVariable val="Portes3"/>
+        <CVariable val="Portes4"/>
+        <CVariable val="Portes5"/>
+        <CVariable val="Mvt1"/>
+        <CVariable val="Mvt2"/>
+        <CVariable val="Mvt3"/>
+        <CVariable val="Mvt4"/>
+        <CVariable val="Mvt5"/>
+    </VARIABLES>
+    <INVARIANT>
+        <CAnd>
+            <!-- | NS = 9 | -->
+            <CEquals>
+                <CVariable val="NS"/>
+                <CNumber val="9"/>
+            </CEquals>
+
+            <!-- | NR = 5 | -->
+            <CEquals>
+                <CVariable val="NR"/>
+                <CNumber val="5"/>
+            </CEquals>
+
+            <!-- | Pos : Rames -> 0..NS-1 | -->
+            <CAnd>
+                <CGreater>
+                    <CVariable val="Pos1"/>
+                    <CNumber val="-1"/>
+                </CGreater>
+                <CGreater>
+                    <CVariable val="NS"/>
+                    <CVariable val="Pos1"/>
+                </CGreater>
+            </CAnd>
+            <CAnd>
+                <CGreater>
+                    <CVariable val="Pos2"/>
+                    <CNumber val="-1"/>
+                </CGreater>
+                <CGreater>
+                    <CVariable val="NS"/>
+                    <CVariable val="Pos2"/>
+                </CGreater>
+            </CAnd>
+            <CAnd>
+                <CGreater>
+                    <CVariable val="Pos3"/>
+                    <CNumber val="-1"/>
+                </CGreater>
+                <CGreater>
+                    <CVariable val="NS"/>
+                    <CVariable val="Pos3"/>
+                </CGreater>
+            </CAnd>
+            <CAnd>
+                <CGreater>
+                    <CVariable val="Pos4"/>
+                    <CNumber val="-1"/>
+                </CGreater>
+                <CGreater>
+                    <CVariable val="NS"/>
+                    <CVariable val="Pos4"/>
+                </CGreater>
+            </CAnd>
+            <CAnd>
+                <CGreater>
+                    <CVariable val="Pos5"/>
+                    <CNumber val="-1"/>
+                </CGreater>
+                <CGreater>
+                    <CVariable val="NS"/>
+                    <CVariable val="Pos5"/>
+                </CGreater>
+            </CAnd>
+
+            <!-- | Dir : {-1, 1} | -->
+            <COr>
+                <CEquals>
+                    <CVariable val="Dir1"/>
+                    <CNumber val="-1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Dir1"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Dir2"/>
+                    <CNumber val="-1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Dir2"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Dir3"/>
+                    <CNumber val="-1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Dir3"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Dir4"/>
+                    <CNumber val="-1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Dir4"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Dir5"/>
+                    <CNumber val="-1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Dir5"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+
+            <!-- | Portes : Rames -> EtatPortes | -->
+            <CAnd>
+                <CGreater>
+                    <CVariable val="Portes1"/>
+                    <CNumber val="-1"/>
+                </CGreater>
+                <CGreater>
+                    <CNumber val="3"/>
+                    <CVariable val="Portes1"/>
+                </CGreater>
+            </CAnd>
+            <CAnd>
+                <CGreater>
+                    <CVariable val="Portes2"/>
+                    <CNumber val="-1"/>
+                </CGreater>
+                <CGreater>
+                    <CNumber val="3"/>
+                    <CVariable val="Portes2"/>
+                </CGreater>
+            </CAnd>
+            <CAnd>
+                <CGreater>
+                    <CVariable val="Portes3"/>
+                    <CNumber val="-1"/>
+                </CGreater>
+                <CGreater>
+                    <CNumber val="3"/>
+                    <CVariable val="Portes3"/>
+                </CGreater>
+            </CAnd>
+            <CAnd>
+                <CGreater>
+                    <CVariable val="Portes4"/>
+                    <CNumber val="-1"/>
+                </CGreater>
+                <CGreater>
+                    <CNumber val="3"/>
+                    <CVariable val="Portes4"/>
+                </CGreater>
+            </CAnd>
+            <CAnd>
+                <CGreater>
+                    <CVariable val="Portes5"/>
+                    <CNumber val="-1"/>
+                </CGreater>
+                <CGreater>
+                    <CNumber val="3"/>
+                    <CVariable val="Portes5"/>
+                </CGreater>
+            </CAnd>
+
+            <!-- | Mvt : Rames -> BOOL | -->
+            <COr>
+                <CEquals>
+                    <CVariable val="Mvt1"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mvt1"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Mvt2"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mvt2"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Mvt3"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mvt3"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Mvt4"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mvt4"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CEquals>
+                    <CVariable val="Mvt5"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Mvt5"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+
+            <!-- | !R.(Mvt(R)=TRUE => Portes(R)=fermees) | -->
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mvt1"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Portes1"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mvt2"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Portes2"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mvt3"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Portes3"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mvt4"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Portes4"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mvt5"/>
+                        <CNumber val="1"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Portes5"/>
+                    <CNumber val="1"/>
+                </CEquals>
+            </COr>
+
+            <!-- | !R.( Portes(R)=ouvertes => Mvt(R)=FALSE) | -->
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Portes1"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Mvt1"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Portes2"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Mvt2"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Portes3"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Mvt3"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Portes4"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Mvt4"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Portes5"/>
+                        <CNumber val="0"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Mvt5"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+
+            <!-- | !R.( Portes(R)=refermees => Mvt(R)=FALSE) | -->
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Portes1"/>
+                        <CNumber val="2"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Mvt1"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Portes2"/>
+                        <CNumber val="2"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Mvt2"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Portes3"/>
+                        <CNumber val="2"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Mvt3"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Portes4"/>
+                        <CNumber val="2"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Mvt4"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Portes5"/>
+                        <CNumber val="2"/>
+                    </CEquals>
+                </CNot>
+                <CEquals>
+                    <CVariable val="Mvt5"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </COr>
+
+            <!-- | !R1. !R2.(R1/=R2 => (Dir(R1)/=Dir(R2) or Pos(R1)/=Pos(R2) or Mvt(R1)/=Mvt(R2))) | -->
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Dir1"/>
+                        <CVariable val="Dir2"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Pos1"/>
+                        <CVariable val="Pos2"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mvt1"/>
+                        <CVariable val="Mvt2"/>
+                    </CEquals>
+                </CNot>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Dir1"/>
+                        <CVariable val="Dir3"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Pos1"/>
+                        <CVariable val="Pos3"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mvt1"/>
+                        <CVariable val="Mvt3"/>
+                    </CEquals>
+                </CNot>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Dir1"/>
+                        <CVariable val="Dir4"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Pos1"/>
+                        <CVariable val="Pos4"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mvt1"/>
+                        <CVariable val="Mvt4"/>
+                    </CEquals>
+                </CNot>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Dir1"/>
+                        <CVariable val="Dir5"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Pos1"/>
+                        <CVariable val="Pos5"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mvt1"/>
+                        <CVariable val="Mvt5"/>
+                    </CEquals>
+                </CNot>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Dir2"/>
+                        <CVariable val="Dir3"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Pos2"/>
+                        <CVariable val="Pos3"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mvt2"/>
+                        <CVariable val="Mvt3"/>
+                    </CEquals>
+                </CNot>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Dir2"/>
+                        <CVariable val="Dir4"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Pos2"/>
+                        <CVariable val="Pos4"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mvt2"/>
+                        <CVariable val="Mvt4"/>
+                    </CEquals>
+                </CNot>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Dir2"/>
+                        <CVariable val="Dir5"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Pos2"/>
+                        <CVariable val="Pos5"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mvt2"/>
+                        <CVariable val="Mvt5"/>
+                    </CEquals>
+                </CNot>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Dir3"/>
+                        <CVariable val="Dir4"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Pos3"/>
+                        <CVariable val="Pos4"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mvt3"/>
+                        <CVariable val="Mvt4"/>
+                    </CEquals>
+                </CNot>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Dir3"/>
+                        <CVariable val="Dir5"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Pos3"/>
+                        <CVariable val="Pos5"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mvt3"/>
+                        <CVariable val="Mvt5"/>
+                    </CEquals>
+                </CNot>
+            </COr>
+            <COr>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Dir4"/>
+                        <CVariable val="Dir5"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Pos4"/>
+                        <CVariable val="Pos5"/>
+                    </CEquals>
+                </CNot>
+                <CNot>
+                    <CEquals>
+                        <CVariable val="Mvt4"/>
+                        <CVariable val="Mvt5"/>
+                    </CEquals>
+                </CNot>
+            </COr>
+
+        </CAnd>
+    </INVARIANT>
+    <INITIALISATION>
+        <CMultipleAssignment>
+            <CAssignment>
+                <CVariable val="Pos1"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Pos2"/>
+                <CNumber val="1"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Pos3"/>
+                <CNumber val="4"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Pos4"/>
+                <CNumber val="7"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Pos5"/>
+                <CNumber val="8"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Dir1"/>
+                <CNumber val="1"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Dir2"/>
+                <CNumber val="1"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Dir3"/>
+                <CNumber val="1"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Dir4"/>
+                <CNumber val="1"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Dir5"/>
+                <CNumber val="-1"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Mvt1"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Mvt2"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Mvt3"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Mvt4"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Mvt5"/>
+                <CNumber val="0"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Portes1"/>
+                <CNumber val="1"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Portes2"/>
+                <CNumber val="1"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Portes3"/>
+                <CNumber val="1"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Portes4"/>
+                <CNumber val="1"/>
+            </CAssignment>
+            <CAssignment>
+                <CVariable val="Portes5"/>
+                <CNumber val="1"/>
+            </CAssignment>
+        </CMultipleAssignment>
+    </INITIALISATION>
+    <EVENTS>
+
+        <!-- | Depart_Station | -->
+        <CNonGuardedEvent name="Depart_Station">
+            <CNDChoice>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- Portes(R)=refermees -->
+                        <CEquals>
+                            <CVariable val="Portes1"/>
+                            <CNumber val="2"/>
+                        </CEquals>
+                        <!-- Mvt(R)=FALSE -->
+                        <CEquals>
+                            <CVariable val="Mvt1"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                        <!-- (Pos(R)/=NS-1 or Dir(R)/=1) -->
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos1"/>
+                                    <CNumber val="4"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir1"/>
+                                    <CNumber val="1"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <!-- (Pos(R)/=0 or Dir(R)/=-1) -->
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos1"/>
+                                    <CNumber val="0"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir1"/>
+                                    <CNumber val="-1"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <!--  !R1.(R1 : Rames & R1/=R => Pos(R1)/=Pos(R) or Dir(R1)/=Dir(R) -->
+                        <CAnd>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos2"/>
+                                        <CVariable val="Pos1"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir2"/>
+                                        <CVariable val="Dir1"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos3"/>
+                                        <CVariable val="Pos1"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir3"/>
+                                        <CVariable val="Dir1"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos4"/>
+                                        <CVariable val="Pos1"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir4"/>
+                                        <CVariable val="Dir1"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos5"/>
+                                        <CVariable val="Pos1"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir5"/>
+                                        <CVariable val="Dir1"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                        </CAnd>
+                    </CAnd>
+                    <CMultipleAssignment>
+                        <CAssignment>
+                            <CVariable val="Portes1"/>
+                            <CNumber val="1"/>
+                        </CAssignment>
+                        <CAssignment>
+                            <CVariable val="Mvt1"/>
+                            <CNumber val="1"/>
+                        </CAssignment>
+                    </CMultipleAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- Portes(R)=refermees -->
+                        <CEquals>
+                            <CVariable val="Portes2"/>
+                            <CNumber val="2"/>
+                        </CEquals>
+                        <!-- Mvt(R)=FALSE -->
+                        <CEquals>
+                            <CVariable val="Mvt2"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                        <!-- (Pos(R)/=NS-1 or Dir(R)/=1) -->
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos2"/>
+                                    <CNumber val="4"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir2"/>
+                                    <CNumber val="1"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <!-- (Pos(R)/=0 or Dir(R)/=-1) -->
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos2"/>
+                                    <CNumber val="0"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir2"/>
+                                    <CNumber val="-1"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <!--  !R1.(R1 : Rames & R1/=R => Pos(R1)/=Pos(R) or Dir(R1)/=Dir(R) -->
+                        <CAnd>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos1"/>
+                                        <CVariable val="Pos2"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir1"/>
+                                        <CVariable val="Dir2"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos3"/>
+                                        <CVariable val="Pos2"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir3"/>
+                                        <CVariable val="Dir2"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos4"/>
+                                        <CVariable val="Pos2"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir4"/>
+                                        <CVariable val="Dir2"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos5"/>
+                                        <CVariable val="Pos2"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir5"/>
+                                        <CVariable val="Dir2"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                        </CAnd>
+                    </CAnd>
+                    <CMultipleAssignment>
+                        <CAssignment>
+                            <CVariable val="Portes2"/>
+                            <CNumber val="1"/>
+                        </CAssignment>
+                        <CAssignment>
+                            <CVariable val="Mvt2"/>
+                            <CNumber val="1"/>
+                        </CAssignment>
+                    </CMultipleAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- Portes(R)=refermees -->
+                        <CEquals>
+                            <CVariable val="Portes3"/>
+                            <CNumber val="2"/>
+                        </CEquals>
+                        <!-- Mvt(R)=FALSE -->
+                        <CEquals>
+                            <CVariable val="Mvt3"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                        <!-- (Pos(R)/=NS-1 or Dir(R)/=1) -->
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos3"/>
+                                    <CNumber val="4"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir3"/>
+                                    <CNumber val="1"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <!-- (Pos(R)/=0 or Dir(R)/=-1) -->
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos3"/>
+                                    <CNumber val="0"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir3"/>
+                                    <CNumber val="-1"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <!--  !R1.(R1 : Rames & R1/=R => Pos(R1)/=Pos(R) or Dir(R1)/=Dir(R) -->
+                        <CAnd>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos1"/>
+                                        <CVariable val="Pos3"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir1"/>
+                                        <CVariable val="Dir3"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos2"/>
+                                        <CVariable val="Pos3"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir2"/>
+                                        <CVariable val="Dir3"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos4"/>
+                                        <CVariable val="Pos3"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir4"/>
+                                        <CVariable val="Dir3"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos5"/>
+                                        <CVariable val="Pos3"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir5"/>
+                                        <CVariable val="Dir3"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                        </CAnd>
+                    </CAnd>
+                    <CMultipleAssignment>
+                        <CAssignment>
+                            <CVariable val="Portes3"/>
+                            <CNumber val="1"/>
+                        </CAssignment>
+                        <CAssignment>
+                            <CVariable val="Mvt3"/>
+                            <CNumber val="1"/>
+                        </CAssignment>
+                    </CMultipleAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- Portes(R)=refermees -->
+                        <CEquals>
+                            <CVariable val="Portes4"/>
+                            <CNumber val="2"/>
+                        </CEquals>
+                        <!-- Mvt(R)=FALSE -->
+                        <CEquals>
+                            <CVariable val="Mvt4"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                        <!-- (Pos(R)/=NS-1 or Dir(R)/=1) -->
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos4"/>
+                                    <CNumber val="4"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir4"/>
+                                    <CNumber val="1"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <!-- (Pos(R)/=0 or Dir(R)/=-1) -->
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos4"/>
+                                    <CNumber val="0"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir4"/>
+                                    <CNumber val="-1"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <!--  !R1.(R1 : Rames & R1/=R => Pos(R1)/=Pos(R) or Dir(R1)/=Dir(R) -->
+                        <CAnd>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos1"/>
+                                        <CVariable val="Pos4"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir1"/>
+                                        <CVariable val="Dir4"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos2"/>
+                                        <CVariable val="Pos4"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir2"/>
+                                        <CVariable val="Dir4"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos3"/>
+                                        <CVariable val="Pos4"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir3"/>
+                                        <CVariable val="Dir4"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos5"/>
+                                        <CVariable val="Pos4"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir5"/>
+                                        <CVariable val="Dir4"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                        </CAnd>
+                    </CAnd>
+                    <CMultipleAssignment>
+                        <CAssignment>
+                            <CVariable val="Portes4"/>
+                            <CNumber val="1"/>
+                        </CAssignment>
+                        <CAssignment>
+                            <CVariable val="Mvt4"/>
+                            <CNumber val="1"/>
+                        </CAssignment>
+                    </CMultipleAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- Portes(R)=refermees -->
+                        <CEquals>
+                            <CVariable val="Portes5"/>
+                            <CNumber val="2"/>
+                        </CEquals>
+                        <!-- Mvt(R)=FALSE -->
+                        <CEquals>
+                            <CVariable val="Mvt5"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                        <!-- (Pos(R)/=NS-1 or Dir(R)/=1) -->
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos5"/>
+                                    <CNumber val="4"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir5"/>
+                                    <CNumber val="1"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <!-- (Pos(R)/=0 or Dir(R)/=-1) -->
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos5"/>
+                                    <CNumber val="0"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir5"/>
+                                    <CNumber val="-1"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <!--  !R1.(R1 : Rames & R1/=R => Pos(R1)/=Pos(R) or Dir(R1)/=Dir(R) -->
+                        <CAnd>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos1"/>
+                                        <CVariable val="Pos5"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir1"/>
+                                        <CVariable val="Dir5"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos2"/>
+                                        <CVariable val="Pos5"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir2"/>
+                                        <CVariable val="Dir5"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos3"/>
+                                        <CVariable val="Pos5"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir3"/>
+                                        <CVariable val="Dir5"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                            <COr>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Pos4"/>
+                                        <CVariable val="Pos5"/>
+                                    </CEquals>
+                                </CNot>
+                                <CNot>
+                                    <CEquals>
+                                        <CVariable val="Dir4"/>
+                                        <CVariable val="Dir5"/>
+                                    </CEquals>
+                                </CNot>
+                            </COr>
+                        </CAnd>
+                    </CAnd>
+                    <CMultipleAssignment>
+                        <CAssignment>
+                            <CVariable val="Portes4"/>
+                            <CNumber val="1"/>
+                        </CAssignment>
+                        <CAssignment>
+                            <CVariable val="Mvt4"/>
+                            <CNumber val="1"/>
+                        </CAssignment>
+                    </CMultipleAssignment>
+                </CGuarded>
+
+            </CNDChoice>
+        </CNonGuardedEvent>
+
+        <!-- Arrivee_Station -->
+        <CNonGuardedEvent name="Arrivee_Station">
+            <CNDChoice>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Mvt(R)=TRUE | -->
+                        <CEquals>
+                            <CVariable val="Mvt1"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <!-- | !R1.(R1 : Rames & R1/=R => Pos(R1)/=Pos(R)+Dir(R) or Dir(R1)/=Dir(R)) | -->
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos2"/>
+                                    <CPlus>
+                                        <CVariable val="Pos1"/>
+                                        <CVariable val="Dir1"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir2"/>
+                                    <CVariable val="Dir1"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos3"/>
+                                    <CPlus>
+                                        <CVariable val="Pos1"/>
+                                        <CVariable val="Dir1"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir3"/>
+                                    <CVariable val="Dir1"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos4"/>
+                                    <CPlus>
+                                        <CVariable val="Pos1"/>
+                                        <CVariable val="Dir1"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir4"/>
+                                    <CVariable val="Dir1"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos5"/>
+                                    <CPlus>
+                                        <CVariable val="Pos1"/>
+                                        <CVariable val="Dir1"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir5"/>
+                                    <CVariable val="Dir1"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                    </CAnd>
+                    <CMultipleAssignment>
+                        <CAssignment>
+                            <CVariable val="Pos1"/>
+                            <CPlus>
+                                <CVariable val="Pos1"/>
+                                <CVariable val="Dir1"/>
+                            </CPlus>
+                        </CAssignment>
+                        <CAssignment>
+                            <CVariable val="Mvt1"/>
+                            <CNumber val="0"/>
+                        </CAssignment>
+                    </CMultipleAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Mvt(R)=TRUE | -->
+                        <CEquals>
+                            <CVariable val="Mvt2"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <!-- | !R1.(R1 : Rames & R1/=R => Pos(R1)/=Pos(R)+Dir(R) or Dir(R1)/=Dir(R)) | -->
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos1"/>
+                                    <CPlus>
+                                        <CVariable val="Pos2"/>
+                                        <CVariable val="Dir2"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir1"/>
+                                    <CVariable val="Dir2"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos3"/>
+                                    <CPlus>
+                                        <CVariable val="Pos2"/>
+                                        <CVariable val="Dir2"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir3"/>
+                                    <CVariable val="Dir2"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos4"/>
+                                    <CPlus>
+                                        <CVariable val="Pos2"/>
+                                        <CVariable val="Dir2"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir4"/>
+                                    <CVariable val="Dir2"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos5"/>
+                                    <CPlus>
+                                        <CVariable val="Pos2"/>
+                                        <CVariable val="Dir2"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir5"/>
+                                    <CVariable val="Dir2"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                    </CAnd>
+                    <CMultipleAssignment>
+                        <CAssignment>
+                            <CVariable val="Pos2"/>
+                            <CPlus>
+                                <CVariable val="Pos2"/>
+                                <CVariable val="Dir2"/>
+                            </CPlus>
+                        </CAssignment>
+                        <CAssignment>
+                            <CVariable val="Mvt2"/>
+                            <CNumber val="0"/>
+                        </CAssignment>
+                    </CMultipleAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Mvt(R)=TRUE | -->
+                        <CEquals>
+                            <CVariable val="Mvt3"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <!-- | !R1.(R1 : Rames & R1/=R => Pos(R1)/=Pos(R)+Dir(R) or Dir(R1)/=Dir(R)) | -->
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos1"/>
+                                    <CPlus>
+                                        <CVariable val="Pos3"/>
+                                        <CVariable val="Dir3"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir1"/>
+                                    <CVariable val="Dir3"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos2"/>
+                                    <CPlus>
+                                        <CVariable val="Pos3"/>
+                                        <CVariable val="Dir3"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir2"/>
+                                    <CVariable val="Dir3"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos4"/>
+                                    <CPlus>
+                                        <CVariable val="Pos3"/>
+                                        <CVariable val="Dir3"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir4"/>
+                                    <CVariable val="Dir3"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos5"/>
+                                    <CPlus>
+                                        <CVariable val="Pos3"/>
+                                        <CVariable val="Dir3"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir5"/>
+                                    <CVariable val="Dir3"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                    </CAnd>
+                    <CMultipleAssignment>
+                        <CAssignment>
+                            <CVariable val="Pos3"/>
+                            <CPlus>
+                                <CVariable val="Pos3"/>
+                                <CVariable val="Dir3"/>
+                            </CPlus>
+                        </CAssignment>
+                        <CAssignment>
+                            <CVariable val="Mvt3"/>
+                            <CNumber val="0"/>
+                        </CAssignment>
+                    </CMultipleAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Mvt(R)=TRUE | -->
+                        <CEquals>
+                            <CVariable val="Mvt4"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <!-- | !R1.(R1 : Rames & R1/=R => Pos(R1)/=Pos(R)+Dir(R) or Dir(R1)/=Dir(R)) | -->
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos1"/>
+                                    <CPlus>
+                                        <CVariable val="Pos4"/>
+                                        <CVariable val="Dir4"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir1"/>
+                                    <CVariable val="Dir4"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos2"/>
+                                    <CPlus>
+                                        <CVariable val="Pos4"/>
+                                        <CVariable val="Dir4"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir2"/>
+                                    <CVariable val="Dir4"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos3"/>
+                                    <CPlus>
+                                        <CVariable val="Pos4"/>
+                                        <CVariable val="Dir4"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir3"/>
+                                    <CVariable val="Dir4"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos5"/>
+                                    <CPlus>
+                                        <CVariable val="Pos4"/>
+                                        <CVariable val="Dir4"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir5"/>
+                                    <CVariable val="Dir4"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                    </CAnd>
+                    <CMultipleAssignment>
+                        <CAssignment>
+                            <CVariable val="Pos4"/>
+                            <CPlus>
+                                <CVariable val="Pos4"/>
+                                <CVariable val="Dir4"/>
+                            </CPlus>
+                        </CAssignment>
+                        <CAssignment>
+                            <CVariable val="Mvt4"/>
+                            <CNumber val="0"/>
+                        </CAssignment>
+                    </CMultipleAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Mvt(R)=TRUE | -->
+                        <CEquals>
+                            <CVariable val="Mvt5"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <!-- | !R1.(R1 : Rames & R1/=R => Pos(R1)/=Pos(R)+Dir(R) or Dir(R1)/=Dir(R)) | -->
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos1"/>
+                                    <CPlus>
+                                        <CVariable val="Pos5"/>
+                                        <CVariable val="Dir5"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir1"/>
+                                    <CVariable val="Dir5"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos2"/>
+                                    <CPlus>
+                                        <CVariable val="Pos5"/>
+                                        <CVariable val="Dir5"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir2"/>
+                                    <CVariable val="Dir5"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos3"/>
+                                    <CPlus>
+                                        <CVariable val="Pos5"/>
+                                        <CVariable val="Dir5"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir3"/>
+                                    <CVariable val="Dir5"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                        <COr>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos4"/>
+                                    <CPlus>
+                                        <CVariable val="Pos5"/>
+                                        <CVariable val="Dir5"/>
+                                    </CPlus>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir4"/>
+                                    <CVariable val="Dir5"/>
+                                </CEquals>
+                            </CNot>
+                        </COr>
+                    </CAnd>
+                    <CMultipleAssignment>
+                        <CAssignment>
+                            <CVariable val="Pos5"/>
+                            <CPlus>
+                                <CVariable val="Pos5"/>
+                                <CVariable val="Dir5"/>
+                            </CPlus>
+                        </CAssignment>
+                        <CAssignment>
+                            <CVariable val="Mvt5"/>
+                            <CNumber val="0"/>
+                        </CAssignment>
+                    </CMultipleAssignment>
+                </CGuarded>
+
+            </CNDChoice>
+        </CNonGuardedEvent>
+
+        <!-- | Changement_Direction | -->
+        <CNonGuardedEvent name="Changement_Direction">
+            <CNDChoice>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Portes(R)=refermees | -->
+                        <CEquals>
+                            <CVariable val="Portes1"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <!-- | ((Pos(R)=NS-1 & Dir(R)=1) or (Pos(R)=0 & Dir(R)=-1)) | -->
+                        <COr>
+                            <CAnd>
+                                <CEquals>
+                                    <CVariable val="Pos1"/>
+                                    <CMinus>
+                                        <CVariable val="NS"/>
+                                        <CNumber val="1"/>
+                                    </CMinus>
+                                </CEquals>
+                                <CEquals>
+                                    <CVariable val="Dir1"/>
+                                    <CNumber val="1"/>
+                                </CEquals>
+                            </CAnd>
+                            <CAnd>
+                                <CEquals>
+                                    <CVariable val="Pos1"/>
+                                    <CNumber val="0"/>
+                                </CEquals>
+                                <CEquals>
+                                    <CVariable val="Dir1"/>
+                                    <CNumber val="-1"/>
+                                </CEquals>
+                            </CAnd>
+                        </COr>
+                        <!-- | !R1.(R1 : Rames & R1/=R => Pos(R1)/=Pos(R) & Dir(R1)/=-Dir(R)) | -->
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos2"/>
+                                    <CVariable val="Pos1"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir2"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir1"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos3"/>
+                                    <CVariable val="Pos1"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir3"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir1"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos4"/>
+                                    <CVariable val="Pos1"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir4"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir1"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos5"/>
+                                    <CVariable val="Pos1"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir5"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir1"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                    </CAnd>
+                    <!-- | Portes(R) := fermees || Dir(R) := -Dir(R) | -->
+                    <CMultipleAssignment>
+                        <CAssignment>
+                            <CVariable val="Portes1"/>
+                            <CNumber val="1"/>
+                        </CAssignment>
+                        <CAssignment>
+                            <CVariable val="Dir1"/>
+                            <CProduct>
+                                <CNumber val="-1"/>
+                                <CVariable val="Dir1"/>
+                            </CProduct>
+                        </CAssignment>
+                    </CMultipleAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Portes(R)=refermees | -->
+                        <CEquals>
+                            <CVariable val="Portes2"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <!-- | ((Pos(R)=NS-1 & Dir(R)=1) or (Pos(R)=0 & Dir(R)=-1)) | -->
+                        <COr>
+                            <CAnd>
+                                <CEquals>
+                                    <CVariable val="Pos2"/>
+                                    <CMinus>
+                                        <CVariable val="NS"/>
+                                        <CNumber val="1"/>
+                                    </CMinus>
+                                </CEquals>
+                                <CEquals>
+                                    <CVariable val="Dir2"/>
+                                    <CNumber val="1"/>
+                                </CEquals>
+                            </CAnd>
+                            <CAnd>
+                                <CEquals>
+                                    <CVariable val="Pos2"/>
+                                    <CNumber val="0"/>
+                                </CEquals>
+                                <CEquals>
+                                    <CVariable val="Dir2"/>
+                                    <CNumber val="-1"/>
+                                </CEquals>
+                            </CAnd>
+                        </COr>
+                        <!-- | !R1.(R1 : Rames & R1/=R => Pos(R1)/=Pos(R) & Dir(R1)/=-Dir(R)) | -->
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos1"/>
+                                    <CVariable val="Pos2"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir1"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir2"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos3"/>
+                                    <CVariable val="Pos2"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir3"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir2"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos4"/>
+                                    <CVariable val="Pos2"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir4"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir2"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos5"/>
+                                    <CVariable val="Pos2"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir5"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir2"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                    </CAnd>
+                    <!-- | Portes(R) := fermees || Dir(R) := -Dir(R) | -->
+                    <CMultipleAssignment>
+                        <CAssignment>
+                            <CVariable val="Portes2"/>
+                            <CNumber val="1"/>
+                        </CAssignment>
+                        <CAssignment>
+                            <CVariable val="Dir2"/>
+                            <CProduct>
+                                <CNumber val="-1"/>
+                                <CVariable val="Dir2"/>
+                            </CProduct>
+                        </CAssignment>
+                    </CMultipleAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Portes(R)=refermees | -->
+                        <CEquals>
+                            <CVariable val="Portes3"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <!-- | ((Pos(R)=NS-1 & Dir(R)=1) or (Pos(R)=0 & Dir(R)=-1)) | -->
+                        <COr>
+                            <CAnd>
+                                <CEquals>
+                                    <CVariable val="Pos3"/>
+                                    <CMinus>
+                                        <CVariable val="NS"/>
+                                        <CNumber val="1"/>
+                                    </CMinus>
+                                </CEquals>
+                                <CEquals>
+                                    <CVariable val="Dir3"/>
+                                    <CNumber val="1"/>
+                                </CEquals>
+                            </CAnd>
+                            <CAnd>
+                                <CEquals>
+                                    <CVariable val="Pos3"/>
+                                    <CNumber val="0"/>
+                                </CEquals>
+                                <CEquals>
+                                    <CVariable val="Dir3"/>
+                                    <CNumber val="-1"/>
+                                </CEquals>
+                            </CAnd>
+                        </COr>
+                        <!-- | !R1.(R1 : Rames & R1/=R => Pos(R1)/=Pos(R) & Dir(R1)/=-Dir(R)) | -->
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos1"/>
+                                    <CVariable val="Pos3"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir1"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir3"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos2"/>
+                                    <CVariable val="Pos3"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir2"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir3"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos4"/>
+                                    <CVariable val="Pos3"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir4"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir3"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos5"/>
+                                    <CVariable val="Pos3"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir5"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir3"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                    </CAnd>
+                    <!-- | Portes(R) := fermees || Dir(R) := -Dir(R) | -->
+                    <CMultipleAssignment>
+                        <CAssignment>
+                            <CVariable val="Portes3"/>
+                            <CNumber val="1"/>
+                        </CAssignment>
+                        <CAssignment>
+                            <CVariable val="Dir3"/>
+                            <CProduct>
+                                <CNumber val="-1"/>
+                                <CVariable val="Dir3"/>
+                            </CProduct>
+                        </CAssignment>
+                    </CMultipleAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Portes(R)=refermees | -->
+                        <CEquals>
+                            <CVariable val="Portes4"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <!-- | ((Pos(R)=NS-1 & Dir(R)=1) or (Pos(R)=0 & Dir(R)=-1)) | -->
+                        <COr>
+                            <CAnd>
+                                <CEquals>
+                                    <CVariable val="Pos4"/>
+                                    <CMinus>
+                                        <CVariable val="NS"/>
+                                        <CNumber val="1"/>
+                                    </CMinus>
+                                </CEquals>
+                                <CEquals>
+                                    <CVariable val="Dir4"/>
+                                    <CNumber val="1"/>
+                                </CEquals>
+                            </CAnd>
+                            <CAnd>
+                                <CEquals>
+                                    <CVariable val="Pos4"/>
+                                    <CNumber val="0"/>
+                                </CEquals>
+                                <CEquals>
+                                    <CVariable val="Dir4"/>
+                                    <CNumber val="-1"/>
+                                </CEquals>
+                            </CAnd>
+                        </COr>
+                        <!-- | !R1.(R1 : Rames & R1/=R => Pos(R1)/=Pos(R) & Dir(R1)/=-Dir(R)) | -->
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos1"/>
+                                    <CVariable val="Pos4"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir1"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir4"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos2"/>
+                                    <CVariable val="Pos4"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir2"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir4"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos3"/>
+                                    <CVariable val="Pos4"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir3"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir4"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos5"/>
+                                    <CVariable val="Pos4"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir5"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir4"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                    </CAnd>
+                    <!-- | Portes(R) := fermees || Dir(R) := -Dir(R) | -->
+                    <CMultipleAssignment>
+                        <CAssignment>
+                            <CVariable val="Portes4"/>
+                            <CNumber val="1"/>
+                        </CAssignment>
+                        <CAssignment>
+                            <CVariable val="Dir4"/>
+                            <CProduct>
+                                <CNumber val="-1"/>
+                                <CVariable val="Dir4"/>
+                            </CProduct>
+                        </CAssignment>
+                    </CMultipleAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Portes(R)=refermees | -->
+                        <CEquals>
+                            <CVariable val="Portes5"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <!-- | ((Pos(R)=NS-1 & Dir(R)=1) or (Pos(R)=0 & Dir(R)=-1)) | -->
+                        <COr>
+                            <CAnd>
+                                <CEquals>
+                                    <CVariable val="Pos5"/>
+                                    <CMinus>
+                                        <CVariable val="NS"/>
+                                        <CNumber val="1"/>
+                                    </CMinus>
+                                </CEquals>
+                                <CEquals>
+                                    <CVariable val="Dir5"/>
+                                    <CNumber val="1"/>
+                                </CEquals>
+                            </CAnd>
+                            <CAnd>
+                                <CEquals>
+                                    <CVariable val="Pos5"/>
+                                    <CNumber val="0"/>
+                                </CEquals>
+                                <CEquals>
+                                    <CVariable val="Dir5"/>
+                                    <CNumber val="-1"/>
+                                </CEquals>
+                            </CAnd>
+                        </COr>
+                        <!-- | !R1.(R1 : Rames & R1/=R => Pos(R1)/=Pos(R) & Dir(R1)/=-Dir(R)) | -->
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos1"/>
+                                    <CVariable val="Pos5"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir1"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir5"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos2"/>
+                                    <CVariable val="Pos5"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir2"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir5"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos3"/>
+                                    <CVariable val="Pos5"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir3"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir5"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                        <CAnd>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Pos4"/>
+                                    <CVariable val="Pos5"/>
+                                </CEquals>
+                            </CNot>
+                            <CNot>
+                                <CEquals>
+                                    <CVariable val="Dir4"/>
+                                    <CProduct>
+                                        <CNumber val="-1"/>
+                                        <CVariable val="Dir5"/>
+                                    </CProduct>
+                                </CEquals>
+                            </CNot>
+                        </CAnd>
+                    </CAnd>
+                    <!-- | Portes(R) := fermees || Dir(R) := -Dir(R) | -->
+                    <CMultipleAssignment>
+                        <CAssignment>
+                            <CVariable val="Portes5"/>
+                            <CNumber val="1"/>
+                        </CAssignment>
+                        <CAssignment>
+                            <CVariable val="Dir5"/>
+                            <CProduct>
+                                <CNumber val="-1"/>
+                                <CVariable val="Dir5"/>
+                            </CProduct>
+                        </CAssignment>
+                    </CMultipleAssignment>
+                </CGuarded>
+
+            </CNDChoice>
+        </CNonGuardedEvent>
+
+        <!-- | Ouverture_Portes | -->
+        <CNonGuardedEvent name="Ouverture_Portes">
+            <CNDChoice>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Portes(R)=fermees | -->
+                        <CEquals>
+                            <CVariable val="Portes1"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <!-- | Mvt(R) = FALSE | -->
+                        <CEquals>
+                            <CVariable val="Mvt1"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                    </CAnd>
+                    <!-- | Portes(R) := ouvertes | -->
+                    <CAssignment>
+                        <CVariable val="Portes1"/>
+                        <CNumber val="0"/>
+                    </CAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Portes(R)=fermees | -->
+                        <CEquals>
+                            <CVariable val="Portes2"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <!-- | Mvt(R) = FALSE | -->
+                        <CEquals>
+                            <CVariable val="Mvt2"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                    </CAnd>
+                    <!-- | Portes(R) := ouvertes | -->
+                    <CAssignment>
+                        <CVariable val="Portes2"/>
+                        <CNumber val="0"/>
+                    </CAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Portes(R)=fermees | -->
+                        <CEquals>
+                            <CVariable val="Portes3"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <!-- | Mvt(R) = FALSE | -->
+                        <CEquals>
+                            <CVariable val="Mvt3"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                    </CAnd>
+                    <!-- | Portes(R) := ouvertes | -->
+                    <CAssignment>
+                        <CVariable val="Portes3"/>
+                        <CNumber val="0"/>
+                    </CAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Portes(R)=fermees | -->
+                        <CEquals>
+                            <CVariable val="Portes4"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <!-- | Mvt(R) = FALSE | -->
+                        <CEquals>
+                            <CVariable val="Mvt4"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                    </CAnd>
+                    <!-- | Portes(R) := ouvertes | -->
+                    <CAssignment>
+                        <CVariable val="Portes4"/>
+                        <CNumber val="0"/>
+                    </CAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Portes(R)=fermees | -->
+                        <CEquals>
+                            <CVariable val="Portes5"/>
+                            <CNumber val="1"/>
+                        </CEquals>
+                        <!-- | Mvt(R) = FALSE | -->
+                        <CEquals>
+                            <CVariable val="Mvt5"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                    </CAnd>
+                    <!-- | Portes(R) := ouvertes | -->
+                    <CAssignment>
+                        <CVariable val="Portes5"/>
+                        <CNumber val="0"/>
+                    </CAssignment>
+                </CGuarded>
+
+            </CNDChoice>
+        </CNonGuardedEvent>
+
+        <!-- | Fermeture_Portes | -->
+        <CNonGuardedEvent name="Fermeture_Portes">
+            <CNDChoice>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Portes(R)=ouvertes | -->
+                        <CEquals>
+                            <CVariable val="Portes1"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                        <!-- | Mvt(R) = FALSE | -->
+                        <CEquals>
+                            <CVariable val="Mvt1"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                    </CAnd>
+                    <!-- | Portes(R) := refermees | -->
+                    <CAssignment>
+                        <CVariable val="Portes1"/>
+                        <CNumber val="2"/>
+                    </CAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Portes(R)=ouvertes | -->
+                        <CEquals>
+                            <CVariable val="Portes2"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                        <!-- | Mvt(R) = FALSE | -->
+                        <CEquals>
+                            <CVariable val="Mvt2"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                    </CAnd>
+                    <!-- | Portes(R) := refermees | -->
+                    <CAssignment>
+                        <CVariable val="Portes2"/>
+                        <CNumber val="2"/>
+                    </CAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Portes(R)=ouvertes | -->
+                        <CEquals>
+                            <CVariable val="Portes3"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                        <!-- | Mvt(R) = FALSE | -->
+                        <CEquals>
+                            <CVariable val="Mvt3"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                    </CAnd>
+                    <!-- | Portes(R) := refermees | -->
+                    <CAssignment>
+                        <CVariable val="Portes3"/>
+                        <CNumber val="2"/>
+                    </CAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Portes(R)=ouvertes | -->
+                        <CEquals>
+                            <CVariable val="Portes4"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                        <!-- | Mvt(R) = FALSE | -->
+                        <CEquals>
+                            <CVariable val="Mvt4"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                    </CAnd>
+                    <!-- | Portes(R) := refermees | -->
+                    <CAssignment>
+                        <CVariable val="Portes4"/>
+                        <CNumber val="2"/>
+                    </CAssignment>
+                </CGuarded>
+
+                <CGuarded>
+                    <CAnd>
+                        <!-- | Portes(R)=ouvertes | -->
+                        <CEquals>
+                            <CVariable val="Portes5"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                        <!-- | Mvt(R) = FALSE | -->
+                        <CEquals>
+                            <CVariable val="Mvt5"/>
+                            <CNumber val="0"/>
+                        </CEquals>
+                    </CAnd>
+                    <!-- | Portes(R) := refermees | -->
+                    <CAssignment>
+                        <CVariable val="Portes5"/>
+                        <CNumber val="2"/>
+                    </CAssignment>
+                </CGuarded>
+
+            </CNDChoice>
+        </CNonGuardedEvent>
+
+    </EVENTS>
+</MACHINE>

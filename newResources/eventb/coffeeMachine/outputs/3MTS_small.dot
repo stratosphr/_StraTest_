@@ -1,0 +1,24 @@
+digraph {
+
+	rankdir="LR";
+	node[shape="box", style="rounded,filled", color="lightblue2"];
+
+	q4[label="q4"];
+	q0[label="q0"];
+	q2[label="q2"];
+
+	q4 -> q4 [label="addCoffee"];
+	q4 -> q0 [label="powerUp"];
+	q0 -> q0 [label="insert50"];
+	q0 -> q0 [label="insert100"];
+	q0 -> q0 [label="coffeeReq"];
+	q0 -> q0 [label="changeReq"];
+	q0 -> q0 [label="serveCoffee"];
+	q0 -> q0 [label="changeBack"];
+	q0 -> q2 [label="serveCoffee"];
+	q0 -> q4 [label="powerDown"];
+	q0 -> q2 [label=<autoOut<sup>#</sup>>];
+	q2 -> q4 [label=<powerDown<sup>#</sup>>];
+	q4 -> q4 [label=<takePot<sup>+</sup>>];
+
+}

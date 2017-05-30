@@ -64,6 +64,7 @@ public final class Z3 {
     public Status checkSAT() {
         try {
             getCode().add("(check-sat)");
+            getContext().parseSMTLIB2String(getCode().stream().collect(Collectors.joining(Chars.NEW_LINE)), null, null, null, null);
             getSolver().add(getContext().parseSMTLIB2String(getCode().stream().collect(Collectors.joining(Chars.NEW_LINE)), null, null, null, null));
             return getSolver().check();
         } catch (Z3Exception e) {

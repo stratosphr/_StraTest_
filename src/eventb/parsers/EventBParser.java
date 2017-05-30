@@ -179,6 +179,8 @@ public final class EventBParser {
                 return parseSum(node);
             case EBMEntities.SUBTRACTION:
                 return parseSubtraction(node);
+            case EBMEntities.PRODUCT:
+                return parseProduct(node);
             case EBMEntities.DIVISION:
                 return parseDivision(node);
             default:
@@ -231,6 +233,10 @@ public final class EventBParser {
 
     private static AArithExpr parseSubtraction(XMLNode node) {
         return new Subtraction(node.getChildren().stream().map(EventBParser::parseArithExpr).toArray(AArithExpr[]::new));
+    }
+
+    private static AArithExpr parseProduct(XMLNode node) {
+        return new Product(node.getChildren().stream().map(EventBParser::parseArithExpr).toArray(AArithExpr[]::new));
     }
 
     private static AArithExpr parseDivision(XMLNode node) {

@@ -10,10 +10,18 @@ import utilities.Time;
 public abstract class AComputer<T> {
 
     public final ComputerResult<T> compute() {
+        preCompute();
         long start = Time.now();
         T computed = compute_();
         long end = Time.now();
+        postCompute();
         return new ComputerResult<>(computed, new Time(end - start));
+    }
+
+    private void preCompute() {
+    }
+
+    protected void postCompute() {
     }
 
     protected abstract T compute_();

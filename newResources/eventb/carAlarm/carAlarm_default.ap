@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AbstractionPredicatesList>
+
+    <CAnd>
+        <CEquals>
+            <CVariable val="Tr"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Mv"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="AC"/>
+            <CNumber val="1"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Do"/>
+            <CNumber val="1"/>
+        </CEquals>
+    </CAnd>
+
+    <CAnd>
+        <CEquals>
+            <CVariable val="Tr"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Mv"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Do"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <COr>
+            <CEquals>
+                <CVariable val="Us"/>
+                <CNumber val="0"/>
+            </CEquals>
+            <CAnd>
+                <CEquals>
+                    <CVariable val="Us"/>
+                    <CNumber val="1"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="Lo"/>
+                    <CNumber val="0"/>
+                </CEquals>
+                <CEquals>
+                    <CVariable val="AC"/>
+                    <CNumber val="0"/>
+                </CEquals>
+            </CAnd>
+        </COr>
+    </CAnd>
+
+    <CAnd>
+        <CEquals>
+            <CVariable val="Tr"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Mv"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Us"/>
+            <CNumber val="1"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Do"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="AC"/>
+            <CNumber val="1"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Lo"/>
+            <CNumber val="1"/>
+        </CEquals>
+    </CAnd>
+
+    <CAnd>
+        <CEquals>
+            <CVariable val="Tr"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Mv"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Us"/>
+            <CNumber val="0"/>
+        </CEquals>
+        <CEquals>
+            <CVariable val="Be"/>
+            <CNumber val="1"/>
+        </CEquals>
+    </CAnd>
+
+</AbstractionPredicatesList>
